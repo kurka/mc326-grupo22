@@ -17,19 +17,25 @@ Funções disponiveis:
 int main() {
 
   char c,opcao,n_registros=0;
-  char * str_final;
+  char str_final[TAM_REGISTRO+1];
   int res;
   FILE *arq_base,*arq_pk;
   ap_tipo_registro_pk vetor_registros;
   tipo_registro_pk ultimo;
+  
+   /* Atribui o caractere '\0' ao final da string 
+     para imprimir corretamente o string no vetor */  
+  str_final[TAM_REGISTRO] = '\0';
 
+ 
   arq_base=fopen("base22.dat","a");
-  arq_pk=fopen("pkteste.dat","r");
+  arq_pk=fopen("pk.dat","w+");
 
   /* Esta rotina retorna o numero de registros do arquivo da base de dados
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
+
 
   /* Carrega um vetor com os registros ja existentes*/
   vetor_registros = lerArquivoPK(arq_pk, n_registros);
@@ -64,18 +70,18 @@ int main() {
 	/*repete a insercao ate inserir um titulo novo*/
 	while(res==-1){
 	  /*le da entrada padrao os dados da obra*/
-	  str_final = Insere_base(arq_base);
+	  Insere_base(arq_base, str_final);
 	  n_registros++;
 	  /*pega o ultimo titulo lido*/
 	  ultimo = novopk(str_final, n_registros);
 	  /*guarda a chave primaria no vetor_registros 
 	    (conferindo se eh unica)*/
 	  res = inserirPK(vetor_registros, ultimo, n_registros);
+	  
 	  if(res==-1)	
 	    n_registros--;
 	}
 	printf("Numero de registros: %d\n\n",n_registros);
-
 	fprintf(arq_base,"%s",str_final);
 	printf("Obra adicionada com sucesso.\n\n\n");
 	break;
