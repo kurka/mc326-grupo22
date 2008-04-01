@@ -95,8 +95,9 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
 	fprintf(arq_pk, "%c", vetor[i].titulo[j]);
       for(j=0; j<TAM_NRR; j++)
 	fprintf(arq_pk, "%c", vetor[i].nrr[j]);     
-      
     }
+  
+  free(vetor);
 }
 
 
