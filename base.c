@@ -7,12 +7,7 @@
 #include "pk.h"
 
 /* Funcao da insercao propriamente dita (insercao no arquivo) */
-char * Insere_base(FILE *arq_base) {
-
-  char str_final[TAM_REGISTRO+1];
-
-  /* Atribui o caractere '\0' ao final da string pra nao dar problema com o fprintf */  
-  str_final[TAM_REGISTRO] = '\0';
+void Insere_base(FILE *arq_base, char * str_final) {
 
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
   Insere_titulo(str_final);
@@ -23,7 +18,6 @@ char * Insere_base(FILE *arq_base) {
   Insere_imagem(str_final);
 
 
-  return str_final;
 }
 
 

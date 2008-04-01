@@ -57,26 +57,40 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
   int i, j;
   
 
+  /*realoca vetor, para inserir novo elemento*/
+  vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs));
     
   for(i=0; i< numberOfPKs; i++){ 
+    
+    printf("novo.titulo = %s", novo.titulo);
+    printf("vetor.titulo = %s", vetor[i].titulo);
+    
     if(strcmp(novo.titulo, vetor[i].titulo) == 0){
       printf("Erro! chave primaria ja existente!\n");
-      return -1;
+      
+      /*realoca vetor, eliminando o registro criado acima*/
+      vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs-1));  
+  return -1;
     }
     
     if(strcmp(novo.titulo, vetor[i].titulo) < 0){
       
-      /*realoca vetor, para inserir novo elemento*/
-      vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs));
       
       /*desloca os elementos depois da posicao a ser inserida*/
       for(j=numberOfPKs-2; j>=i; j--){
 	vetor[j+1] = vetor[j];
       }
-      vetor[i] = novo;
+ 
       break;
     }
     
+  }
+  vetor[i-1] = novo;
+
+  printf("\nimpressao do vetor de chaves primarias:\n");
+  for(i=0; i< numberOfPKs; i++){ 
+    printf("vetor.titulo = %s\n", vetor[i].titulo);
+    printf("vetor.nrr = %s\n", vetor[i].nrr);
   }
   return 0;
 }
@@ -95,9 +109,8 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
 	fprintf(arq_pk, "%c", vetor[i].titulo[j]);
       for(j=0; j<TAM_NRR; j++)
 	fprintf(arq_pk, "%c", vetor[i].nrr[j]);     
+      
     }
-  
-  free(vetor);
 }
 
 

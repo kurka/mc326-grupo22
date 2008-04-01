@@ -2,7 +2,7 @@
    (baseXX.dat) e funcoes auxiliares */
 
 /* Funcao de insercao na base */
-char * Insere_base(FILE *arq_base);
+void Insere_base(FILE *arq_base, char * str_final);
 
 void busca_registro(int NRR);
 
