@@ -79,6 +79,8 @@ tipo_registro_pk  novopk(char *str_final, int numberOfPKs){
   for(i=0;i<TAM_TIT;i++)
     novo.titulo[i]=str_final[i];
 
+  printf("str_final = %s\n\n\n", str_final);
+
   /*imprime no vetor nrr o numero numberOfPks (transformando int em string)*/
   sprintf(novo.nrr,"%d",numberOfPKs);
   return novo;
@@ -105,7 +107,10 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
       break;
     }
   }
-    vetor[i] = novo;    
+  if(i==numberOfPKs)
+    i--;
+
+  vetor[i] = novo;    
 
 printf("\nimpressao do vetor de chaves primarias:\n");
 for(i=0; i< numberOfPKs; i++){ 
