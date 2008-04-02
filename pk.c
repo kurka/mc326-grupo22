@@ -13,7 +13,7 @@
    mantendo a ordem de registros, que é alfabética */
 tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 {
-  int i, j;
+  int i, j, k;
   tipo_registro_pk novo;
   tipo_registro_pk *vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
 
@@ -23,8 +23,10 @@ tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
     {
       for(j=0; j<TAM_TIT; j++)
         fscanf(arqPK, "%c", &(novo.titulo[j]));
-      for(j=0; j<TAM_NRR; j++)
-	fscanf(arqPK, "%c", &(novo.nrr[j]));
+      /* for(j=0; j<TAM_NRR; j++)*/
+	fscanf(arqPK, "%d", &(k));
+
+	printf("k=%d!", k);
       
       
       vetor[i] = novo;
@@ -129,12 +131,17 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
   
   fseek(arq_pk,0,SEEK_SET);
   
+  printf("rotina de saida\n");
   for(i=0; i<numberOfPKs; i++)
     {
-      for(j=0; j<TAM_TIT; j++)
+      for(j=0; j<TAM_TIT; j++){
+	printf("%c", vetor[i].titulo[j]);
 	fprintf(arq_pk, "%c", vetor[i].titulo[j]);
-      for(j=0; j<TAM_NRR; j++)
-	fprintf(arq_pk, "%c", vetor[i].nrr[j]);     
+      }
+      /*for(j=0; j<TAM_NRR; j++){*/
+      printf("%s", vetor[i].nrr);  
+      fprintf(arq_pk, "%s", vetor[i].nrr);     
+      /* }*/      
       
     }
 }

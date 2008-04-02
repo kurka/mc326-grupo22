@@ -29,7 +29,8 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 
 typedef struct {
   char titulo[TAM_TIT];
-  char nrr[TAM_NRR];
+  int nrr;
+  /*char nrr[TAM_NRR];*/
 }tipo_registro_pk;
 
 typedef tipo_registro_pk * ap_tipo_registro_pk;
