@@ -140,28 +140,6 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
 }
 
 
-/* /\* Consulta nos registros do vetor de PKs, se o titulo passado como parametro existe nesse vetor, e portanto no arquivo PK.dat, caso exista a função retorna o NRR desse registro, caso titulo nao exista, então zero é retornado *\/ */
-/* int consultarPK(pk *vetor, int *numberOfPKs, char *titulo) */
-/* { */
-/*   int i; */
-/*   char tituloTemp[200]; */
-  
-/*   while(titulo[i]!= '\0') */
-/*     tituloTemp[i] = titulo[i]; */
-  
-/*   while(i< 200) */
-/*     tituloTemp[i] = ' '; */
-  
-/*   for(i=0; i<=numberOfPKs); i++){  */
-/*   if(strcmp(vetor[i].titulo, tituloTemp)== 0) */
-/*     return vetor.nrr; */
-  
-/* } */
-/* return 0; */
-/* } */
-
-
-
 
 /* Funcao de listagem de registros. A partir do arquivo de chaves primarias,
  gera um arquivo em html com todos os titulos das obras. */
@@ -209,7 +187,7 @@ int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registr
    que busca o registro e gera o HTML da consulta. */
 void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *arq_base) {
 
-  int NRR,teste;
+  int NRR;
   char titulo_procurado[MAX_TIT];
   tipo_registro_pk *elto_encontrado;
   /* tipo_registro_pk * vetor_de_registros = malloc(sizeof(tipo_registro_pk)*n_registros);*/
@@ -222,25 +200,6 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado);
 
-  /* Copiando os dados do arquivo de chaves primarias para o vetor. */
-/*   fseek(arq_pk,0,SEEK_SET); */
-/*   for(i=0;i<n_registros;i++) { */
-/*     /\* Insercao do titulo caractere por caractere. *\/ */
-/*     for(j=0;j<MAX_TIT;j++) { */
-/*       vetor_de_registros[i].titulo[j]=fgetc(arq_pk); */
-/*     } */
-/*     /\* Insercao do NRR caractere por caractere. *\/ */
-/*     for(j=0;j<TAM_NRR;j++) { */
-/*       vetor_de_registros[i].nrr[j]=fgetc(arq_pk); */
-/*     } */
-/*   } */
-
-  teste=strncmp(titulo_procurado,vetor_de_registros[0].titulo,TAM_TIT);
-  printf("titulo procurado = %s \n",titulo_procurado);
-  printf("titulo teste = %s \n",vetor_de_registros[0].titulo);
-  printf("Teste == %d .",teste);
-
-
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);
 
@@ -252,6 +211,8 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
   else {
     NRR=atoi((*elto_encontrado).nrr);
     busca_registro(NRR, arq_base); /* funcao definida em base.c */
+    printf("Obra encontrada. Para visualizar suas informações consulte\n");
+    printf("sua pasta atual e abra o arquivo ./tp2.html\n\n"); 
   }
 
   return;
