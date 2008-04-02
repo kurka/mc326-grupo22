@@ -58,7 +58,7 @@ int main() {
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
 
-  printf(">>>Numero de registros: %d\n\n",n_registros);
+  printf(">>>Numero de registros: %d\n",n_registros);
 
   /* Carrega um vetor com os registros ja existentes*/
 
@@ -106,9 +106,9 @@ int main() {
       
       /* Insercao no catalogo */
     case INSERIR:
-      res=0;
+      res=1;
       /*repete a insercao ate inserir um titulo novo*/
-      while(res==0){
+      while(res==1){
 	/*le da entrada padrao os dados da obra*/
 	Insere_base(arq_base, str_final);
 	/*pega o ultimo titulo lido e insere no vetor de registros*/
