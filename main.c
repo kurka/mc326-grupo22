@@ -31,15 +31,31 @@ int main() {
  
   arq_base=fopen("base22.dat","a+");
   
-  /*pk indica se o arquivo pk.dat precisa 
-    ser gerado a partir da base(1 sim, 0 nao)*/
-  pk=0;
+  /*pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
+    para ser gerado ou nao a partir da base*/
+  pk=1;
   arq_pk=fopen("pk.dat","r");
-  if(!arq_pk){
-    arq_pk=fopen("pk.dat","w");    
-    pk=1;
-  }
 
+  if(!arq_pk){
+
+    /*conta quantos registros serao inseridos,
+      a partir do arquivo base.dat*/
+    fseek(arq_base,0,SEEK_END);
+    n_registros=ftell(arq_base)/TAM_REGISTRO;
+    
+    printf("\nCriando arquivo de chaves primarias...\n");
+    
+    
+    arq_pk=fopen("pk.dat","w");    
+    pk=0;
+  }
+  if(arq_pk){
+    fseek(arq_pk,0,SEEK_END);
+    /*se pk possui tamanho 0, as chaves primarias serao
+      coletadas a partir do arquivo base.dat */ 
+    pk = ftell(arq_pk);
+  }
+  
   /* Esta rotina retorna o numero de registros do arquivo da base de dados
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
@@ -49,18 +65,19 @@ int main() {
 
   /* Carrega um vetor com os registros ja existentes*/
 
-  /* Se existirem no arquivo pk.dat, carrega 
-     registros vindos do arquivo*/
-  if(pk==0){
+  /* Se existirem no arquivo pk.dat, carrega as 
+     chaves primarias vindas do arquivo*/
+  if(pk!=0){
     vetor_registros = lerArquivoPK(arq_pk, n_registros);
     fclose(arq_pk);
     /*fecha o arquivo com os registros atuais e abre agora para escrita*/
     arq_pk=fopen("pk.dat","w");    
   }
-  /* Caso o arquivo pk.dat nao exista, pega os valores da base (se existirem)
-     e coloca no vetor_registro, para serem adicionados ao arquivo pk.dat*/
-  if(pk==1)
-    vetor_registros = inserePKbase(arq_base, n_registros);
+  /* Caso o arquivo pk.dat nao exista, ou seja vazio, pega os valores 
+     da base (se existirem) e os coloca no vetor_registro, para serem
+     adicionados posteriormente ao arquivo pk.dat*/
+  if(pk==0)
+    vetor_registros = inserePKBase(arq_base, n_registros);
       
 
 
@@ -77,7 +94,8 @@ int main() {
     c=getchar();
 
     /* Tratamento de caractere invalido ou caractere(s) a mais */
-    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA)&&(opcao!=SAIR)) ) {
+    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)
+		      &&(opcao!=CONSULTA)&&(opcao!=SAIR)) ) {
       while(c!='\n') {
 	c=getchar();
       }
