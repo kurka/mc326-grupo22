@@ -76,11 +76,6 @@ void Insere_titulo(char *str_final) {
       }
     }
 
-
-/*     /\*funcao definida em pk.h que confere se o titulo ja esta */
-/*     sendo usado (a chave primaria tem que ser unica)*\/ */
-/*     resposta = titulo_repetido(); */
-
   } while(resposta==ERRO);
   
 
