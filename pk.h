@@ -7,7 +7,7 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arq_pk, int numberOfPKs);
 
 /*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
   e cria os indices no arquivo.*/
-ap_tipo_registro_pk inserePKbase(FILE *arqBase, int numberOfPKs)
+ap_tipo_registro_pk inserePKbase(FILE *arqBase, int numberOfPKs);
 
 /*pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
 tipo_registro_pk novopk(char *str_final, int numberOfPKs);
