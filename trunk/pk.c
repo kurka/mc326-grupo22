@@ -42,7 +42,7 @@ int compara_qsort(const void * vetora, const void * vetorb) {
 
 /*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
   e cria os indices no arquivo.*/
-tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
+tipo_registro_pk * inserePKBase(FILE *arqBase, int numberOfPKs){
   
   int i, j;
   tipo_registro_pk novo;
@@ -61,6 +61,8 @@ tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
   }  
   /*ordena o vetor em ordem alfabetica*/
   qsort(vetor, numberOfPKs, sizeof(tipo_registro_pk), compara_qsort);
+  
+ 
 
   return vetor;
 } 
@@ -70,15 +72,12 @@ tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
 para ser inserido no vetor de chaves primarias*/
 tipo_registro_pk  novopk(char *str_final, int numberOfPKs){
 
-  int i, inicio;
+  int i;
   tipo_registro_pk novo;
  
-
-  /*posicao do ultimo titulo inserido*/
-  inicio = TAM_REGISTRO*(numberOfPKs-1);
   /*copia o ultimo titulo inserido*/
-  for(i=inicio;i<inicio+TAM_TIT;i++)
-    novo.titulo[i-inicio]=str_final[i];
+  for(i=0;i<TAM_TIT;i++)
+    novo.titulo[i]=str_final[i];
 
   /*imprime no vetor nrr o numero numberOfPks (transformando int em string)*/
   sprintf(novo.nrr,"%d",numberOfPKs);
@@ -93,40 +92,28 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
 
   /*realoca vetor, para inserir novo elemento*/
   vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs));
-    
+
+  printf("novo.titulo = %s\n\n\n", novo.titulo);    
   for(i=0; i< numberOfPKs; i++){ 
     
-    printf("novo.titulo = %s", novo.titulo);
-    printf("vetor.titulo = %s", vetor[i].titulo);
-    
-    if(strcmp(novo.titulo, vetor[i].titulo) == 0){
-      printf("Erro! chave primaria ja existente!\n");
-      
-      /*realoca vetor, eliminando o registro criado acima*/
-      vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs-1));  
-  return -1;
-    }
-    
     if(strcmp(novo.titulo, vetor[i].titulo) < 0){
-      
-      
       /*desloca os elementos depois da posicao a ser inserida*/
       for(j=numberOfPKs-2; j>=i; j--){
 	vetor[j+1] = vetor[j];
       }
- 
+      
       break;
     }
-    
   }
-  vetor[i-1] = novo;
+    vetor[i] = novo;    
 
-  printf("\nimpressao do vetor de chaves primarias:\n");
-  for(i=0; i< numberOfPKs; i++){ 
-    printf("vetor.titulo = %s\n", vetor[i].titulo);
-    printf("vetor.nrr = %s\n", vetor[i].nrr);
-  }
-  return 0;
+printf("\nimpressao do vetor de chaves primarias:\n");
+for(i=0; i< numberOfPKs; i++){ 
+  printf("vetor.titulo = %s\n", vetor[i].titulo);
+  printf("vetor.nrr = %s\n", vetor[i].nrr);
+ }
+
+return 0;
 }
 
 
@@ -260,3 +247,4 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
 
   return;
 }
+ 
