@@ -23,14 +23,13 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_IMG 9
 #define MAX_IMG 450
 #define TAM_FORM 3
-#define TAM_NRR 5
+
 
 
 
 typedef struct {
   char titulo[TAM_TIT];
   int nrr;
-  /*char nrr[TAM_NRR];*/
 }tipo_registro_pk;
 
 typedef tipo_registro_pk * ap_tipo_registro_pk;
