@@ -102,44 +102,44 @@ int main() {
       printf("Caractere ou sequencia de caracteres invalido.\n\n\n");
       opcao=0;
     }
-
+    
     switch(opcao) {
- 
+      
       /* Insercao no catalogo */
-      case INSERIR:
-	res=-1;
-	/*repete a insercao ate inserir um titulo novo*/
-	while(res==-1){
-	  /*le da entrada padrao os dados da obra*/
-	  Insere_base(arq_base, str_final);
-	  n_registros++;
-	  /*pega o ultimo titulo lido*/
-	  ultimo = novopk(str_final, n_registros);
-	  /*guarda a chave primaria no vetor_registros 
-	    (conferindo se eh unica)*/
-	  res = inserirPK(vetor_registros, ultimo, n_registros);
-	  
-	  if(res==-1)	
-	    n_registros--;
-	}
-	printf("Numero de registros: %d\n\n",n_registros);
-	fprintf(arq_base,"%s",str_final);
-	printf("Obra adicionada com sucesso.\n\n\n");
-	break;
-
+    case INSERIR:
+      res=-1;
+      /*repete a insercao ate inserir um titulo novo*/
+      while(res==-1){
+	/*le da entrada padrao os dados da obra*/
+	Insere_base(arq_base, str_final);
+	n_registros++;
+	/*pega o ultimo titulo lido*/
+	ultimo = novopk(str_final, n_registros);
+	/*guarda a chave primaria no vetor_registros 
+	  (conferindo se eh unica)*/
+	res = inserirPK(vetor_registros, ultimo, n_registros);
+	
+	if(res==-1)	
+	  n_registros--;
+      }
+      printf("Numero de registros: %d\n\n",n_registros);
+      fprintf(arq_base,"%s",str_final);
+      printf("Obra adicionada com sucesso.\n\n\n");
+      break;
+      
       /* Listar os registros do catalogo */
-      case LISTAR:
-	lista_registros(n_registros,vetor_registros);
-	break;
-
+    case LISTAR:
+      lista_registros(n_registros,vetor_registros);
+      break;
+      
       /* Procurar por registro */
-      case CONSULTA:
+    case CONSULTA:
       consulta_pk(n_registros,vetor_registros, arq_base);
-	break;
+      break;
     }
-
+    
   } while(opcao!=SAIR);
-
+  
   /*guarda o indice de chaves primarias no arquivo*/  
   salvarArquivoPK(vetor_registros, arq_pk, n_registros);
 
