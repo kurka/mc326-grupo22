@@ -13,7 +13,7 @@
    mantendo a ordem de registros, que é alfabética */
 tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 {
-  int i, j, k;
+  int i, j;
   tipo_registro_pk novo;
   tipo_registro_pk *vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
 
@@ -23,12 +23,8 @@ tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
     {
       for(j=0; j<TAM_TIT; j++)
         fscanf(arqPK, "%c", &(novo.titulo[j]));
-      /* for(j=0; j<TAM_NRR; j++)*/
-	fscanf(arqPK, "%d", &(k));
+      fscanf(arqPK, "%d", &(novo.nrr));
 
-	printf("k=%d!", k);
-      
-      
       vetor[i] = novo;
     }
 
@@ -57,7 +53,7 @@ tipo_registro_pk * inserePKBase(FILE *arqBase, int numberOfPKs){
     for(j=0; j<TAM_TIT; j++)
       fscanf(arqBase, "%c", &(novo.titulo[j]));
     /*guarda o numero do registro junto com o campo*/
-    sprintf(novo.nrr,"%d",i+1);   
+    novo.nrr = i+1;   
     
     vetor[i] = novo;
   }  
@@ -84,7 +80,7 @@ tipo_registro_pk  novopk(char *str_final, int numberOfPKs){
   printf("str_final = %s\n\n\n", str_final);
 
   /*imprime no vetor nrr o numero numberOfPks (transformando int em string)*/
-  sprintf(novo.nrr,"%d",numberOfPKs);
+  novo.nrr = numberOfPKs;
   return novo;
 }
 
@@ -117,7 +113,7 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
 printf("\nimpressao do vetor de chaves primarias:\n");
 for(i=0; i< numberOfPKs; i++){ 
   printf("vetor.titulo = %s\n", vetor[i].titulo);
-  printf("vetor.nrr = %s\n", vetor[i].nrr);
+  printf("vetor.nrr = %d\n", vetor[i].nrr);
  }
 
 return 0;
@@ -135,14 +131,9 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
   for(i=0; i<numberOfPKs; i++)
     {
       for(j=0; j<TAM_TIT; j++){
-	printf("%c", vetor[i].titulo[j]);
 	fprintf(arq_pk, "%c", vetor[i].titulo[j]);
       }
-      /*for(j=0; j<TAM_NRR; j++){*/
-      printf("%s", vetor[i].nrr);  
-      fprintf(arq_pk, "%s", vetor[i].nrr);     
-      /* }*/      
-      
+      fprintf(arq_pk, "%d", vetor[i].nrr);     
     }
 }
 
@@ -197,7 +188,7 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
   int NRR;
   char titulo_procurado[MAX_TIT];
   tipo_registro_pk *elto_encontrado;
-  /* tipo_registro_pk * vetor_de_registros = malloc(sizeof(tipo_registro_pk)*n_registros);*/
+
   if(n_registros==0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
     return;
@@ -216,7 +207,7 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
   }
   /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
   else {
-    NRR=atoi((*elto_encontrado).nrr);
+    NRR=((*elto_encontrado).nrr);
     busca_registro(NRR, arq_base); /* funcao definida em base.c */
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
     printf("sua pasta atual e abra o arquivo ./tp2.html\n\n"); 
