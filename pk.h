@@ -26,5 +26,5 @@ void consulta_pk(int n_registros, ap_tipo_registro_pk vetor_de_registros, FILE *
 void lista_registros( int n_registros,  ap_tipo_registro_pk vetor_de_registros);
 
 
-/* /\*\/\* Consulta nos registros do vetor de PKs, se o titulo passado como parametro existe nesse vetor, e portanto no arquivo PK.dat, caso exista a função retorna o NRR desse registro, caso titulo nao exista, então zero é retornado *\/ */
-/* int consultarPK(pk *vetor, int *numberOfPKs, char *titulo); *\/ */
+
+

@@ -75,10 +75,18 @@ void Insere_titulo(char *str_final) {
 	str_final[i]=' ';
       }
     }
-    
+
+
+/*     /\*funcao definida em pk.h que confere se o titulo ja esta */
+/*     sendo usado (a chave primaria tem que ser unica)*\/ */
+/*     resposta = titulo_repetido(); */
+
   } while(resposta==ERRO);
   
-  printf("Titulo lido com sucesso.\n");
+
+    printf("Titulo lido com sucesso.\n");
+
+
   return;
   
 }
@@ -437,6 +445,9 @@ void Insere_imagem(char *str_final) {
   return;
 }
 
+
+/*retira informacoes sobre obra de arte, gerando um arquivo .html com elas
+  chamada dentro da funcao consulta_pk, do arquivo pk.c*/
 void busca_registro(int NRR, FILE * arq_base) {
 
   FILE *arq_html;

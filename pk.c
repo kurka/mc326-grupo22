@@ -93,10 +93,15 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
   /*realoca vetor, para inserir novo elemento*/
   vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs));
 
-  printf("novo.titulo = %s\n\n\n", novo.titulo);    
   for(i=0; i< numberOfPKs; i++){ 
     
-    if(strcmp(novo.titulo, vetor[i].titulo) < 0){
+    if(strncmp(novo.titulo, vetor[i].titulo, TAM_TIT) == 0){
+      printf("Erro! Titulo inserido já existente!\n");
+      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+      return -1;  
+    }
+    
+    if(strncmp(novo.titulo, vetor[i].titulo, TAM_TIT) < 0){
       /*desloca os elementos depois da posicao a ser inserida*/
       for(j=numberOfPKs-2; j>=i; j--){
 	vetor[j+1] = vetor[j];
@@ -112,7 +117,9 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
 
 printf("\nimpressao do vetor de chaves primarias:\n");
 for(i=0; i< numberOfPKs; i++){ 
-  printf("vetor.titulo = %s\n", vetor[i].titulo);
+  printf("vetor.titulo = ");
+  for(j=0;j<TAM_TIT;j++)
+    printf("%c", vetor[i].titulo[j]);
   printf("vetor.nrr = %d\n", vetor[i].nrr);
  }
 
@@ -127,14 +134,13 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
   
   fseek(arq_pk,0,SEEK_SET);
   
-  printf("rotina de saida\n");
-  for(i=0; i<numberOfPKs; i++)
-    {
-      for(j=0; j<TAM_TIT; j++){
-	fprintf(arq_pk, "%c", vetor[i].titulo[j]);
-      }
-      fprintf(arq_pk, "%d", vetor[i].nrr);     
-    }
+  for(i=0; i<numberOfPKs; i++){
+    for(j=0; j<TAM_TIT; j++)
+      fprintf(arq_pk, "%c", vetor[i].titulo[j]);
+    
+    fprintf(arq_pk, "%d", vetor[i].nrr);     
+  }
+  
 }
 
 
