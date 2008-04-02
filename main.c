@@ -1,3 +1,4 @@
+
 /*Programa de criação e manipulação de um banco de dados 
 com informações sobre obras de arte
 Funções disponiveis:
@@ -18,7 +19,7 @@ int main() {
 
   char c,opcao,n_registros=0;
   char str_final[TAM_REGISTRO+1];
-  int res;
+  int res, pk;
   FILE *arq_base,*arq_pk;
   ap_tipo_registro_pk vetor_registros;
   tipo_registro_pk ultimo;
@@ -28,18 +29,40 @@ int main() {
   str_final[TAM_REGISTRO] = '\0';
 
  
-  arq_base=fopen("base22.dat","a");
-  arq_pk=fopen("pk.dat","w+");
+  arq_base=fopen("base22.dat","a+");
+  
+  /*pk indica se o arquivo pk.dat precisa 
+    ser gerado a partir da base(1 sim, 0 nao)*/
+  pk=0
+  arq_pk=fopen("pk.dat","r");
+  if(!arq_pk){
+    arq_pk=fopen("pk.dat","w");    
+    pk=1;
+  }
 
   /* Esta rotina retorna o numero de registros do arquivo da base de dados
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
 
+  printf("Numero de registros: %d\n\n",n_registros);
 
   /* Carrega um vetor com os registros ja existentes*/
-  vetor_registros = lerArquivoPK(arq_pk, n_registros);
-  printf("Numero de registros: %d\n\n",n_registros);
+
+  /* Se existirem no arquivo pk.dat, carrega 
+     registros vindos do arquivo*/
+  if(pk==0){
+    vetor_registros = lerArquivoPK(arq_pk, n_registros);
+    fclose(arq_pk);
+    /*fecha o arquivo com os registros atuais e abre agora para escrita*/
+    arq_pk=fopen("pk.dat","w");    
+  }
+  /* Caso o arquivo pk.dat nao exista, pega os valores da base (se existirem)
+     e coloca no vetor_registro, para serem adicionados ao arquivo pk.dat*/
+  if(pk==1)
+    vetor_registros = inserePKbase(arq_base, n_registros) 
+      
+
 
   /* Interface*/
   do {
@@ -93,7 +116,7 @@ int main() {
 
       /* Procurar por registro */
       case CONSULTA:
-	consulta_pk(n_registros,vetor_registros);
+      consulta_pk(n_registros,vetor_registros, arq_base);
 	printf("Consulta.\n\n");
 	break;
     }

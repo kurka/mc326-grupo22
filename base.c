@@ -437,13 +437,14 @@ void Insere_imagem(char *str_final) {
   return;
 }
 
-void busca_registro(int NRR) {
+void busca_registro(int NRR, FILE * arq_base) {
 
-  FILE *arq_base, *arq_html;
+  FILE *arq_html;
+    /* *arq_base, *arq_html;*/
   int i;
   char identificador[TAM_IMG];
 
-  arq_base=fopen("base22.dat","r");
+  /* arq_base=fopen("base22.dat","r");*/
 
   /* Desloca o cursor para o inicio do registro. */
   fseek(arq_base,(NRR-1)*TAM_REGISTRO,SEEK_SET);
@@ -507,7 +508,7 @@ void busca_registro(int NRR) {
   fprintf(arq_html,"<br></div></body></html>");
 
   fclose(arq_html);
-  fclose(arq_base);
+  /*  fclose(arq_base);*/
 
   return;
 }
