@@ -1,9 +1,13 @@
 /* Funcoes de operacoes a serem realizadas nos arquivos 
    referentes a chaves primarias */
 
-/*#include "defines.h"*/
+
 /* le todos os dados do arquivo PK.dat e os adiciona em um vetor, mantendo a ordem de registros, que é alfabética */
 ap_tipo_registro_pk lerArquivoPK(FILE *arq_pk, int numberOfPKs);
+
+/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
+  e cria os indices no arquivo.*/
+ap_tipo_registro_pk inserePKbase(FILE *arqBase, int numberOfPKs)
 
 /*pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
 tipo_registro_pk novopk(char *str_final, int numberOfPKs);
@@ -16,7 +20,7 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs);
 
 
 /* Consulta por chave primaria */
-void consulta_pk(int n_registros, ap_tipo_registro_pk vetor_de_registros);
+void consulta_pk(int n_registros, ap_tipo_registro_pk vetor_de_registros, FILE *arqBase);
 
 /* Lista todas as chaves primarias presentes*/
 void lista_registros( int n_registros,  ap_tipo_registro_pk vetor_de_registros);

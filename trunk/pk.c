@@ -9,7 +9,8 @@
 #include "base.h"
 #include "pk.h"
 
-/* le todos os dados do arquivo PK.dat e os adiciona em um vetor, mantendo a ordem de registros, que é alfabética */
+/* le todos os dados do arquivo PK.dat e os adiciona em um vetor,
+   mantendo a ordem de registros, que é alfabética */
 tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 {
   int i, j;
@@ -31,6 +32,36 @@ tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 
   return vetor;
 }
+
+
+/*(funcao auxiliar usada na funcao qsort)*/
+int compara_qsort(const void * a, const void * b) {
+  return(strcmp( (tipo_registro_pk*)vetor->titulo, 
+		 (tipo_registro_pk*)vetor->titulo));
+}
+
+/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
+  e cria os indices no arquivo.*/
+tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
+  
+  int i, j;
+  tipo_registro_pk novo;
+  tipo_registro_pk *vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
+
+  for(i=0;i<numberOfPKs;i++){
+    /*encontra a posicao onde o titulo esta registrado*/
+    fseek(arq_base,i*TAM_REGISTRO,SEEK_SET);     
+    /*copia o titulo*/
+    for(j=0; j<TAM_TIT; j++)
+      fscanf(arqBase, "%c", &(novo.titulo[j]));
+    /*guarda o numero do registro junto com o campo*/
+    sprintf(novo.nrr,"%d",i+1);   
+    
+    vetor[i] = novo;
+  }  
+  /*ordena o vetor em ordem alfabetica*/
+  qsort(vetor, numberOfPKs, sizeof(tipo_registro_pk), compara_qsort);} 
+
 
 /*pega o ultimo titulo lido e registra ele como novo, 
 para ser inserido no vetor de chaves primarias*/
@@ -171,10 +202,8 @@ void lista_registros(int n_registros, tipo_registro_pk *vetor_de_registros) {
 }
 
 
-/*compara titulo procurado com titulos presentes no registro de 
-  chaves primarias retornando 1 caso encontre e 0 caso nao encontre
-  (funcao auxiliar usada na funcao bsearch)*/
-int compara(const void * titulo_procurado, const void * vetor_de_registros) {
+/*(funcao auxiliar usada na funcao bsearch)*/
+int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
   return(strcmp( (char*)titulo_procurado, ((tipo_registro_pk*)vetor_de_registros)->titulo));
 }
 
@@ -182,7 +211,7 @@ int compara(const void * titulo_procurado, const void * vetor_de_registros) {
    Le o titulo procurado e verifica no arquivo de chaves primarias se ele
    esta la. Em caso positivo, chama uma funcao da biblioteca da base de dados
    que busca o registro e gera o HTML da consulta. */
-void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros) {
+void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *arq_base) {
 
   int NRR,teste;
   char titulo_procurado[MAX_TIT];
@@ -214,7 +243,7 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros) {
   printf("Teste == %d .",teste);
 
   /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, n_registros, sizeof(tipo_registro_pk), compara);
+  elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);
 
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
@@ -223,7 +252,7 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros) {
   /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
   else {
     NRR=atoi((*elto_encontrado).nrr);
-    busca_registro(NRR); /* funcao definida em base.c */
+    busca_registro(NRR, arq_base); /* funcao definida em base.c */
   }
 
   return;
