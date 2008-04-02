@@ -77,7 +77,6 @@ tipo_registro_pk  novopk(char *str_final, int numberOfPKs){
   for(i=0;i<TAM_TIT;i++)
     novo.titulo[i]=str_final[i];
 
-  printf("str_final = %s\n\n\n", str_final);
 
   /*imprime no vetor nrr o numero numberOfPks (transformando int em string)*/
   novo.nrr = numberOfPKs;
@@ -93,7 +92,7 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
   /*realoca vetor, para inserir novo elemento*/
   vetor = realloc(vetor, sizeof(tipo_registro_pk)*(numberOfPKs));
 
-  for(i=0; i< numberOfPKs; i++){ 
+  for(i=0; i<numberOfPKs-1; i++){ 
     
     if(strncmp(novo.titulo, vetor[i].titulo, TAM_TIT) == 0){
       printf("Erro! Titulo inserido já existente!\n");
@@ -110,18 +109,16 @@ int inserirPK(tipo_registro_pk *vetor, tipo_registro_pk novo, int numberOfPKs)
       break;
     }
   }
-  if(i==numberOfPKs)
-    i--;
-
+ 
   vetor[i] = novo;    
 
-printf("\nimpressao do vetor de chaves primarias:\n");
-for(i=0; i< numberOfPKs; i++){ 
-  printf("vetor.titulo = ");
-  for(j=0;j<TAM_TIT;j++)
-    printf("%c", vetor[i].titulo[j]);
-  printf("vetor.nrr = %d\n", vetor[i].nrr);
- }
+/* printf("\n>>>impressao do vetor de chaves primarias:\n"); */
+/* for(i=0; i< numberOfPKs; i++){  */
+/*   printf("vetor.titulo = "); */
+/*   for(j=0;j<TAM_TIT/5;j++) */
+/*     printf("%c", vetor[i].titulo[j]); */
+/*   printf("vetor.nrr = %d\n", vetor[i].nrr); */
+/*  } */
 
 return 0;
 }
