@@ -59,7 +59,7 @@ void Insere_titulo(char *str_final) {
 
       /* CASO DE ERRO */
       /* Caso a entrada seja maior que o tamanho limite */
-      if((i>=TAM_TIT) && (c!='\n')) {
+      if((i>=MAX_TIT) && (c!='\n')) {
 	resposta = come_excesso(c);
 	
 	if(resposta==ERRO) {
@@ -71,7 +71,7 @@ void Insere_titulo(char *str_final) {
     
     if(resposta==OK){
       /* Preenche o resto do vetor com espacos */
-      for(;i<TAM_TIT;i++) {
+      for(;i<MAX_TIT;i++) {
 	str_final[i]=' ';
       }
     }
@@ -440,11 +440,9 @@ void Insere_imagem(char *str_final) {
 void busca_registro(int NRR, FILE * arq_base) {
 
   FILE *arq_html;
-    /* *arq_base, *arq_html;*/
   int i;
   char identificador[TAM_IMG];
 
-  /* arq_base=fopen("base22.dat","r");*/
 
   /* Desloca o cursor para o inicio do registro. */
   fseek(arq_base,(NRR-1)*TAM_REGISTRO,SEEK_SET);

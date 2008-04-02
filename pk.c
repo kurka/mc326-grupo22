@@ -36,8 +36,8 @@ tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 
 /*(funcao auxiliar usada na funcao qsort)*/
 int compara_qsort(const void * vetora, const void * vetorb) {
-  return(strcmp( ((tipo_registro_pk *)vetora)->titulo, 
-		 ((tipo_registro_pk *)vetorb)->titulo));
+  return(strncmp( ((tipo_registro_pk *)vetora)->titulo, 
+		  ((tipo_registro_pk *)vetorb)->titulo, TAM_TIT));
 }
 
 /*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
@@ -183,7 +183,7 @@ void lista_registros(int n_registros, tipo_registro_pk *vetor_de_registros) {
     /* Para cada registro, insere o titulo caractere por caractere */
     for(i=0;i<n_registros;i++) {
       fprintf(arq_html,"<br>");
-      for(j=0;j<MAX_TIT;j++) {
+      for(j=0;j<TAM_TIT;j++) {
 	fprintf(arq_html,"%c",vetor_de_registros[i].titulo[j]);
       }
     }
@@ -199,7 +199,8 @@ void lista_registros(int n_registros, tipo_registro_pk *vetor_de_registros) {
 
 /*(funcao auxiliar usada na funcao bsearch)*/
 int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
-  return(strcmp( (char*)titulo_procurado, ((tipo_registro_pk*)vetor_de_registros)->titulo));
+  return(strncmp( (char*)titulo_procurado, 
+		  ((tipo_registro_pk*)vetor_de_registros)->titulo,TAM_TIT));
 }
 
 /* Funcao principal de consulta por chave primaria.
@@ -234,8 +235,11 @@ void consulta_pk(int n_registros, tipo_registro_pk *vetor_de_registros, FILE *ar
 /*     } */
 /*   } */
 
-  teste=strcmp(titulo_procurado,vetor_de_registros[0].titulo);
+  teste=strncmp(titulo_procurado,vetor_de_registros[0].titulo,TAM_TIT);
+  printf("titulo procurado = %s \n",titulo_procurado);
+  printf("titulo teste = %s \n",vetor_de_registros[0].titulo);
   printf("Teste == %d .",teste);
+
 
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);

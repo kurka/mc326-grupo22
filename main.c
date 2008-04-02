@@ -135,7 +135,6 @@ int main() {
       /* Procurar por registro */
       case CONSULTA:
       consulta_pk(n_registros,vetor_registros, arq_base);
-	printf("Consulta.\n\n");
 	break;
     }
 
