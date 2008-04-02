@@ -4,7 +4,7 @@
 /* Funcao de insercao na base */
 void Insere_base(FILE *arq_base, char * str_final);
 
-void busca_registro(int NRR);
+void busca_registro(int NRR, FILE *arq_base);
 
 /* ********************************* */
 /* Funcoes de tratamento de entradas */

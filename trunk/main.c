@@ -33,7 +33,7 @@ int main() {
   
   /*pk indica se o arquivo pk.dat precisa 
     ser gerado a partir da base(1 sim, 0 nao)*/
-  pk=0
+  pk=0;
   arq_pk=fopen("pk.dat","r");
   if(!arq_pk){
     arq_pk=fopen("pk.dat","w");    
@@ -60,7 +60,7 @@ int main() {
   /* Caso o arquivo pk.dat nao exista, pega os valores da base (se existirem)
      e coloca no vetor_registro, para serem adicionados ao arquivo pk.dat*/
   if(pk==1)
-    vetor_registros = inserePKbase(arq_base, n_registros) 
+    vetor_registros = inserePKbase(arq_base, n_registros);
       
 
 

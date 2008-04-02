@@ -35,9 +35,9 @@ tipo_registro_pk * lerArquivoPK(FILE *arqPK, int numberOfPKs)
 
 
 /*(funcao auxiliar usada na funcao qsort)*/
-int compara_qsort(const void * a, const void * b) {
-  return(strcmp( (tipo_registro_pk*)vetor->titulo, 
-		 (tipo_registro_pk*)vetor->titulo));
+int compara_qsort(const void * vetora, const void * vetorb) {
+  return(strcmp( ((tipo_registro_pk *)vetora)->titulo, 
+		 ((tipo_registro_pk *)vetorb)->titulo));
 }
 
 /*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
@@ -47,10 +47,10 @@ tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
   int i, j;
   tipo_registro_pk novo;
   tipo_registro_pk *vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
-
+  
   for(i=0;i<numberOfPKs;i++){
     /*encontra a posicao onde o titulo esta registrado*/
-    fseek(arq_base,i*TAM_REGISTRO,SEEK_SET);     
+    fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);     
     /*copia o titulo*/
     for(j=0; j<TAM_TIT; j++)
       fscanf(arqBase, "%c", &(novo.titulo[j]));
@@ -60,7 +60,10 @@ tipo_registro_pk * inserePKbase(FILE *arqBase, int numberOfPKs){
     vetor[i] = novo;
   }  
   /*ordena o vetor em ordem alfabetica*/
-  qsort(vetor, numberOfPKs, sizeof(tipo_registro_pk), compara_qsort);} 
+  qsort(vetor, numberOfPKs, sizeof(tipo_registro_pk), compara_qsort);
+
+  return vetor;
+} 
 
 
 /*pega o ultimo titulo lido e registra ele como novo, 
