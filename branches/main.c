@@ -32,9 +32,8 @@ int main() {
   /*aloca memoria para ser usada durante a execucao*/
   realoca_memoria(vetor_registros, limite);
   /* Atribui o caractere '\0' ao final da string 
-     para imprimir corretamente o string no vetor */  
+     para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
-
  
   arq_base=fopen("base22.dat","a+");
   

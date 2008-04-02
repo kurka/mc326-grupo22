@@ -19,7 +19,7 @@ int novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite);
 int insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite);
 
 /* salva todos os registros do nosso vetor de PKs no arquivo PK.dat*/
-void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg);
+void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
 
 
 /* Consulta por chave primaria */

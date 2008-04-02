@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
+
 
 
 /*sempre que o vetor que armazena as chaves primarias estiver cheio, 
@@ -17,11 +19,16 @@ void realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
   ap_tipo_registro_pk temp;
 
   limite[1]  = 2*(limite[1]);
-  printf(">>>vetor (re)alocado com %d posicoes\n", (limite[1]));
+  printf(">>>vetor (re)alocado com %d posicoes\n", (sizeof(tipo_registro_pk)*(limite[1])));
   
-  temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*limite[1]);
+  if(limite[1]==20)
+    vetor_pk = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1]));
 
-  vetor_pk = temp;
+ else{
+   temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*(limite[1]));
+   vetor_pk = temp;
+ }
+
 }
 
 
@@ -63,6 +70,7 @@ void inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_re
   int i, j;
   tipo_registro_pk novo;
   
+  printf("n_registros dentro do inserePKBase = %d", n_registros);
   for(i=0;i<n_registros;i++){
     /*encontra a posicao onde o titulo esta registrado*/
     fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);     
@@ -133,53 +141,55 @@ int insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
   int i, j;
  
   printf(">>>insercao da chave primaria %d\n", limite[0]);
- 
-
-  /*verifica se ainda cabe dados no vetor (limite 0 contem 
+  
+  
+  /*verifica se ainda cabe dados no vetor (limite 0 contem
     o numero de chaves primariase limite 1 o tamanho do vetor)*/
-   if(limite[0] > limite[1])
-     realoca_memoria(vetor_pk, limite);   
-   
-  if((limite[0])==1){
-    printf("pelo menos eu entro aqui");
-    vetor_pk[limite[0]-1]=novo;
-    return 0;
-  }
+/*   if(limite[0] > limite[1]) */
+/*     realoca_memoria(vetor_pk, limite); */
+  
+/*   if((limite[0])==1){ */
+/*     printf("pelo menos eu entro aqui"); */
+/*     vetor_pk[limite[0]-1]=novo; */
+/*     return 0; */
+/*   } */
+  
+  for(i=0; i<limite[0]; i++){
+    
+/*     if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) == 0){ */
+/*       printf("Erro! Titulo inserido já existente!\n"); */
+/*       printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n"); */
+/*       return 1; */
+/*     } */
+    
+/*     if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) < 0){ */
+/*       /\*desloca os elementos depois da posicao a ser inserida*\/ */
+/*       for(j=limite[0]-2; j>=i; j--){ */
+/* 	vetor_pk[j+1] = vetor_pk[j]; */
+/*       } */
+/*       break; */
+/*     } */
 
-  for(i=0; i<limite[0]; i++){ 
     
-    if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) == 0){
-      printf("Erro! Titulo inserido já existente!\n");
-      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
-      return 1;  
-    }
-    
-    if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) < 0){
-      /*desloca os elementos depois da posicao a ser inserida*/
-      for(j=limite[0]-2; j>=i; j--){
-	vetor_pk[j+1] = vetor_pk[j];
-      }
-      
-      break;
-    }
   }
   if(i==limite[0])
     i--;
+
+  vetor_pk[i] = novo; 
   
-  vetor_pk[i] = novo;    
-  
-  printf("\nimpressao do vetor de chaves primarias:\n");
-  for(i=0; i< limite[0]; i++){ 
-    printf("vetor.titulo = ");
-    for(j=0;j<TAM_TIT;j++)
-      printf("%c", vetor_pk[i].titulo[j]);
-    printf("vetor.nrr = %d\n", vetor_pk[i].nrr);
-  }
+/*   printf("\nimpressao do vetor de chaves primarias:\n"); */
+/*   for(i=0; i<limite[0]; i++){ */
+/*     printf("vetor.titulo = "); */
+/*     for(j=0;j<TAM_TIT;j++) */
+/*       printf("%c", vetor_pk[i].titulo[j]); */
+/*     printf("vetor.nrr = %d\n", vetor_pk[i].nrr); */
+/*   } */
   
   return 0;
+  
 }
-
-
+  
+  
 /* salva todos os registros do nosso vetor de PKs no arquivo PK.dat*/
 void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
 {
