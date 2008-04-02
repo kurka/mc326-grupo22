@@ -3,7 +3,7 @@
 
 /*sempre que o vetor que armazena as chaves primarias estiver cheio, 
   ele eh dobrado de tamanho (vetor dinamico dobravel)*/
-void realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
+ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
 
 /* le todos os dados do arquivo PK.dat e os adiciona em um vetor, mantendo a ordem de registros, que é alfabética */
 void lerArquivoPK(FILE *arq_pk, ap_tipo_registro_pk vetor, int * limite, int n_registros);

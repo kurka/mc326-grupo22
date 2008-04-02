@@ -12,23 +12,27 @@
 
 
 
-/*sempre que o vetor que armazena as chaves primarias estiver cheio, 
+/*sempre que o vetor que armazena as chaves primarias estiver cheio,
   ele eh dobrado de tamanho (vetor dinamico dobravel)*/
-void realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
+ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
   
   ap_tipo_registro_pk temp;
 
-  limite[1]  = 2*(limite[1]);
-  printf(">>>vetor (re)alocado com %d posicoes\n", (sizeof(tipo_registro_pk)*(limite[1])));
+  limite[1] = 2*(limite[1]);
+  printf(">>>vetor [re]alocado com %d posicoes\n", (limite[1]) );
   
-  if(limite[1]==20)
-    vetor_pk = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1]));
+  if(limite[1]==2*MEM_INIT){
+    printf("to fazendo o malloc\n");
+    temp = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1]));
+}
 
- else{
-   temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*(limite[1]));
-   vetor_pk = temp;
- }
+  else{
+    printf("to fazendo o realloc\n");
+    temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*(limite[1]));
+/*     vetor_pk = temp; */
+  }
 
+  return temp;
 }
 
 
@@ -59,21 +63,20 @@ void lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int * limite, int n_re
 
 /*(funcao auxiliar usada na funcao qsort)*/
 int compara_qsort(const void * vetora, const void * vetorb) {
-  return(strncmp( ((tipo_registro_pk *)vetora)->titulo, 
+  return(strncmp( ((tipo_registro_pk *)vetora)->titulo,
 		  ((tipo_registro_pk *)vetorb)->titulo, TAM_TIT));
 }
 
-/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
+/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
   e cria os indices no arquivo.*/
 void inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_registros){
   
   int i, j;
   tipo_registro_pk novo;
   
-  printf("n_registros dentro do inserePKBase = %d", n_registros);
   for(i=0;i<n_registros;i++){
     /*encontra a posicao onde o titulo esta registrado*/
-    fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);     
+    fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);
     /*copia o titulo*/
     for(j=0; j<TAM_TIT; j++)
       fscanf(arqBase, "%c", &(novo.titulo[j]));
@@ -81,14 +84,14 @@ void inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_re
     limite[0]++;
 
     /*guarda o numero do registro*/
-    novo.nrr = limite[0];   
+    novo.nrr = limite[0];
     
 
     printf("\nimpressao do vetor de chaves primarias a ser inseridas:\n");
-      printf("novo.titulo = ");
-      for(j=0;j<TAM_TIT;j++)
-	printf("%c", novo.titulo[j]);
-      printf("novo.nrr = %d\n", novo.nrr);
+    printf("novo.titulo = ");
+    for(j=0;j<TAM_TIT;j++)
+      printf("%c", novo.titulo[j]);
+    printf("novo.nrr = %d\n", novo.nrr);
 
     
 
@@ -99,15 +102,15 @@ void inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_re
       printf("Erro na leitura de chaves primarias do arquivo base.dat!\n");
       return;
     }
-  }  
-  /*ordena o vetor em ordem alfabetica*/ 
+  }
+  /*ordena o vetor em ordem alfabetica*/
   /*  qsort(vetor, numberOfPKs, sizeof(tipo_registro_pk), compara_qsort); */
   return;
-} 
+}
 
 
-/*pega o ultimo titulo lido e registra ele como novo, 
-para ser inserido no vetor de chaves primarias*/
+/*pega o ultimo titulo lido e registra ele como novo,
+  para ser inserido no vetor de chaves primarias*/
 int novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite){
 
   int i;
@@ -140,51 +143,62 @@ int novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite){
 int insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
   int i, j;
  
-  printf(">>>insercao da chave primaria %d\n", limite[0]);
+  printf(">>>%d) insercao da chave primaria %d\n", limite[0], novo.nrr);
   
   
-  /*verifica se ainda cabe dados no vetor (limite 0 contem
-    o numero de chaves primariase limite 1 o tamanho do vetor)*/
-/*   if(limite[0] > limite[1]) */
-/*     realoca_memoria(vetor_pk, limite); */
+  /*  verifica se ainda cabe dados no vetor (limite 0 contem 
+     o numero de chaves primariase limite 1 o tamanho do vetor) */
+  if(limite[0] > limite[1])
+    vetor_pk = realoca_memoria(vetor_pk, limite);
   
-/*   if((limite[0])==1){ */
-/*     printf("pelo menos eu entro aqui"); */
-/*     vetor_pk[limite[0]-1]=novo; */
-/*     return 0; */
-/*   } */
+  /*     if((limite[0])==1){ */
+  /*       vetor_pk[limite[0]-1]=novo; */
+  /*       return 0; */
+  /* } */
   
-  for(i=0; i<limite[0]; i++){
+  for(i=0; i<limite[0]-1; i++){
     
-/*     if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) == 0){ */
-/*       printf("Erro! Titulo inserido já existente!\n"); */
-/*       printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n"); */
-/*       return 1; */
-/*     } */
+
+    if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) == 0){
+      printf("Erro! Titulo inserido já existente!\n");
+      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+      return 1;
+    }
     
 /*     if(strncmp(novo.titulo, vetor_pk[i].titulo, TAM_TIT) < 0){ */
 /*       /\*desloca os elementos depois da posicao a ser inserida*\/ */
 /*       for(j=limite[0]-2; j>=i; j--){ */
-/* 	vetor_pk[j+1] = vetor_pk[j]; */
+/*   	vetor_pk[j+1] = vetor_pk[j]; */
 /*       } */
 /*       break; */
 /*     } */
 
     
   }
-  if(i==limite[0])
-    i--;
+ /*  if(i==limite[0]) */
+/*     i--; */
+  printf("i = %d\n", i);  
+  vetor_pk[limite[0]-1] = novo;  
+  
+  printf("\nimpressao do vetor de chaves primarias:\n");
+  for(i=0; i<limite[0]; i++){
+    printf("vetor.titulo = ");
+    for(j=0;j<TAM_TIT/5;j++)
+      printf("%c", vetor_pk[i].titulo[j]);
+    printf("vetor.nrr = %d\n", vetor_pk[i].nrr);
+  }
+  
+  /*ordena o vetor em ordem alfabetica*/
+  qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort); 
 
-  vetor_pk[i] = novo; 
-  
-/*   printf("\nimpressao do vetor de chaves primarias:\n"); */
-/*   for(i=0; i<limite[0]; i++){ */
-/*     printf("vetor.titulo = "); */
-/*     for(j=0;j<TAM_TIT;j++) */
-/*       printf("%c", vetor_pk[i].titulo[j]); */
-/*     printf("vetor.nrr = %d\n", vetor_pk[i].nrr); */
-/*   } */
-  
+  printf("\nimpressao do vetor de chaves primarias (2):\n");
+  for(i=0; i<limite[0]; i++){
+    printf("vetor.titulo = ");
+    for(j=0;j<TAM_TIT/5;j++)
+      printf("%c", vetor_pk[i].titulo[j]);
+    printf("vetor.nrr = %d\n", vetor_pk[i].nrr);
+  }
+
   return 0;
   
 }
@@ -209,7 +223,7 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
 
 
 /* Funcao de listagem de registros. A partir do arquivo de chaves primarias,
- gera um arquivo em html com todos os titulos das obras. */
+   gera um arquivo em html com todos os titulos das obras. */
 void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 
   FILE *arq_html;
