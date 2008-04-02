@@ -106,9 +106,9 @@ int main() {
       
       /* Insercao no catalogo */
     case INSERIR:
-      res=-1;
+      res=0;
       /*repete a insercao ate inserir um titulo novo*/
-      while(res==-1){
+      while(res==0){
 	/*le da entrada padrao os dados da obra*/
 	Insere_base(arq_base, str_final);
 	/*pega o ultimo titulo lido e insere no vetor de registros*/
