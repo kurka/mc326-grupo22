@@ -50,15 +50,17 @@ int main() {
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
-
-  printf(">>>Numero de registros: %d\n\n",n_registros);
+  
+  if(DEBUG)
+    printf(">>>Numero de registros: %d\n\n",n_registros);
 
   /* Carrega um vetor com os registros ja existentes*/
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo*/
   if(pk!=0){
-    printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
+    if(DEBUG)
+      printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
     vetor_registros = lerArquivoPK(arq_pk, n_registros);
     fclose(arq_pk);
     /*fecha o arquivo com os registros atuais*/
@@ -67,7 +69,9 @@ int main() {
      da base (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
   if(pk==0){
-    printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
+   
+    if(DEBUG)
+      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
     arq_pk=fopen("pk.dat","w");    
     vetor_registros = inserePKBase(arq_base, n_registros);
   }
@@ -114,7 +118,8 @@ int main() {
 	if(res==-1)	
 	  n_registros--;
       }
-      printf(">>>Numero de registros: %d\n\n",n_registros);
+      if(DEBUG)
+	printf(">>>Numero de registros: %d\n\n",n_registros);
       fprintf(arq_base,"%s",str_final);
       printf("Obra adicionada com sucesso.\n\n\n");
       break;
