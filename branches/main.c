@@ -30,8 +30,8 @@ int main() {
   limite[0] = 0;
   limite[1] = MEM_INIT+1;
   /*aloca memoria para ser usada durante a execucao*/
-/*   vetor_registros =  realoca_memoria(vetor_registros, limite); */
-  vetor_registros = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1])*2); 
+   vetor_registros =  realoca_memoria(vetor_registros, limite); 
+/*  vetor_registros = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1])*2); */
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
