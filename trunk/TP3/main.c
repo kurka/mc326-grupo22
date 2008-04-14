@@ -24,7 +24,7 @@ int main() {
   ap_tipo_registro_pk vetor_registros;
   tipo_registro_pk ultimo;
   
-   /* Atribui o caractere '\0' ao final da string 
+  /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no vetor */  
   str_final[TAM_REGISTRO] = '\0';
 
