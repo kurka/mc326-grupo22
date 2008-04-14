@@ -146,8 +146,13 @@ int main() {
     arq_pk=fopen("pk.dat","w");    
 
   /*guarda o indice de chaves primarias no arquivo*/  
+  if(DEBUG)
+    printf(">>>Salvando arquivos e liberando memoria\n");
   salvarArquivoPK(vetor_registros, arq_pk, n_registros);
-
+  /* if(n_registros) 
+     free(vetor_registros);*/
+  if(DEBUG)
+    printf(">>>Fim da execucao!\n");
   /*fecha os arquivos*/
   fclose(arq_pk);
   fclose(arq_base);
