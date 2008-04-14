@@ -44,8 +44,12 @@ tipo_registro_pk * inserePKBase(FILE *arqBase, int numberOfPKs){
   
   int i, j;
   tipo_registro_pk novo;
-  tipo_registro_pk *vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
-  
+  tipo_registro_pk *vetor;
+
+  if(numberOfPKs)
+    vetor = malloc(sizeof(tipo_registro_pk)*(numberOfPKs));
+ 
+
   for(i=0;i<numberOfPKs;i++){
     /*encontra a posicao onde o titulo esta registrado*/
     fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);     
@@ -137,7 +141,6 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int numberOfPKs)
     
     fprintf(arq_pk, "%d", vetor[i].nrr);     
   }
-  
 }
 
 

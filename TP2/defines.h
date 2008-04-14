@@ -23,7 +23,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_IMG 9
 #define MAX_IMG 450
 #define TAM_FORM 3
-#define DEBUG 0  /*if(DEBUG) imprime etapas e outras infos para debugar*/
+#define DEBUG 0 /*if(DEBUG) imprime etapas e outras infos para debugar*/
 
 
 
