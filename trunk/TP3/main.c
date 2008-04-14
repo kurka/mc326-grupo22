@@ -137,7 +137,6 @@ int main() {
     
   } while(opcao!=SAIR);
   
-  printf("Obrigado por usar nosso programa!\n\n");
 
   
   /* se o arquivo nao era vazio, abre soh no final, 
