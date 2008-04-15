@@ -148,8 +148,8 @@ int main() {
   if(DEBUG)
     printf(">>>Salvando arquivos e liberando memoria\n");
   salvarArquivoPK(vetor_registros, arq_pk, n_registros);
-  /* if(n_registros) 
-     free(vetor_registros);*/
+  if(n_registros) 
+    free(vetor_registros);
   if(DEBUG)
     printf(">>>Fim da execucao!\n");
   /*fecha os arquivos*/
