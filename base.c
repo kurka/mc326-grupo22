@@ -512,6 +512,7 @@ void busca_registro(int NRR, FILE * arq_base) {
   fprintf(arq_html,"<br></div></body></html>");
 
   fclose(arq_html);
+  /*  fclose(arq_base);*/
 
   return;
 }

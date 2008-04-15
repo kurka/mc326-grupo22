@@ -1,4 +1,4 @@
-min: main.o base.o pk.o
+main: main.o base.o pk.o
 	gcc -ggdb -ansi -pedantic -Wall -lefence main.o base.o pk.o -o tp2
 
 main.o: main.c base.h pk.h defines.h
