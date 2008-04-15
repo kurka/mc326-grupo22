@@ -1,2 +1,0 @@
-/* Definicao das funcoes de manipulacao
-   no arquivo de chaves secundarias. */

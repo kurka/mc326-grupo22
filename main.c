@@ -22,12 +22,19 @@ int main() {
   int res, pk;
   FILE *arq_base,*arq_pk;
   ap_tipo_registro_pk vetor_registros;
-  tipo_registro_pk ultimo;
-  
-  /* Atribui o caractere '\0' ao final da string 
-     para imprimir corretamente o string no vetor */  
-  str_final[TAM_REGISTRO] = '\0';
+  int limite[2];
 
+  /*limite possui no primeiro o numero de registros
+    e no segundo a quantidade de memoria alocada 
+    no vetor de registros*/
+  limite[0] = 0;
+  limite[1] = MEM_INIT+1;
+  /*aloca memoria para ser usada durante a execucao*/
+   vetor_registros =  realoca_memoria(vetor_registros, limite); 
+/*  vetor_registros = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1])*2); */
+  /* Atribui o caractere '\0' ao final da string 
+     para imprimir corretamente o string no arquivo */  
+  str_final[TAM_REGISTRO] = '\0';
  
   arq_base=fopen("base22.dat","a+");
   
@@ -50,18 +57,16 @@ int main() {
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
-  
-  if(DEBUG)
-    printf(">>>Numero de registros: %d\n\n",n_registros);
+
+  printf(">>>Numero de registros: %d\n",n_registros);
 
   /* Carrega um vetor com os registros ja existentes*/
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo*/
   if(pk!=0){
-    if(DEBUG)
-      printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
-    vetor_registros = lerArquivoPK(arq_pk, n_registros);
+    printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
+    lerArquivoPK(arq_pk, vetor_registros, limite, n_registros);
     fclose(arq_pk);
     /*fecha o arquivo com os registros atuais*/
   }
@@ -69,11 +74,9 @@ int main() {
      da base (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
   if(pk==0){
-   
-    if(DEBUG)
-      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
+    printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
     arq_pk=fopen("pk.dat","w");    
-    vetor_registros = inserePKBase(arq_base, n_registros);
+    inserePKBase(arq_base, vetor_registros, limite, n_registros);
   }
 
 
@@ -103,40 +106,34 @@ int main() {
       
       /* Insercao no catalogo */
     case INSERIR:
-      res=-1;
+      res=1;
       /*repete a insercao ate inserir um titulo novo*/
-      while(res==-1){
+      while(res==1){
 	/*le da entrada padrao os dados da obra*/
 	Insere_base(arq_base, str_final);
-	n_registros++;
-	/*pega o ultimo titulo lido*/
-	ultimo = novopk(str_final, n_registros);
-	/*guarda a chave primaria no vetor_registros 
-	  (conferindo se eh unica)*/
-	res = inserirPK(vetor_registros, ultimo, n_registros);
-	
-	if(res==-1)	
-	  n_registros--;
+	/*pega o ultimo titulo lido e insere no vetor de registros*/
+	res = novopk(str_final, vetor_registros, limite);
+
       }
-      if(DEBUG)
-	printf(">>>Numero de registros: %d\n\n",n_registros);
+      printf(">>>Numero de registros: %d\n\n",limite[0]);
       fprintf(arq_base,"%s",str_final);
       printf("Obra adicionada com sucesso.\n\n\n");
       break;
       
       /* Listar os registros do catalogo */
     case LISTAR:
-      lista_registros(n_registros,vetor_registros);
+      lista_registros(limite[0],vetor_registros);
       break;
       
       /* Procurar por registro */
     case CONSULTA:
-      consulta_pk(n_registros,vetor_registros, arq_base);
+      consulta_pk(limite[0],vetor_registros, arq_base);
       break;
     }
     
   } while(opcao!=SAIR);
   
+  printf("Obrigado por usar nosso programa!\n\n");
 
   
   /* se o arquivo nao era vazio, abre soh no final, 
@@ -145,13 +142,8 @@ int main() {
     arq_pk=fopen("pk.dat","w");    
 
   /*guarda o indice de chaves primarias no arquivo*/  
-  if(DEBUG)
-    printf(">>>Salvando arquivos e liberando memoria\n");
-  salvarArquivoPK(vetor_registros, arq_pk, n_registros);
-  if(n_registros) 
-    free(vetor_registros);
-  if(DEBUG)
-    printf(">>>Fim da execucao!\n");
+  salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
+
   /*fecha os arquivos*/
   fclose(arq_pk);
   fclose(arq_base);
