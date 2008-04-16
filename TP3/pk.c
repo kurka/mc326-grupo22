@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
+#include <ctype.h>
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
@@ -162,7 +163,7 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
   }
   /* Caso haja, gera o arquivo de consulta em HTML */
   else {
-    arq_html=fopen("tp2.html","w");
+    arq_html=fopen("tp3.html","w");
     /* Cabecalho do arquivo */
     fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
     fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>");
@@ -176,7 +177,7 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
     fprintf(arq_html,"<br></div></body></html>");
     fclose(arq_html);
     printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n");
-    printf("sua pasta atual e abra o arquivo ./tp2.html\n\n");
+    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n");
   }
 
   return;
@@ -185,6 +186,13 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 
 /*(funcao auxiliar usada na funcao bsearch)*/
 int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
+/*   int i; */
+/*   for(i=0;i<MAX_TIT;i++){ */
+/*     tolower((char *)titulo_procurado[i]); */
+/*     tolower((ap_tipo_registro_pk)vetor_de_registros->titulo[i]); */
+   
+/*   } */
+
   return(strncmp( (char*)titulo_procurado, 
 		  ((tipo_registro_pk*)vetor_de_registros)->titulo,TAM_TIT));
 }
@@ -193,11 +201,12 @@ int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registr
    Le o titulo procurado e verifica no arquivo de chaves primarias se ele
    esta la. Em caso positivo, chama uma funcao da biblioteca da base de dados
    que busca o registro e gera o HTML da consulta. */
-void consulta_pk(int limite_reg, tipo_registro_pk *vetor_de_registros, FILE *arq_base) {
+void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
 
-  int NRR;
-  char titulo_procurado[MAX_TIT];
-  tipo_registro_pk *elto_encontrado;
+  int NRR, i, j;
+  char titulo_procurado[MAX_TIT], titulo_procurado_low[MAX_TIT];
+  ap_tipo_registro_pk elto_encontrado;
+  ap_tipo_registro_pk vetor_de_registros_low = malloc(sizeof(tipo_registro_pk)*limite_reg); 
 
   if(limite_reg==0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -208,8 +217,19 @@ void consulta_pk(int limite_reg, tipo_registro_pk *vetor_de_registros, FILE *arq
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado, vetor_de_registros, 0);
 
+  for(i=0;i<MAX_TIT;i++)
+    titulo_procurado_low[i] = (char)tolower(titulo_procurado[i]);
+
+  for(i=0;i<limite_reg;i++){
+    for(j=0;j<MAX_TIT;j++){
+      vetor_de_registros_low[i].titulo[j] = (char)tolower(vetor_de_registros[i].titulo[j]);
+      vetor_de_registros_low[i].nrr = vetor_de_registros[i].nrr;
+    }
+  }
+
+
   /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
+  elto_encontrado=bsearch(titulo_procurado_low, vetor_de_registros_low, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
 
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
@@ -220,8 +240,10 @@ void consulta_pk(int limite_reg, tipo_registro_pk *vetor_de_registros, FILE *arq
     NRR=((*elto_encontrado).nrr);
     busca_registro(NRR, arq_base); /* funcao definida em base.c */
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo ./tp2.html\n\n"); 
+    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n"); 
   }
+
+  free(vetor_de_registros_low);
 
   return;
 }
