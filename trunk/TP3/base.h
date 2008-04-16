@@ -26,3 +26,5 @@ void Insere_imagem(char *str_final);
 char come_espaco(char c);
 /* Funcao que recebe caracteres alem do esperado pelo campo */
 int come_excesso(char c);
+/*funcao que verifica se titulo ja foi inserido anteriormente (case insensitive)*/
+int checa_redundancia_tit(char * str_final, ap_tipo_registro_pk vetor, int n_registros);

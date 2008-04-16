@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
@@ -77,15 +78,10 @@ void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) 
       }
     }
 
-  for(i=0; i<n_registros; i++){ 
-    if(strncmp(str_final, vetor[i].titulo, TAM_TIT) == 0){
-      printf("Erro! Titulo inserido já existente!\n");
-      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
-      resposta = ERRO;
-      break;
-    }
 
-  }
+    resposta = checa_redundancia_tit(str_final, vetor, n_registros);
+
+
 
   } while(resposta==ERRO);
   
@@ -467,7 +463,7 @@ void busca_registro(int NRR, FILE * arq_base) {
 
   /* Geracao do arquivo de consulta em HTML: */
 
-  arq_html=fopen("tp2.html","w");
+  arq_html=fopen("tp3.html","w");
 
   /* Cabecalho do arquivo */
   fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\"><br>\n");
@@ -557,4 +553,27 @@ int come_excesso(char c){
     c=getchar();
   }
   return(resposta);
+}
+
+/*funcao que verifica se titulo ja foi inserido anteriormente (case insensitive)*/
+int checa_redundancia_tit(char * str_final, ap_tipo_registro_pk vetor, int n_registros){
+  
+  int i, j;
+  
+  for(i=0; i<n_registros; i++){ 
+    for(j=0; j<TAM_TIT; j++){ 
+
+      if(tolower(str_final[j]) != tolower(vetor[i].titulo[j]))
+	break;
+
+      if(j == TAM_TIT-1){
+	printf("Erro! Titulo inserido já existente!\n");
+	printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+	return ERRO;
+      }
+
+    }
+  }
+ 
+  return OK;     
 }
