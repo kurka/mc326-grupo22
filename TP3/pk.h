@@ -29,5 +29,16 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 void lista_registros( int limite_reg,  ap_tipo_registro_pk vetor_de_registros);
 
 
+/*funcoes auxiliares*/
+
+/*funcao auxiliar usada na funcao qsort*/
+int compara_qsort(const void * vetora, const void * vetorb);
+
+/*funcao analoga a strncmp, mas insensivel a maiusculas/minusculas*/
+int strncmpinsensitive(char * a, char * b, int size);
+
+
+/*funcao auxiliar usada na funcao bsearch*/
+int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros);
 
 

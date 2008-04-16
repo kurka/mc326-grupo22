@@ -103,12 +103,6 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
   return vetor;
 }
 
-/*(funcao auxiliar usada na funcao qsort)*/
-int compara_qsort(const void * vetora, const void * vetorb) {
-  return(strncmp( ((tipo_registro_pk *)vetora)->titulo,
-		  ((tipo_registro_pk *)vetorb)->titulo, TAM_TIT));
-}
-
 
 /* insere um novo registro no nosso vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
@@ -183,30 +177,16 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
   return;
 }
 
-
-/*(funcao auxiliar usada na funcao bsearch)*/
-int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
-/*   int i; */
-/*   for(i=0;i<MAX_TIT;i++){ */
-/*     tolower((char *)titulo_procurado[i]); */
-/*     tolower((ap_tipo_registro_pk)vetor_de_registros->titulo[i]); */
-   
-/*   } */
-
-  return(strncmp( (char*)titulo_procurado, 
-		  ((tipo_registro_pk*)vetor_de_registros)->titulo,TAM_TIT));
-}
-
 /* Funcao principal de consulta por chave primaria.
    Le o titulo procurado e verifica no arquivo de chaves primarias se ele
    esta la. Em caso positivo, chama uma funcao da biblioteca da base de dados
    que busca o registro e gera o HTML da consulta. */
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
 
-  int NRR, i, j;
-  char titulo_procurado[MAX_TIT], titulo_procurado_low[MAX_TIT];
+  int NRR;
+  char titulo_procurado[MAX_TIT];
   ap_tipo_registro_pk elto_encontrado;
-  ap_tipo_registro_pk vetor_de_registros_low = malloc(sizeof(tipo_registro_pk)*limite_reg); 
+
 
   if(limite_reg==0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -217,20 +197,9 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado, vetor_de_registros, 0);
 
-  for(i=0;i<MAX_TIT;i++)
-    titulo_procurado_low[i] = (char)tolower(titulo_procurado[i]);
-
-  for(i=0;i<limite_reg;i++){
-    for(j=0;j<MAX_TIT;j++){
-      vetor_de_registros_low[i].titulo[j] = (char)tolower(vetor_de_registros[i].titulo[j]);
-      vetor_de_registros_low[i].nrr = vetor_de_registros[i].nrr;
-    }
-  }
-
-
   /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(titulo_procurado_low, vetor_de_registros_low, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
-
+  elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
+  
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     printf("O titulo nao foi encontrado.\n\n");
@@ -243,8 +212,36 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
     printf("sua pasta atual e abra o arquivo ./tp3.html\n\n"); 
   }
 
-  free(vetor_de_registros_low);
-
   return;
 }
- 
+
+
+/**************************************/
+/*         Funcoes Auxiliares         */
+/**************************************/
+
+
+/*funcao auxiliar usada na funcao qsort*/
+int compara_qsort(const void * vetora, const void * vetorb) {
+  return(strncmp( ((tipo_registro_pk *)vetora)->titulo,
+		  ((tipo_registro_pk *)vetorb)->titulo, TAM_TIT));
+}
+
+/*funcao analoga a strncmp, mas insensivel a maiusculas/minusculas*/
+int strncmpinsensitive(char * a, char * b, int size){
+  int i;
+  for(i=0; i<size;i++){
+    if( tolower(a[i]) > tolower(b[i]) )
+      return 1;
+    if( tolower(a[i]) < tolower(b[i]) )
+      return -1;
+  }
+  return 0;
+}
+
+
+/*funcao auxiliar usada na funcao bsearch*/
+int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
+  return(strncmpinsensitive( (char*)titulo_procurado, 
+		  ((tipo_registro_pk*)vetor_de_registros)->titulo,TAM_TIT));
+} 
