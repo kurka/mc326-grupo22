@@ -19,9 +19,9 @@ int main() {
 
   char c,opcao,n_registros=0;
   char str_final[TAM_REGISTRO+1];
-  int res, pk, i, j;
+  int pk, i, j;
   FILE *arq_base,*arq_pk;
-  ap_tipo_registro_pk * vetor_registros;
+  ap_tipo_registro_pk vetor_registros;
   int limite[2];
 
   /*limite possui no primeiro o numero de registros
@@ -30,7 +30,8 @@ int main() {
   limite[0] = 0;
   limite[1] = MEM_INIT;
   /*aloca memoria para ser usada durante a execucao*/
-  realoca_memoria(vetor_registros, limite); 
+   vetor_registros =  realoca_memoria(vetor_registros, limite); 
+/*  vetor_registros = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1])*2); */
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
@@ -65,7 +66,7 @@ int main() {
      chaves primarias vindas do arquivo*/
   if(pk!=0){
     printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
-    lerArquivoPK(arq_pk, vetor_registros, limite, n_registros);
+    vetor_registros = lerArquivoPK(arq_pk, vetor_registros, limite, n_registros);
     fclose(arq_pk);
     /*fecha o arquivo com os registros atuais*/
   }
@@ -75,7 +76,7 @@ int main() {
   if(pk==0){
     printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
     arq_pk=fopen("pk.dat","w");    
-    inserePKBase(arq_base, vetor_registros, limite, n_registros);
+    vetor_registros = inserePKBase(arq_base, vetor_registros, limite, n_registros);
   }
 
 
@@ -105,15 +106,10 @@ int main() {
       
       /* Insercao no catalogo */
     case INSERIR:
-      res=1;
-      /*repete a insercao ate inserir um titulo novo*/
-      while(res==1){
-	/*le da entrada padrao os dados da obra*/
-	Insere_base(arq_base, str_final);
-	/*pega o ultimo titulo lido e insere no vetor de registros*/
-	res = novopk(str_final, vetor_registros, limite);
-
-      }
+      /*le da entrada padrao os dados da obra*/
+      Insere_base(arq_base, str_final, vetor_registros, limite[0]);
+      /*pega o ultimo titulo lido e insere no vetor de registros*/
+      vetor_registros = novopk(str_final, vetor_registros, limite);   
       printf(">>>Numero de registros: %d\n\n",limite[0]);
       fprintf(arq_base,"%s",str_final);
       printf("Obra adicionada com sucesso.\n\n\n");
@@ -121,12 +117,12 @@ int main() {
       
       /* Listar os registros do catalogo */
     case LISTAR:
-      lista_registros(limite[0],(*vetor_registros));
+      lista_registros(limite[0],vetor_registros);
       break;
       
       /* Procurar por registro */
     case CONSULTA:
-      consulta_pk(limite[0],*vetor_registros, arq_base);
+      consulta_pk(limite[0],vetor_registros, arq_base);
       break;
     }
     
@@ -140,13 +136,13 @@ int main() {
   if(pk!=0)
     arq_pk=fopen("pk.dat","w");
   
-/*   for(i=0; i<n_registros; i++){ */
-/*     printf("\nimpressao do vetor de chaves primarias a ser inseridos no arquivo (1):\n"); */
-/*     printf("novo.titulo = "); */
-/*     for(j=0;j<TAM_TIT/20;j++) */
-/*       printf("%c", vetor_registros[i].titulo[j]); */
-/*     printf("novo.nrr = %d\n", vetor_registros[i].nrr); */
-/*   } */
+  for(i=0; i<n_registros; i++){
+    printf("\nimpressao do vetor de chaves primarias a ser inseridos no arquivo (1):\n");
+    printf("novo.titulo = ");
+    for(j=0;j<TAM_TIT/20;j++)
+      printf("%c", vetor_registros[i].titulo[j]);
+    printf("novo.nrr = %d\n", vetor_registros[i].nrr);
+  }
   
   /*guarda o indice de chaves primarias no arquivo*/  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
