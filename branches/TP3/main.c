@@ -19,7 +19,7 @@ int main() {
 
   char c,opcao,n_registros=0;
   char str_final[TAM_REGISTRO+1];
-  int pk, i, j;
+  int pk;
   FILE *arq_base,*arq_pk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
@@ -29,9 +29,9 @@ int main() {
     no vetor de registros*/
   limite[0] = 0;
   limite[1] = MEM_INIT;
+
   /*aloca memoria para ser usada durante a execucao*/
    vetor_registros =  realoca_memoria(vetor_registros, limite); 
-/*  vetor_registros = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1])*2); */
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
@@ -136,17 +136,11 @@ int main() {
   if(pk!=0)
     arq_pk=fopen("pk.dat","w");
   
-  for(i=0; i<n_registros; i++){
-    printf("\nimpressao do vetor de chaves primarias a ser inseridos no arquivo (1):\n");
-    printf("novo.titulo = ");
-    for(j=0;j<TAM_TIT/20;j++)
-      printf("%c", vetor_registros[i].titulo[j]);
-    printf("novo.nrr = %d\n", vetor_registros[i].nrr);
-  }
   
   /*guarda o indice de chaves primarias no arquivo*/  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
 
+  free(vetor_registros);
   /*fecha os arquivos*/
   fclose(arq_pk);
   fclose(arq_base);
