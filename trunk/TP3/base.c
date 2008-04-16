@@ -2,15 +2,16 @@
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
 #include <stdio.h>
-#include "base.h"
+#include <string.h>
 #include "defines.h"
+#include "base.h"
 #include "pk.h"
 
 /* Funcao da insercao propriamente dita (insercao no arquivo) */
-void Insere_base(FILE *arq_base, char * str_final) {
-
+void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
+  
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
-  Insere_titulo(str_final);
+  Insere_titulo(str_final, vetor, n_registros);
   Insere_tipo(str_final);
   Insere_autor(str_final);
   Insere_ano(str_final);
@@ -21,7 +22,7 @@ void Insere_base(FILE *arq_base, char * str_final) {
 }
 
 
-void Insere_titulo(char *str_final) {
+void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
   int i,resposta;
   char c;
   
@@ -75,6 +76,16 @@ void Insere_titulo(char *str_final) {
 	str_final[i]=' ';
       }
     }
+
+  for(i=0; i<n_registros; i++){ 
+    if(strncmp(str_final, vetor[i].titulo, TAM_TIT) == 0){
+      printf("Erro! Titulo inserido já existente!\n");
+      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+      resposta = ERRO;
+      break;
+    }
+
+  }
 
   } while(resposta==ERRO);
   
