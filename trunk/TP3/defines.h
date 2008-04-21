@@ -5,8 +5,10 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_REGISTRO 450
 #define INSERIR '1'
 #define LISTAR '2'
-#define CONSULTA '3'
-#define SAIR '4'
+#define CONSULTA_PK '3'
+#define CONSULTA_SK '4'
+#define REMOVER '5'
+#define SAIR '6'
 #define OK 0
 #define ERRO -1
 #define ERRO2 -2
