@@ -90,8 +90,10 @@ int main() {
     printf("Escolha uma das opcoes abaixo (1 ou 2) e tecle Enter.\n");
     printf("1-) Adicionar uma obra ao catalogo.\n");
     printf("2-) Listar obras do catalogo.\n");
-    printf("3-) Procurar por uma obra no catalogo.\n");
-    printf("4-) Sair.\n");
+    printf("3-) Procurar por uma obra no catalogo via chave primaria (titulo).\n");
+    printf("4-) Procurar por uma obra no catalogo via chave secundaria.\n");
+    printf("5-) Remover uma obra do catalogo.\n");
+    printf("6-) Sair.\n");
 
     opcao=getchar();
     c=getchar();
@@ -125,10 +127,23 @@ int main() {
       lista_registros(limite[0],vetor_registros);
       break;
       
-      /* Procurar por registro */
-    case CONSULTA:
+      /* Procurar por registro via chave primaria */
+    case CONSULTA_PK:
       consulta_pk(limite[0],vetor_registros, arq_base);
       break;
+
+      /* Procurar pro registro via chave secundaria */
+    case CONSULTA_SK:
+      /* ***Definir funcao!*** */
+      consulta_sk();
+      break;
+
+      /* Remove um registro do catalogo */
+    case REMOVER:
+      /* ***Definir funcao!*** */
+      remove_registro();
+      break;
+
     }
     
   } while(opcao!=SAIR);
