@@ -27,3 +27,8 @@
   Remocao de registro -> avail list dos indices secundarios
   Insercao de registro -> insere novas chaves secundarias do novo registro
  */
+
+
+void consulta_sk() {
+  return;
+}

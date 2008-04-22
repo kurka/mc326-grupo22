@@ -1,4 +1,3 @@
-
 /*Programa de criação e manipulação de um banco de dados 
 com informações sobre obras de arte
 Funções disponiveis:
@@ -147,9 +146,7 @@ int main() {
     
   } while(opcao!=SAIR);
   
-  printf("Obrigado por usar nosso programa!\n\n");
 
-  
   /* se o arquivo nao era vazio, abre soh no final, 
      evitando perder dados em caso de erro de execucao*/
   if(pk!=0)
