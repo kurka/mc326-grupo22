@@ -30,7 +30,7 @@ int main() {
   limite[1] = MEM_INIT;
 
   /*aloca memoria para ser usada durante a execucao*/
-   vetor_registros =  realoca_memoria(vetor_registros, limite); 
+  vetor_registros =  realoca_memoria(vetor_registros, limite); 
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
@@ -59,8 +59,6 @@ int main() {
   
   if(DEBUG)
     printf(">>>Numero de registros: %d\n",n_registros);
-
-  /* Carrega um vetor com os registros ja existentes*/
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo*/
@@ -132,12 +130,14 @@ int main() {
 
       /* Procurar pro registro via chave secundaria */
     case CONSULTA_SK:
+      printf("Consulta SK.\n\n");
       /* ***Definir funcao!*** */
       /* consulta_sk(); */
       break;
 
       /* Remove um registro do catalogo */
     case REMOVER:
+      printf("REMOVER!\n\n");
       /* ***Definir funcao!*** */
       /* remove_registro(); */
       break;

@@ -14,12 +14,23 @@
 
 \section{Descricao do trabalho}\
 
-/* ... */
+Implementamos, neste terceiro trabalho pratico, um sistema de busca por indice secundario e remocao de registros de uma base de dados, alem de manter todas as funcionalidades dos trabalhos praticos anteriores e corrigir alguns problemas (o mais serio: vetor dobravel).
 
+Dessa forma, o programa ja conta com as seguintes funcionalidades: 
+- insercao de registro em uma base de dados; 
+- consulta por registro pelo nome (chave primaria); 
+- consulta por registro por qualquer palavra (chave secundaria); 
+- remocao de registro.
+
+A busca por chave secundaria se da a partir da comparacao com cada palavra dos seguintes campos do registro: titulo, autor, tipo e ano. Para a remocao, implementamos um sistema de gerenciamento de memoria em disco a partir de uma lista invertida. Mais especificacoes serao dadas adiante.
 
 \section{Especificacoes do programa}\
 
-/* ... */
+Antes mesmo do usuario escolher a primeira opcao da interface, o programa faz a execucao da seguinte rotina: 
+- aloca memoria para o vetor de registros (chave primaria + NRR); 
+- abre (ou inicia) o arquivo base22.dat e calcula o numero de registros ja existentes na base no inicio do programa; 
+- tenta abrir o arquivo pk.dat: caso este exista carrega as chaves primarias para a memoria em vetor-registros, caso contrario inicia-o a partir dos registros na base (se houver).
+
 
 
 \section{Problemas}\
