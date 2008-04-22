@@ -25,7 +25,7 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
   
   if(limite[1]==2*MEM_INIT){
     temp = (ap_tipo_registro_pk) malloc(sizeof(tipo_registro_pk)*(limite[1]));
-}
+  }
 
   else{
     temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*(limite[1]));
