@@ -99,8 +99,7 @@ int main() {
     c=getchar();
 
     /* Tratamento de caractere invalido ou caractere(s) a mais */
-    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)
-		      &&(opcao!=CONSULTA)&&(opcao!=SAIR)) ) {
+    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA_PK)&&(opcao!=CONSULTA_SK)&&(opcao!=REMOVER)&&(opcao!=SAIR)) ) {
       while(c!='\n') {
 	c=getchar();
       }
@@ -135,13 +134,13 @@ int main() {
       /* Procurar pro registro via chave secundaria */
     case CONSULTA_SK:
       /* ***Definir funcao!*** */
-      consulta_sk();
+      /* consulta_sk(); */
       break;
 
       /* Remove um registro do catalogo */
     case REMOVER:
       /* ***Definir funcao!*** */
-      remove_registro();
+      /* remove_registro(); */
       break;
 
     }

@@ -11,4 +11,4 @@ pk.o: pk.h defines.h pk.c
 	gcc -ggdb -ansi -pedantic -Wall -c pk.c
 
 clean:
-	rm -f *.o tp2
+	rm -f *.o tp3
