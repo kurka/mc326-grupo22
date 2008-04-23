@@ -138,7 +138,7 @@ int main() {
 
       /* Remove um registro do catalogo */
     case REMOVER:
-      /* remove_registro(n_registros, vetor_registros); */
+      remove_registro(n_registros, vetor_registros, arq_base);
       break;
 
     }
