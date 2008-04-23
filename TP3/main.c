@@ -23,22 +23,22 @@ int main() {
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
 
-  /*limite possui no primeiro o numero de registros
-    e no segundo a quantidade de memoria alocada 
-    no vetor de registros*/
+  /* limite[] possui no primeiro o numero de registros e no segundo a 
+     quantidade de memoria alocada no vetor de registros */
   limite[0] = 0;
   limite[1] = MEM_INIT;
 
-  /*aloca memoria para ser usada durante a execucao*/
-  vetor_registros =  realoca_memoria(vetor_registros, limite); 
+  /* Aloca memoria a ser usada durante a execucao (vetor de PKs + NRR) */
+  vetor_registros =  realoca_memoria(vetor_registros, limite);
+ 
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
  
   arq_base=fopen("base22.dat","a+");
   
-  /*pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
-    para ser gerado ou nao a partir da base*/
+  /* pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
+    para ser gerado ou nao a partir da base */
   pk=1;
   arq_pk=fopen("pk.dat","r");
 
@@ -61,14 +61,15 @@ int main() {
     printf(">>>Numero de registros: %d\n",n_registros);
 
   /* Se existirem no arquivo pk.dat, carrega as 
-     chaves primarias vindas do arquivo*/
+     chaves primarias vindas do arquivo */
   if(pk!=0){
     if(DEBUG)
       printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
     vetor_registros = lerArquivoPK(arq_pk, vetor_registros, limite, n_registros);
+    /* Fecha o arquivo com os registros atuais */
     fclose(arq_pk);
-    /*fecha o arquivo com os registros atuais*/
   }
+
   /* Caso o arquivo pk.dat nao exista, ou seja vazio, pega os valores 
      da base (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
@@ -137,9 +138,7 @@ int main() {
 
       /* Remove um registro do catalogo */
     case REMOVER:
-      printf("REMOVER!\n\n");
-      /* ***Definir funcao!*** */
-      /* remove_registro(); */
+      /* remove_registro(n_registros, vetor_registros); */
       break;
 
     }

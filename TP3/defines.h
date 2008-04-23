@@ -27,7 +27,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_FORM 3
 #define MEM_INIT 10
 #define DEBUG 0 /*if(DEBUG) imprime etapas e outras infos para debugar*/ 
-
+#define TAM_NRR_CHAR 6
 
 typedef struct {
   char titulo[TAM_TIT];
