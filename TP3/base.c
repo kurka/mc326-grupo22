@@ -2,6 +2,7 @@
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "defines.h"
@@ -522,10 +523,10 @@ void busca_registro(int NRR, FILE * arq_base) {
   return;
 }
 
-
+/* Funcao de remocao de registro - avail list da base de dados */
 void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE *arq_base) {
 
-  int NRR, contador;
+  int NRR_a_remover, NRR_cabeca_avail, contador;
   char titulo_a_remover[MAX_TIT], NRR_char[TAM_NRR_CHAR];
   ap_tipo_registro_pk elto_encontrado;
   FILE *arq_cabeca_avail_base;
@@ -535,47 +536,50 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
     return;
   }
 
-  /* Final da string \0, para o fprintf dar certo. */
-  NRR_char[TAM_NRR_CHAR-1]='\0';
-
-  printf("Insira o titulo completo da obra que você deseja remover:\n");  
+  printf("ATENCAO! Remocao de obra do catalogo\n\n");
   /* titulo_a_remover eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_a_remover, vetor_registros, 0);
 
   /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(titulo_a_remover, vetor_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);
+  elto_encontrado = bsearch(titulo_a_remover, vetor_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);
   
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     printf("O titulo nao foi encontrado.\n\n");
   }
-  /* Caso contrario, a partir do NRR, atualiza a avail list. */
+
+  /* Caso contrario, a partir do NRR, faz o procedimento de remocao do registro: */
   else {
-    NRR=((*elto_encontrado).nrr);
+    NRR_a_remover=((*elto_encontrado).nrr);
+
+    if(DEBUG)
+      printf("Titulo encontrado!\nNRR: %d\n",NRR);
+
     /* NRR_char=itoa(NRR);  %% ENCONTRAR OUTRA SOLUCAO! %% */
 
     /* Rotina de verificacao se ja existe itens removidos. */
-
     arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
 
     /* Caso nao exista o arquivo cabeca da avail list da base, o arquivo é criado. */
+    /* ARRUMAR! */
     if (arq_cabeca_avail_base==NULL) {
       arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
       /* Dentro dele, escreve-se o valor do NRR a ser removido. */
-      fprintf(arq_cabeca_avail_base,"%s",NRR_char);
-    }
-    /* Caso contrario, le-se o valor da cabeca e atualiza a lista. */
+      for(contador=0;contador<TAM_NRR_CHAR;contador++)
+	fprintf(arq_cabeca_avail_base, "%c", NRR_char[contador]);
+    } /* ARRUMAR! */
+    /* Caso ja exista registros removidos (arq existe) */
     else {
       /* Leitura do arquivo */
       for(contador=0;contador<TAM_NRR_CHAR;contador++)
 	NRR_char[contador]=fgetc(arq_cabeca_avail_base);
+      
+      NRR_cabeca = atoi(NRR_char);
 
-      /* a continuar... */
 
-    }
 
     printf("Obra removida com sucesso.\n\n");
-  }
+  } 
 
   return;
 }
