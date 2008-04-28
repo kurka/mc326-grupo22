@@ -12,16 +12,18 @@ Funções disponiveis:
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
+#include "sk.h"
 
 
 int main() {
 
   char c,opcao,n_registros=0;
   char str_final[TAM_REGISTRO+1];
-  int pk;
-  FILE *arq_base,*arq_pk;
+  int pk, sk;
+  FILE *arq_base,*arq_pk, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
+  tipo_vetores_sk vetores_sk;
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
@@ -41,7 +43,7 @@ int main() {
     para ser gerado ou nao a partir da base */
   pk=1;
   arq_pk=fopen("pk.dat","r");
-
+	
   if(!arq_pk){
     pk=0;
   }
@@ -51,7 +53,25 @@ int main() {
       coletadas a partir do arquivo base.dat */ 
     pk = ftell(arq_pk);
   }
+ 
+	
+  /* verificando a existência de um arquivo de sk */
+  arq_sk=fopen("sk.dat","r");
+	
+  if(arq_sk == NULL) /*se não existe um arquivo de sk*/
+  {                  /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
+      
+  }
+  if(arq_sk){
+    fseek(arq_pk,0,SEEK_END);
+    /*se sk possui tamanho 0, as chaves primarias serao
+      coletadas a partir do arquivo base.dat */ 
+    sk = ftell(arq_sk);
+  }
   
+	
+	
+	
   /* Esta rotina retorna o numero de registros do arquivo da base de dados
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);

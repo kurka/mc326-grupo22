@@ -35,3 +35,23 @@ typedef struct {
 }tipo_registro_pk;
 
 typedef tipo_registro_pk * ap_tipo_registro_pk;
+
+
+
+typedef struct 
+{
+  char *chave;
+  int endereco_li; /*endereço na lista invertida*/
+}tipo_registro_sk;
+
+typedef struct 
+{
+  tipo_registro_sk *vetor_SK_titulo; int n_titulos;
+  tipo_registro_sk *vetor_SK_autor; int n_autores;
+  tipo_registro_sk *vetor_SK_ano; int n_anos;
+  tipo_registro_sk *vetor_SK_tipo; int n_tipos;
+	
+}tipo_vetores_sk;
+
+
+
