@@ -44,6 +44,8 @@ typedef struct
   int endereco_li; /*endereço na lista invertida*/
 }tipo_registro_sk;
 
+
+/*esta é uma estrutura com 4 apontadores que apontam para o inicio dos 4 vetores the SKs, além de 4 campos inteiros que informam o tamanho destes vetores */
 typedef struct 
 {
   tipo_registro_sk *vetor_SK_titulo; int n_titulos;
@@ -52,6 +54,24 @@ typedef struct
   tipo_registro_sk *vetor_SK_tipo; int n_tipos;
 	
 }tipo_vetores_sk;
+
+
+/*estrutura que representa um registro da lista invertida*/
+typedef struct
+{
+   char *chave;
+   int prox;	
+}tipo_registro_li;
+
+/*estrutura com 4 apontadores para o inicio de cada uma das 4 listas invertidas(titulo, tipo, autor, ano), e com 4 inteiros que informam o tamanho dessas listas*/
+typedef struct 
+{
+  tipo_registro_li *vetor_li_titulo; int n_titulos;
+  tipo_registro_li *vetor_li_autor; int n_autores;
+  tipo_registro_li *vetor_li_ano; int n_anos;
+  tipo_registro_li *vetor_li_tipo; int n_tipos;
+	
+}tipo_vetores_li;
 
 
 

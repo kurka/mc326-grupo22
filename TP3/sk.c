@@ -14,7 +14,9 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
     
 	char registro[TAM_REGISTRO], temp_sk[TAM_TIT];
 	tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
+	tipo_vetores_li *vetores_li = (tipo_vetores_li *)malloc(sizeof(tipo_vetores_li));
 	int novaSK;
+	
 	
 	
 	vetores_sk->n_titulos = 0;
@@ -27,7 +29,15 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	vetores_sk->vetor_SK_ano = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
 	vetores_sk->vetor_SK_tipo = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
 	
-		
+	vetores_li->n_titulos = 0;
+	vetores_li->n_autores = 0;
+	vetores_li->n_anos = 0;
+	vetores_li->n_tipos = 0;
+	
+	vetores_li->vetor_li_titulo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
+	vetores_li->vetor_li_autor = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
+	vetores_li->vetor_li_ano = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
+	vetores_li->vetor_li_tipo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
 
 	fseek(arqBase,0,SEEK_SET);
 	
@@ -38,6 +48,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
   
 			  	
 		/* criando vetor sk e lista invertida para titulo */	
+		
 		/*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
 		k=0;
 		for(j=0; j<TAM_TIT; j++)
@@ -82,7 +93,29 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
  		}
 		
 		
-	
+
+
+		/* criando a li */  /* RODA! MAS NAO FOI TESTADO!!!! */
+		int novaChave = 1;
+		for(l=0; l<vetores_sk->n_titulos; l++)
+		{
+			if(strcmp(temp_sk, vetores_sk->vetor_SK_titulo[l].chave) == 0)
+			   novaChave = 0;
+		}
+        if(novaChave == 1) /*se a SK é nova*/
+	    {
+	    	vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
+	    	vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*TAM_TIT);
+	        
+	        for(l=0; l<TAM_TIT; l++)
+	        {
+	        	vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[l] = registro[l];
+	        }	
+	        vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
+	        vetores_li->n_titulos++;
+	    }
+	    
+	    
 			
 	    /*criando vetor sk e lista invertida p/ autor*/
 		
