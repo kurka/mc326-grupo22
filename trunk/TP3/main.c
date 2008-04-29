@@ -40,8 +40,15 @@ int main() {
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
  
-  arq_base=fopen("base22.dat","w+");
+  arq_base=fopen("base22.dat","r+");
   
+  if(arq_base == NULL){
+    if(DEBUG)
+      printf("\n>>>Arquivo base22 inexistente: base sera criada\n");
+    arq_base=fopen("base22.dat","w");
+  }
+
+
   /* pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
     para ser gerado ou nao a partir da base */
   pk=1;
@@ -81,7 +88,7 @@ int main() {
   n_registros=ftell(arq_base)/TAM_REGISTRO;
   
   if(DEBUG)
-    printf(">>>Numero de registros: %d\n",n_registros);
+    printf("\n>>>Numero de registros: %d\n",n_registros);
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo */
