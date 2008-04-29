@@ -524,12 +524,17 @@ void busca_registro(int NRR, FILE * arq_base) {
 }
 
 /* Funcao de remocao de registro - avail list da base de dados */
-void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE *arq_base) {
+void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros) {
 
   int NRR_a_remover, contador,NRR_cabeca_antiga;
   char titulo_a_remover[MAX_TIT], NRR_cabeca_antiga_char[TAM_NRR_CHAR];
   ap_tipo_registro_pk elto_encontrado;
-  FILE *arq_cabeca_avail_base;
+  FILE *arq_cabeca_avail_base, *arq_base;
+
+  arq_base=fopen("base22.dat","r+");
+
+  if(DEBUG)
+    printf("Debug: Numero de registros = %d\n\n",n_registros);
 
   if(n_registros == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -553,6 +558,9 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 
     NRR_a_remover=((*elto_encontrado).nrr);
 
+    if(DEBUG)
+      printf("Debug - NRR a remover: %d\n\n", NRR_a_remover);
+
     /* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita */
     arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
 
@@ -560,15 +568,15 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
     if (arq_cabeca_avail_base==NULL) {
 
       if(DEBUG)
-	printf("\n Debug: Nao existe arq com a cabeca da avail. Criando...\n\n");
+	printf("\nDebug: Nao existe arq com a cabeca da avail. Criando...\n\n");
 
       /* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. */
       arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
-
+      
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
       fseek(arq_base, (NRR_a_remover-1)*TAM_REGISTRO, SEEK_SET);
-      fprintf(arq_base, "%05d", -1);
+      fprintf(arq_base, "%05d",-1);
     }
     
 
@@ -582,10 +590,10 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
       for(contador=0;contador<TAM_NRR_CHAR;contador++)
 	NRR_cabeca_antiga_char[contador]=fgetc(arq_cabeca_avail_base);
       NRR_cabeca_antiga=atoi(NRR_cabeca_antiga_char);
-
+      
       /* Atualizacao da cabeca: cabeca=NRR_a_remover */
-      fprintf(arq_cabeca_avail_base,"%05d",NRR_a_remover);
-
+      fseek(arq_cabeca_avail_base,0,SEEK_SET);
+      fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       /* Adiciona o endereco da antiga cabeca no inicio do registro a ser removido */
       fseek(arq_base, (NRR_a_remover -1)*TAM_REGISTRO, SEEK_SET);
       fprintf(arq_base,"%05d",NRR_cabeca_antiga);
