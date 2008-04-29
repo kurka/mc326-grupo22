@@ -584,8 +584,8 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros) {
     else {
 
       if(DEBUG)
-	printf("\n Debug: O arquivo ja existia. Atualizando a lista... \n\n");
-
+	printf("\n Debug: O arquivo cabeca avail ja existia. Atualizando a lista... \n\n");
+      
       /* Leitura do NRR da cabeca da lista a partir do arquivo que ja existia */
       for(contador=0;contador<TAM_NRR_CHAR;contador++)
 	NRR_cabeca_antiga_char[contador]=fgetc(arq_cabeca_avail_base);
