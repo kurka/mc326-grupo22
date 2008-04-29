@@ -40,7 +40,7 @@ int main() {
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
  
-  arq_base=fopen("base22.dat","a+");
+  arq_base=fopen("base22.dat","w+");
   
   /* pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
     para ser gerado ou nao a partir da base */
