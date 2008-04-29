@@ -36,8 +36,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		
 		fread(registro, sizeof(char)*TAM_REGISTRO, 1, arqBase);
   
-		/*criando vetor sk e lista invertida p/ titulo*/
-	  	
+			  	
 		/* criando vetor sk e lista invertida para titulo */	
 		/*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
 		k=0;
@@ -56,7 +55,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 					novaSK = 1;
 					for(l=0; l<vetores_sk->n_titulos; l++)
 					{
-						if(strcmp(vetores_sk->vetor_SK_titulo[i].chave, temp_sk) == 0)
+						if(strcmp(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
 							novaSK = 0;
 					}
 				    
@@ -83,13 +82,143 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
  		}
 		
 		
-		/* daqui pra baixo beta */
+	
 			
 	    /*criando vetor sk e lista invertida p/ autor*/
+		
+		/*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
+		k=0;
+		for(j=TAM_TIT; j<TAM_TIP+TAM_TIT; j++)
+		{
+		    if(registro[j] == ' ')
+		    {
+		    			
+		        if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+				{
+					temp_sk[k]='\0';
+					
+
+	
+					/* novaSK(1 = true, 0 = false)*/
+					novaSK = 1;
+					
+					for(l=0; l<vetores_sk->n_tipos; l++)
+					{
+						if(strcmp(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
+							novaSK = 0;
+					}
+				    
+					if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+					{
+						
+                        vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave = (char *)malloc(sizeof(char)*(k+1));
+						
+						strcpy(vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave, temp_sk);
+						vetores_sk->n_tipos++;
+												
+								
+					}
+					k = 0;
+				}
+		    }
+			else
+			{
+				temp_sk[k] = registro[j];
+				k++;
+				
+
+			}
+ 		}
+ 		
 	    /*criando vetor sk e lista invertida p/ ano*/
-		
+		/*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
+		k=0;
+		for(j=TAM_TIT+TAM_TIP; j<TAM_TIP+TAM_TIT+TAM_AUT; j++)
+		{
+		    if(registro[j] == ' ')
+		    {
+		    			
+		        if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+				{
+					temp_sk[k]='\0';
+					
+
+	
+					/* novaSK(1 = true, 0 = false)*/
+					novaSK = 1;
+					
+					for(l=0; l<vetores_sk->n_autores; l++)
+					{
+						if(strcmp(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
+							novaSK = 0;
+					}
+				    
+					if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+					{
+						
+                        vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave = (char *)malloc(sizeof(char)*(k+1));
+						
+						strcpy(vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave, temp_sk);
+						vetores_sk->n_autores++;
+												
+								
+					}
+					k = 0;
+				}
+		    }
+			else
+			{
+				temp_sk[k] = registro[j];
+				k++;
+				
+
+			}
+ 		}
+	    
 	    /*criando vetor sk e lista invertida p/ tipo*/
-		
+		/*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
+		k=0;
+		for(j=TAM_TIT+TAM_TIP+TAM_AUT; j<TAM_TIP+TAM_TIT+TAM_AUT+TAM_ANO; j++)
+		{
+		    if(registro[j] == ' ')
+		    {
+		    			
+		        if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+				{
+					temp_sk[k]='\0';
+					
+
+	
+					/* novaSK(1 = true, 0 = false)*/
+					novaSK = 1;
+					
+					for(l=0; l<vetores_sk->n_anos; l++)
+					{
+						if(strcmp(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
+							novaSK = 0;
+					}
+				    
+					if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+					{
+						
+                        vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave = (char *)malloc(sizeof(char)*(k+1));
+						
+						strcpy(vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave, temp_sk);
+						vetores_sk->n_anos++;
+												
+								
+					}
+					k = 0;
+				}
+		    }
+			else
+			{
+				temp_sk[k] = registro[j];
+				k++;
+				
+
+			}
+ 		}
 		
 		
 		
@@ -98,11 +227,10 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	
 	    
 	
+ 
+				
 
-		
-		
-
-	    return vetores_sk;
+	return vetores_sk;
 	
 }
 
