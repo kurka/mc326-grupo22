@@ -108,7 +108,7 @@ int main() {
   /* Interface*/
   do {
 
-    printf("Escolha uma das opcoes abaixo (1 ou 2) e tecle Enter.\n");
+    printf("Escolha uma das opcoes abaixo e tecle Enter.\n");
     printf("1-) Adicionar uma obra ao catalogo.\n");
     printf("2-) Listar obras do catalogo.\n");
     printf("3-) Procurar por uma obra no catalogo via chave primaria (titulo).\n");
@@ -161,7 +161,7 @@ int main() {
 
       /* Remove um registro do catalogo */
     case REMOVER:
-      remove_registro(n_registros, vetor_registros, arq_base);
+      remove_registro(n_registros, vetor_registros);
       break;
 
     }
