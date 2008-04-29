@@ -29,13 +29,13 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	
 		
 
+	fseek(arqBase,0,SEEK_SET);
 	
 	for(i=0; i<n_registros; i++)
 	{
-		fseek(arqBase,0,SEEK_SET);
+		
 		fread(registro, sizeof(char)*TAM_REGISTRO, 1, arqBase);
-
-
+  
 		/*criando vetor sk e lista invertida p/ titulo*/
 	  	
 		/* criando vetor sk e lista invertida para titulo */	
@@ -43,13 +43,15 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		k=0;
 		for(j=0; j<TAM_TIT; j++)
 		{
-		    if(registro[j] == 0)
+		    if(registro[j] == ' ')
 		    {
+		    			
 		        if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 				{
 					temp_sk[k]='\0';
-					k=0;
 					
+
+	
 					/* novaSK(1 = true, 0 = false)*/
 					novaSK = 1;
 					for(l=0; l<vetores_sk->n_titulos; l++)
@@ -60,21 +62,26 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 				    
 					if(novaSK == 1) /*se uma nova SK vai ser inserida*/
 					{
-    				  	strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
+						
+                        vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave = (char *)malloc(sizeof(char)*(k+1));
+						
+						strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
 						vetores_sk->n_titulos++;
+												
+								
 					}
-					
+					k = 0;
 				}
 		    }
 			else
 			{
 				temp_sk[k] = registro[j];
 				k++;
+				
+
 			}
  		}
-				
-	}
-		return vetores_sk;
+		
 		
 		/* daqui pra baixo beta */
 			
@@ -82,7 +89,20 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	    /*criando vetor sk e lista invertida p/ ano*/
 		
 	    /*criando vetor sk e lista invertida p/ tipo*/
+		
+		
+		
+		
+				
+	}
+	
+	    
+	
 
+		
+		
+
+	    return vetores_sk;
 	
 }
 
