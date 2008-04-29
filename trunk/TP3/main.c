@@ -26,7 +26,7 @@ int main() {
   FILE *arq_base,*arq_pk, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
-  tipo_vetores_sk vetores_sk;
+  tipo_vetores_sk *vetores_sk;
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
@@ -64,20 +64,9 @@ int main() {
     pk = ftell(arq_pk);
   }
  
+
 	
-  /* verificando a existência de um arquivo de sk */
-  arq_sk=fopen("sk.dat","r");
-	
-  if(arq_sk == NULL) /*se não existe um arquivo de sk*/
-  {                  /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
-      
-  }
-  if(arq_sk){
-    fseek(arq_pk,0,SEEK_END);
-    /*se sk possui tamanho 0, as chaves primarias serao
-      coletadas a partir do arquivo base.dat */ 
-    sk = ftell(arq_sk);
-  }
+  
   
 	
 	
@@ -86,6 +75,21 @@ int main() {
      caso o programa comece com um arquivo ja existente. */
   fseek(arq_base,0,SEEK_END);
   n_registros=ftell(arq_base)/TAM_REGISTRO;
+  
+  /* verificando a existência de um arquivo de sk */
+  arq_sk=fopen("sk.dat","r");
+	
+  if(arq_sk == NULL) /*se não existe um arquivo de sk*/
+  {       			 /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
+	  vetores_sk = criarVetorSK(arq_base, n_registros);
+  }
+  if(arq_sk){
+    fseek(arq_sk,0,SEEK_END);
+    /*se sk possui tamanho 0, as chaves primarias serao
+      coletadas a partir do arquivo base.dat */ 
+    sk = ftell(arq_sk);
+  }	
+  
   
   if(DEBUG)
     printf("\n>>>Numero de registros: %d\n",n_registros);
