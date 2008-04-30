@@ -120,10 +120,8 @@ int main() {
       Insere_base(arq_base, str_final, vetor_registros, limite[0]);
       /*pega o ultimo titulo lido e insere no vetor de registros*/
       vetor_registros = novopk(str_final, vetor_registros, limite);   
-    if(DEBUG)     
-       printf(">>>Numero de registros: %d\n\n",limite[0]);
-      fprintf(arq_base,"%s",str_final);
-      printf("Obra adicionada com sucesso.\n\n\n");
+      if(DEBUG)     
+	printf(">>>Numero de registros: %d\n\n",limite[0]);
       break;
       
       /* Listar os registros do catalogo */
