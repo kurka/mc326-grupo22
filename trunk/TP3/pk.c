@@ -133,7 +133,7 @@ ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *
     \brief pega o ultimo titulo lido e registra ele como novo,
     para ser inserido no vetor de chaves primarias
 */
-ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite){
+ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite, int nrr){
 
   int i;
   tipo_registro_pk novo;
@@ -144,7 +144,10 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
 
   limite[0]++;
   /*guarda no campo  nrr o numero do seu registro*/
-  novo.nrr = limite[0];
+  if(nrr==-1)
+    novo.nrr = limite[0];
+  else
+    novo.nrr = nrr;
   
   vetor = insere_pk(vetor, novo, limite); 
   

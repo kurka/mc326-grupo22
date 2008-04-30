@@ -22,7 +22,7 @@ int main() {
 
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
-  int n_registros, pk, sk, cabeca_avail;
+  int n_registros, pk, sk, cabeca_avail, nrr;
   FILE *arq_base,*arq_pk, *arq_avail, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
@@ -124,7 +124,8 @@ int main() {
       /*le da entrada padrao os dados da obra*/
       Insere_base(arq_base, str_final, vetor_registros, limite[0]);
       /*pega o ultimo titulo lido e insere no vetor de registros*/
-      vetor_registros = novopk(str_final, vetor_registros, limite);   
+      nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
+      vetor_registros = novopk(str_final, vetor_registros, limite, nrr);   
       if(DEBUG)     
 	printf(">>>Numero de registros: %d\n\n",limite[0]);
       break;
