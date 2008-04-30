@@ -1,13 +1,3 @@
-/*Programa de criação e manipulação de um banco de dados 
-com informações sobre obras de arte
-Funções disponiveis:
-1)Criacao/adicao do banco de dados;
-2)Listagem de obras presentes no banco de dados;
-3)Busca de obras no banco de dados por chave primária;
-4)Busca de obras no banco de dados por chave secundaria;
-5)Remoção de obras.
-
-*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -18,7 +8,16 @@ Funções disponiveis:
 #include "sk.h"
 #include "fopen.h"
 
-
+/**
+   \brief Programa de criação e manipulação de um banco de dados 
+   com informações sobre obras de arte
+   Funções disponiveis:
+   1)Criacao/adicao do banco de dados;
+   2)Listagem de obras presentes no banco de dados;
+   3)Busca de obras no banco de dados por chave primária;
+   4)Busca de obras no banco de dados por chave secundaria;
+   5)Remoção de obras.
+*/
 int main() {
 
   char c,opcao;
