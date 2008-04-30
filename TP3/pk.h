@@ -17,7 +17,7 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, ap_tipo_registro_pk vetor, int *
 ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail);
 
 /* pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
-ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite);
+ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite, int nrr);
 
 /* insere um novo registro no nosos vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite);

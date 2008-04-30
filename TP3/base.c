@@ -14,8 +14,6 @@
 */
 void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
 
-  int posicao_a_inserir;
-  
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
   Insere_titulo(str_final, vetor, n_registros);
   Insere_tipo(str_final);
@@ -24,79 +22,55 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
   Insere_valor(str_final);
   Insere_imagem(str_final);
 
-  /* Verifica onde a string deve ser inserida na base */
-  posicao_a_inserir = VerificaAvailBase();
-
-  if(posicao_a_inserir==-1) {
-    /* Insercao no fim do arquivo */
-    fseek(arq_base,0,SEEK_END);
-    fprintf(arq_base,"%s",str_final);
-  }
-  else {
-    /* Insercao no lugar do registro apontado pela cabeca da avail */
-    fseek(arq_base,(posicao_a_inserir-1)*TAM_REGISTRO,SEEK_SET);
-    fprintf(arq_base,"%s",str_final);
-  }
-
-  printf("Obra adicionada com sucesso.\n\n\n");
-  return;
 }
 
 /** 
-    \brief Funcao que verifica onde o novo registro deve ser inserido. 
+    \brief Funcao que verifica onde o novo registro deve ser inserido e o insere
 */
-int VerificaAvailBase() {
-  
-  FILE *arq_base, *arq_cabeca_avail_base;
-  char NRR_cabeca_char[TAM_NRR_CHAR];
-  int NRR_cabeca,NRR_nova_cabeca,contador;
-  
-  arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
-  
-  /* Caso o arquivo nao exista, o novo registro sera inserido no final da base */
-  if(arq_cabeca_avail_base==NULL) {
-    if(DEBUG)
-      printf(">>> Arq da cabeca da avail n existe; insere no final da base.\n\n");
-    return(-1);
-  }
+int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cabeca){
+
+  int NRR_nova_cabeca;
+  int nrr = *NRR_cabeca;
   /* Caso o arquivo exista, ha 2 possibilidades:
-     1-) A cabeca da avail nele contida eh -1. Neste caso, o registro tb eh inserido no final da base;
+     1-) A cabeca da avail nele contida eh -1. Neste caso, o registro eh inserido no final da base;
      2-) A cabeca aponta p/ algum registro. Nesse caso, o novo registro eh inserido no lugar desta cabeca,
      e a cabeca eh atualizada. */
+  
+  /* Possibilidade 1*/
+  if(nrr == -1){
+
+    if(DEBUG)
+      printf(">>>guardando registro no final do arquivo base.dat\n");
+    /* Insercao no fim do arquivo */
+    fseek(arq_base,0,SEEK_END);
+    fprintf(arq_base,"%s",str_final);
+  }   
+  /* Possibilidade 2 */
   else{
-    
-    /* Leitura da cabeca da avail */
-    for(contador=0;contador<TAM_NRR_CHAR;contador++)
-      NRR_cabeca_char[contador]=fgetc(arq_cabeca_avail_base);
-    NRR_cabeca=atoi(NRR_cabeca_char);
-    
-    /* Possibilidade 1 */
-    if(NRR_cabeca == -1) {
-      if(DEBUG)
-	printf(">>> Arq da cabeca existe, mas aponta p/ -1; insere no final da base.\n\n");
-      return(-1);
-    }
-    /* Possibilidade 2 */
-    else {
-      if(DEBUG)
-	printf(">>> Insercao no meio da base; atualizacao da cabeca.\n\n");
-      /* Procedimento para atualizacao da cabeca */
-      arq_base = fopen("base22.dat","r+");
-      fseek(arq_base,(NRR_cabeca-1)*TAM_REGISTRO,SEEK_SET);
-      /* Leitura da nova cabeca */
-      for(contador=0;contador<TAM_NRR_CHAR;contador++)
-	NRR_cabeca_char[contador]=fgetc(arq_base);
-      NRR_nova_cabeca=atoi(NRR_cabeca_char);
-      /* Escrita da nova cabeca no arquivo */
-      fprintf(arq_cabeca_avail_base,"%05d",NRR_nova_cabeca);
-      /* A funcao retorna o NRR da antiga cabeca, onde o novo registro sera inserido. */
-      return(NRR_cabeca);
-    }
+    if(DEBUG)
+      printf(">>>guardando registro em avail list do arquivo base.dat\n");
+
+    /* Procedimento para atualizacao da cabeca */
+    fseek(arq_base,(nrr-1)*TAM_REGISTRO,SEEK_SET);
+    /* Leitura da nova cabeca */
+    fscanf(arq_base, "%05d", &NRR_nova_cabeca); 
+
+     
+    /* Escrita da nova cabeca no arquivo */
+    fprintf(arq_avail,"%05d",NRR_nova_cabeca);
+
+    /* Insercao no lugar do registro apontado pela cabeca da avail */
+    fseek(arq_base,(nrr-1)*TAM_REGISTRO,SEEK_SET);
+    fprintf(arq_base,"%s",str_final);
+
+    *NRR_cabeca = NRR_nova_cabeca;
   }
   
-  fclose(arq_base);
-  fclose(arq_cabeca_avail_base);
+  printf("Obra adicionada com sucesso.\n\n\n");
+  return nrr;
 }
+  
+
 
 void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
   int i,resposta;
