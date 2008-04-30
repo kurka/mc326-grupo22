@@ -597,8 +597,8 @@ void busca_registro(int NRR, FILE * arq_base) {
 /* Funcao de remocao de registro - avail list da base de dados */
 void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *cabeca_avail_base_original) {
 
-  int NRR_a_remover, contador,NRR_cabeca_antiga, cabeca_avail_base;
-  char titulo_a_remover[MAX_TIT], NRR_cabeca_antiga_char[TAM_NRR_CHAR];
+  int NRR_a_remover, NRR_cabeca_antiga, cabeca_avail_base;
+  char titulo_a_remover[MAX_TIT];
   ap_tipo_registro_pk elto_encontrado;
 
   cabeca_avail_base = *cabeca_avail_base_original;
@@ -633,8 +633,9 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 
       
       /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
-      if (cabeca_avail_base== -1) {
-      
+    if (cabeca_avail_base == -1) {
+ 
+      fseek(arq_cabeca_avail_base,0,SEEK_SET);     
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
@@ -650,9 +651,7 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 	printf("\n>>>O arquivo cabeca avail ja existia. Atualizando a lista... \n\n");
       
       /* Leitura do NRR da cabeca da lista a partir do arquivo que ja existia */
-      for(contador=0;contador<TAM_NRR_CHAR;contador++)
-	NRR_cabeca_antiga_char[contador]=fgetc(arq_cabeca_avail_base);
-      NRR_cabeca_antiga=atoi(NRR_cabeca_antiga_char);
+      NRR_cabeca_antiga = cabeca_avail_base;
       
       /* Atualizacao da cabeca: cabeca=NRR_a_remover */
       fseek(arq_cabeca_avail_base,0,SEEK_SET);
@@ -661,12 +660,16 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
       fseek(arq_base, (NRR_a_remover -1)*TAM_REGISTRO, SEEK_SET);
       fprintf(arq_base,"%05d",NRR_cabeca_antiga);
       
+      if(DEBUG){
+	printf(">>>Nova cabeca da Avail List: %d\n", NRR_a_remover);
+	printf(">>>Antiga cabeca (segundo elemento): %d\n\n", NRR_cabeca_antiga);
+	  }
     }
     
     printf("Obra removida com sucesso.\n\n"); 
   }
   
-  *cabeca_avail_base_original = cabeca_avail_base;
+  *cabeca_avail_base_original = NRR_a_remover;
 
   return;
 }
