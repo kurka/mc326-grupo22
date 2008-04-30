@@ -635,14 +635,6 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
       /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
       if (cabeca_avail_base== -1) {
       
-<<<<<<< .mine
-      if(DEBUG) 
- 	printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n");
-      
-      /* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. */
-      arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
-=======
->>>>>>> .r71
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
