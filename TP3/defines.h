@@ -27,7 +27,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MAX_IMG 450
 #define TAM_FORM 3
 #define MEM_INIT 10
-#define DEBUG 1 /*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
+#define DEBUG 0 /*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
 
 typedef struct {

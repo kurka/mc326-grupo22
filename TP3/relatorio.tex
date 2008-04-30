@@ -19,7 +19,7 @@ Implementamos, neste terceiro trabalho pratico, um sistema de busca por indice s
 Dessa forma, o programa ja conta com as seguintes funcionalidades: 
 - insercao de registro em uma base de dados; 
 - consulta por registro pelo nome (chave primaria); 
-- consulta por registro por qualquer palavra (chave secundaria); 
+- consulta por registro por qualquer palavra (chave secundaria) (não funcionando totalmente); 
 - remocao de registro.
 
 A busca por chave secundaria se da a partir da comparacao com cada palavra dos seguintes campos do registro: titulo, autor, tipo e ano. Para a remocao, implementamos um sistema de gerenciamento de memoria em disco a partir de uma lista invertida. Mais especificacoes serao dadas adiante.
@@ -28,9 +28,38 @@ A busca por chave secundaria se da a partir da comparacao com cada palavra dos s
 
 Antes mesmo do usuario escolher a primeira opcao da interface, o programa faz a execucao da seguinte rotina: 
 - aloca memoria para o vetor de registros (chave primaria + NRR); 
-- abre (ou inicia) o arquivo base22.dat e calcula o numero de registros ja existentes na base no inicio do programa; 
-- tenta abrir o arquivo pk.dat: caso este exista carrega as chaves primarias para a memoria em vetor-registros, caso contrario inicia-o a partir dos registros na base (se houver).
+- abre (ou cria se não existir) o arquivo base.dat;
+- abre (ou cria se não existir) o arquivo com o indice da avail list (-1 se nao existir avail list);
+- tenta abrir o arquivo pk.dat: caso este exista carrega as chaves primarias para a memoria em vetor-registros, caso contrario inicia-o a partir dos registros na base (se houver);
+- se a leitura de chaves primárias foi feita do arquivo base.dat, verifica se dentro do arquivo existe avail list. Em caso verdadeiro, elimina do vetor de registros os campos existentes;
+- constroi arquivos de chaves secundarias, com listas ligadas de palavras chaves;
+- calcula o numero de registros trabalhados;
 
+
+Depois dessa etapa, o usuario pode escolher entre as seguintes opções:
+
+1)Criacao/adicao do banco de dados:
+
+-Alem das funcionalidades dos TPs anteriores, sempre que uma obra é adicionada, é conferido se existem espaços no arquivo base.dat já existente (através da avail list). 
+Se houver espaço, o novo registro é inserido no topo da pilha indicado em avail list. Se não houver espaço, o novo registro é inserido no final do arquivo base.dat.
+As chaves primarias são atualizadas junto com os registros, recebendo corretamente o número relativo de registro (NRR) de onde o registro está sendo inserido.
+
+2)Listagem de obras presentes no banco de dados:
+
+-Essa função mantém as mesmas especificações dos outros TPs;
+
+3)Busca de obras no banco de dados por chave primária;
+
+-Essa função mantém as mesmas especificações dos outros TPs;
+
+4)Busca de obras no banco de dados por chave secundaria;
+
+
+
+5)Remoção de obras.
+
+-Função implementada nesse TP, faz a leitura de uma chave primária dada pelo usuário e, achando-a remove do arquivo base.dat e do vetor de chaves primárias (que será transformado em pk.dat).
+Quando remove do arquivo base.dat, forma uma avail list, para reaproveitamento do espaço no momento da inserção.
 
 
 \section{Problemas}\
