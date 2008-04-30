@@ -47,19 +47,19 @@ int main() {
 
 	
 
-  /* verificando a existência de um arquivo de sk */
-  arq_sk=fopen("sk.dat","r");
+/*   /\* verificando a existência de um arquivo de sk *\/ */
+/*   arq_sk=fopen("sk.dat","r"); */
 	
-  if(arq_sk == NULL) /*se não existe um arquivo de sk*/
-    {       			 /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
-      vetores_sk = criarVetorSK(arq_base, n_registros);
-    }
-  if(arq_sk){
-    fseek(arq_sk,0,SEEK_END);
-    /*se sk possui tamanho 0, as chaves primarias serao
-      coletadas a partir do arquivo base.dat */ 
-    sk = ftell(arq_sk);
-  }	
+/*   if(arq_sk == NULL) /\*se não existe um arquivo de sk*\/ */
+/*     {       			 /\*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*\/ */
+/*       vetores_sk = criarVetorSK(arq_base, n_registros); */
+/*     } */
+/*   if(arq_sk){ */
+/*     fseek(arq_sk,0,SEEK_END); */
+/*     /\*se sk possui tamanho 0, as chaves primarias serao */
+/*       coletadas a partir do arquivo base.dat *\/  */
+/*     sk = ftell(arq_sk); */
+/*   } */	
   
   
   if(DEBUG)
@@ -142,6 +142,9 @@ int main() {
       /* Remove um registro do catalogo */
     case REMOVER:
       remove_registro(n_registros, vetor_registros, arq_base, arq_avail, &cabeca_avail);
+      vetor_registros = remove_pk(vetor_registros, limite, cabeca_avail);
+      if(DEBUG)     
+	printf(">>>Numero de registros: %d\n\n",limite[0]);
       break;
 
     }

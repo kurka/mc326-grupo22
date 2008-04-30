@@ -18,6 +18,9 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
 /* insere um novo registro no nosos vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite);
 
+/* remove a chave primaria que acabou de ser removida da base22.dat*/
+ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail);
+
 /* salva todos os registros do nosso vetor de PKs no arquivo PK.dat*/
 void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
 
