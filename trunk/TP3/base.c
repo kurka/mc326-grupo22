@@ -11,6 +11,8 @@
 
 /* Funcao da insercao propriamente dita (insercao no arquivo) */
 void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
+
+  int posicao_a_inserir;
   
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
   Insere_titulo(str_final, vetor, n_registros);
@@ -38,27 +40,59 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
   return;
 }
 
+/* Funcao que verifica onde o novo registro deve ser inserido. */
 int VerificaAvailBase() {
-
+  
   FILE *arq_base, *arq_cabeca_avail_base;
-
+  char NRR_cabeca_char[TAM_NRR_CHAR];
+  int NRR_cabeca,NRR_nova_cabeca,contador;
+  
   arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
-
+  
   /* Caso o arquivo nao exista, o novo registro sera inserido no final da base */
-  if(arq_cabeca_avail_base==NULL)
+  if(arq_cabeca_avail_base==NULL) {
+    if(DEBUG)
+      printf(">>> Arq da cabeca da avail n existe; insere no final da base.\n\n");
     return(-1);
-
+  }
   /* Caso o arquivo exista, ha 2 possibilidades:
      1-) A cabeca da avail nele contida eh -1. Neste caso, o registro tb eh inserido no final da base;
      2-) A cabeca aponta p/ algum registro. Nesse caso, o novo registro eh inserido no lugar desta cabeca,
-     e a cabeca eh atualizada.*/
+     e a cabeca eh atualizada. */
   else{
     
+    /* Leitura da cabeca da avail */
+    for(contador=0;contador<TAM_NRR_CHAR;contador++)
+      NRR_cabeca_char[contador]=fgetc(arq_cabeca_avail_base);
+    NRR_cabeca=atoi(NRR_cabeca_char);
+    
+    /* Possibilidade 1 */
+    if(NRR_cabeca == -1) {
+      if(DEBUG)
+	printf(">>> Arq da cabeca existe, mas aponta p/ -1; insere no final da base.\n\n");
+      return(-1);
+    }
+    /* Possibilidade 2 */
+    else {
+      if(DEBUG)
+	printf(">>> Insercao no meio da base; atualizacao da cabeca.\n\n");
+      /* Procedimento para atualizacao da cabeca */
+      arq_base = fopen("base22.dat","r+");
+      fseek(arq_base,(NRR_cabeca-1)*TAM_REGISTRO,SEEK_SET);
+      /* Leitura da nova cabeca */
+      for(contador=0;contador<TAM_NRR_CHAR;contador++)
+	NRR_cabeca_char[contador]=fgetc(arq_base);
+      NRR_nova_cabeca=atoi(NRR_cabeca_char);
+      /* Escrita da nova cabeca no arquivo */
+      fprintf(arq_cabeca_avail_base,"%05d",NRR_nova_cabeca);
+      /* A funcao retorna o NRR da antiga cabeca, onde o novo registro sera inserido. */
+      return(NRR_cabeca);
+    }
   }
   
-
+  fclose(arq_base);
+  fclose(arq_cabeca_avail_base);
 }
-
 
 void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
   int i,resposta;
@@ -597,10 +631,18 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
     if(DEBUG)
       printf(">>>NRR a remover: %d\n", NRR_a_remover);
 
-
-    /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
-    if (cabeca_avail_base== -1) {
-
+      
+      /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
+      if (cabeca_avail_base== -1) {
+      
+<<<<<<< .mine
+      if(DEBUG) 
+ 	printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n");
+      
+      /* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. */
+      arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
+=======
+>>>>>>> .r71
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
@@ -626,12 +668,12 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
       /* Adiciona o endereco da antiga cabeca no inicio do registro a ser removido */
       fseek(arq_base, (NRR_a_remover -1)*TAM_REGISTRO, SEEK_SET);
       fprintf(arq_base,"%05d",NRR_cabeca_antiga);
-
+      
     }
-
+    
     printf("Obra removida com sucesso.\n\n"); 
   }
-
+  
   *cabeca_avail_base_original = cabeca_avail_base;
 
   return;
