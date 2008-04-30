@@ -23,7 +23,6 @@ int main() {
 
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
- /*  int *ap_n_registros, *ap_pk, *cabeca_avail; */
   int n_registros, pk, sk, cabeca_avail;
   FILE *arq_base,*arq_pk, *arq_avail, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
