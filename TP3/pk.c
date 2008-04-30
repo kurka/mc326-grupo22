@@ -136,6 +136,27 @@ ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo
   
 }
   
+/** 
+    \brief remove a chave primaria que acabou de ser removida da base22.dat
+*/
+ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail){
+
+  int i;
+
+  /*procura a pk com a chave que foi removida*/
+  for(i=0;i<limite[0];i++){
+    if(vetor_pk[i].nrr == cabeca_avail){
+      limite[0]--;
+      break;
+    }
+  }
+  
+  /*desloca as pks seguintes*/
+  for(;i<limite[0]-1;i++)
+    vetor_pk[i]=vetor_pk[i+1];
+
+  return vetor_pk;
+}
   
 /** 
     \brief salva todos os registros do nosso vetor de PKs no arquivo PK.dat
