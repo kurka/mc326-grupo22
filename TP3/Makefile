@@ -1,5 +1,5 @@
-main: main.o base.o pk.o fopen.o 
-	gcc -ggdb -ansi -pedantic -Wall -lefence main.o base.o pk.o fopen.o -o tp3
+main: main.o base.o pk.o sk.o fopen.o 
+	gcc -ggdb -ansi -pedantic -Wall -lefence main.o base.o pk.o sk.o fopen.o -o tp3
 main.o: main.c base.h pk.h defines.h fopen.h
 	gcc -ggdb -ansi -pedantic -Wall -c main.c
 
@@ -12,7 +12,7 @@ pk.o: pk.h defines.h pk.c
 fopen.o: fopen.h defines.h fopen.c
 	gcc -ggdb -ansi -pedantic -Wall -c fopen.c
 
-#sk.o: sk.h defines.h sk.c
-#	gcc -ggdb -ansi -pedantic -Wall -c sk.c
+sk.o: sk.h defines.h sk.c
+	gcc -ggdb -ansi -pedantic -Wall -c sk.c
 clean:
 	rm -f *.o tp3
