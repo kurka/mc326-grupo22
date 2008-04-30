@@ -54,7 +54,7 @@ int main() {
 	
   if(arq_sk == NULL) /*se não existe um arquivo de sk*/
     {       			 /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
-     /*  vetores_sk = criarVetorSK(arq_base, n_registros); */
+      vetores_sk = criarVetorSK(arq_base, n_registros);
     }
   if(arq_sk){
     fseek(arq_sk,0,SEEK_END);
