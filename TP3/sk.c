@@ -77,11 +77,26 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 						
 						strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
 						vetores_sk->n_titulos++;
+
+						
+				        /* criando a li */  /* RODA! MAS NAO FOI TESTADO!!!! */
+						vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
+					    vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+	        	        for(l=0; l<TAM_TIT; l++)
+		        		{
+					       	vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[l] = registro[l];
+					    }	
+						vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[TAM_TIT] = '\0';
+						
+					    vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
+					    vetores_li->n_titulos++;
+						
+					}
 												
 								
-					}
-					k = 0;
 				}
+				k = 0;
+			
 		    }
 			else
 			{
@@ -95,25 +110,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		
 
 
-		/* criando a li */  /* RODA! MAS NAO FOI TESTADO!!!! */
-		int novaChave = 1;
-		for(l=0; l<vetores_sk->n_titulos; l++)
-		{
-			if(strcmp(temp_sk, vetores_sk->vetor_SK_titulo[l].chave) == 0)
-			   novaChave = 0;
-		}
-        if(novaChave == 1) /*se a SK é nova*/
-	    {
-	    	vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
-	    	vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*TAM_TIT);
-	        
-	        for(l=0; l<TAM_TIT; l++)
-	        {
-	        	vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[l] = registro[l];
-	        }	
-	        vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
-	        vetores_li->n_titulos++;
-	    }
+		
 	    
 	    
 			
@@ -260,9 +257,15 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	
 	    
 	
- 
-				
+    printf("\n NUMERO %d", vetores_li->n_titulos);	
+	for(l=0; l< vetores_li->n_titulos; l++)
+	{
+	   printf("%s", vetores_li->vetor_li_titulo[l].chave);	
+	}
 
+	int x;
+	scanf("%d", &x);
+	
 	return vetores_sk;
 	
 }
