@@ -23,7 +23,7 @@ void Insere_valor(char *str_final);
 void Insere_imagem(char *str_final);
 
 /* Funcao de remocao de registro da base de dados */
-void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros);
+void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *avail_base);
 
 /* Funcao que ignora espacos antes do comeco da entrada */
 char come_espaco(char c);

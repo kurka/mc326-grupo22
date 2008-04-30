@@ -16,14 +16,16 @@ Funções disponiveis:
 #include "base.h"
 #include "pk.h"
 #include "sk.h"
+#include "fopen.h"
 
 
 int main() {
 
-  char c,opcao,n_registros=0;
+  char c,opcao;
   char str_final[TAM_REGISTRO+1];
-  int pk, sk;
-  FILE *arq_base,*arq_pk, *arq_sk;
+ /*  int *ap_n_registros, *ap_pk, *cabeca_avail; */
+  int n_registros, pk, sk, cabeca_avail;
+  FILE *arq_base,*arq_pk, *arq_avail, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
   tipo_vetores_sk *vetores_sk;
@@ -40,49 +42,20 @@ int main() {
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
  
-  arq_base=fopen("base22.dat","r+");
-  
-  if(arq_base == NULL){
-    if(DEBUG)
-      printf("\n>>>Arquivo base22 inexistente: base sera criada\n");
-    arq_base=fopen("base22.dat","w");
-  }
-
-
-  /* pk indica se o arquivo pk.dat possui conteudo (1 sim, 0 nao)
-    para ser gerado ou nao a partir da base */
-  pk=1;
-  arq_pk=fopen("pk.dat","r");
-	
-  if(!arq_pk){
-    pk=0;
-  }
-  if(arq_pk){
-    fseek(arq_pk,0,SEEK_END);
-    /*se pk possui tamanho 0, as chaves primarias serao
-      coletadas a partir do arquivo base.dat */ 
-    pk = ftell(arq_pk);
-  }
- 
+  /*consulta ou cria arquivos .dat*/
+  arq_base = abre_base22(arq_base, &n_registros);
+  arq_pk = abre_pk(arq_pk, &pk); 
+  arq_avail = abre_avail(arq_avail, &cabeca_avail);
 
 	
-  
-  
-	
-	
-	
-  /* Esta rotina retorna o numero de registros do arquivo da base de dados
-     caso o programa comece com um arquivo ja existente. */
-  fseek(arq_base,0,SEEK_END);
-  n_registros=ftell(arq_base)/TAM_REGISTRO;
-  
+
   /* verificando a existência de um arquivo de sk */
   arq_sk=fopen("sk.dat","r");
 	
   if(arq_sk == NULL) /*se não existe um arquivo de sk*/
-  {       			 /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
-	  vetores_sk = criarVetorSK(arq_base, n_registros);
-  }
+    {       			 /*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
+      vetores_sk = criarVetorSK(arq_base, n_registros);
+    }
   if(arq_sk){
     fseek(arq_sk,0,SEEK_END);
     /*se sk possui tamanho 0, as chaves primarias serao
@@ -108,10 +81,10 @@ int main() {
      da base (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
   if(pk==0){
-   
+    
     if(DEBUG)
       printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
-    arq_pk=fopen("pk.dat","w");    
+    
     vetor_registros = inserePKBase(arq_base, vetor_registros, limite, n_registros);
   }
 
@@ -172,7 +145,7 @@ int main() {
 
       /* Remove um registro do catalogo */
     case REMOVER:
-      remove_registro(n_registros, vetor_registros);
+      remove_registro(n_registros, vetor_registros, arq_base, arq_avail, &cabeca_avail);
       break;
 
     }
@@ -195,6 +168,7 @@ int main() {
   /*fecha os arquivos*/
   fclose(arq_pk);
   fclose(arq_base);
+  fclose(arq_avail);
 
   if(DEBUG)
     printf(">>>Fim da execucao!\n");

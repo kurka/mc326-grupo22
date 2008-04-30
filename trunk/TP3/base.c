@@ -524,14 +524,16 @@ void busca_registro(int NRR, FILE * arq_base) {
 }
 
 /* Funcao de remocao de registro - avail list da base de dados */
-void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros) {
+void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *cabeca_avail_base_original) {
 
-  int NRR_a_remover, contador,NRR_cabeca_antiga;
+  int NRR_a_remover, contador,NRR_cabeca_antiga, cabeca_avail_base;
   char titulo_a_remover[MAX_TIT], NRR_cabeca_antiga_char[TAM_NRR_CHAR];
   ap_tipo_registro_pk elto_encontrado;
-  FILE *arq_cabeca_avail_base, *arq_base;
 
-  arq_base=fopen("base22.dat","r+");
+  cabeca_avail_base = *cabeca_avail_base_original;
+  /*FILE *arq_cabeca_avail_base, *arq_base;*/
+
+  /* arq_base=fopen("base22.dat","r+"); */
 
   if(DEBUG)
     printf("Debug: Numero de registros = %d\n\n",n_registros);
@@ -559,19 +561,19 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros) {
     NRR_a_remover=((*elto_encontrado).nrr);
 
     if(DEBUG)
-      printf("Debug - NRR a remover: %d\n\n", NRR_a_remover);
+      printf(">>>NRR a remover: %d\n", NRR_a_remover);
 
-    /* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita */
-    arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
+/*     /\* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita *\/ */
+/*     arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+"); */
 
-    /* Caso o arquivo nao exista, nao ha nenhum registro apagado */
-    if (arq_cabeca_avail_base==NULL) {
+    /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
+    if (cabeca_avail_base== -1) {
 
-      if(DEBUG)
-	printf("\nDebug: Nao existe arq com a cabeca da avail. Criando...\n\n");
+/*       if(DEBUG) */
+/* 	printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n"); */
 
-      /* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. */
-      arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
+      /* /\* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. *\/ */
+/*       arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+"); */
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
@@ -602,6 +604,8 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros) {
 
     printf("Obra removida com sucesso.\n\n"); 
   }
+
+  *cabeca_avail_base_original = cabeca_avail_base;
 
   return;
 }
