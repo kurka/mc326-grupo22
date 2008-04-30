@@ -13,8 +13,10 @@
 
 
 
-/*sempre que o vetor que armazena as chaves primarias estiver cheio,
-  ele eh dobrado de tamanho (vetor dinamico dobravel)*/
+/**
+   \brief sempre que o vetor que armazena as chaves primarias estiver cheio,
+   ele eh dobrado de tamanho (vetor dinamico dobravel)
+*/
 ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
   
   ap_tipo_registro_pk temp;
@@ -35,7 +37,9 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
 }
 
 
-/* le todos os dados do arquivo PK.dat e os adiciona em um vetor*/
+/**
+   \brief le todos os dados do arquivo PK.dat e os adiciona em um vetor
+*/
 ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int * limite, int n_registros){
   int i, j;
   tipo_registro_pk novo;
@@ -57,8 +61,10 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int * l
 }
 
 
-/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
-  e cria os indices no arquivo.*/
+/**
+   \brief caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
+   e cria os indices no arquivo.
+*/
 ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_registros){
   
   int i, j;
@@ -83,8 +89,10 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * l
 }
 
 
-/*pega o ultimo titulo lido e registra ele como novo,
-  para ser inserido no vetor de chaves primarias*/
+/** 
+    \brief pega o ultimo titulo lido e registra ele como novo,
+    para ser inserido no vetor de chaves primarias
+*/
 ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite){
 
   int i;
@@ -104,7 +112,10 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
 }
 
 
-/* insere um novo registro no nosso vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */
+/** 
+    \brief insere um novo registro no nosso vetor dinamico de PKs, essa inserção é 
+    ordenada e mantém a ordem alfabética do vetor 
+*/
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
  
   if(DEBUG)
@@ -126,7 +137,9 @@ ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo
 }
   
   
-/* salva todos os registros do nosso vetor de PKs no arquivo PK.dat*/
+/** 
+    \brief salva todos os registros do nosso vetor de PKs no arquivo PK.dat
+*/
 void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
 {
   int i,j;
@@ -144,8 +157,10 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
 
 
 
-/* Funcao de listagem de registros. A partir do arquivo de chaves primarias,
-   gera um arquivo em html com todos os titulos das obras. */
+/** 
+    \brief Funcao de listagem de registros. A partir do arquivo de chaves primarias,
+    gera um arquivo em html com todos os titulos das obras. 
+*/
 void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 
   FILE *arq_html;
@@ -177,10 +192,12 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
   return;
 }
 
-/* Funcao principal de consulta por chave primaria.
+/**
+   \brief Funcao principal de consulta por chave primaria.
    Le o titulo procurado e verifica no arquivo de chaves primarias se ele
    esta la. Em caso positivo, chama uma funcao da biblioteca da base de dados
-   que busca o registro e gera o HTML da consulta. */
+   que busca o registro e gera o HTML da consulta. 
+*/
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
 
   int NRR;
@@ -221,13 +238,17 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 /**************************************/
 
 
-/*funcao auxiliar usada na funcao qsort*/
+/**
+   \brief funcao auxiliar usada na funcao qsort
+*/
 int compara_qsort(const void * vetora, const void * vetorb) {
   return(strncmp( ((tipo_registro_pk *)vetora)->titulo,
 		  ((tipo_registro_pk *)vetorb)->titulo, TAM_TIT));
 }
 
-/*funcao analoga a strncmp, mas insensivel a maiusculas/minusculas*/
+/**
+   \brief funcao analoga a strncmp, mas insensivel a maiusculas/minusculas
+*/
 int strncmpinsensitive(char * a, char * b, int size){
   int i;
   for(i=0; i<size;i++){
@@ -240,7 +261,9 @@ int strncmpinsensitive(char * a, char * b, int size){
 }
 
 
-/*funcao auxiliar usada na funcao bsearch*/
+/**
+   \brief funcao auxiliar usada na funcao bsearch
+*/
 int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
   return(strncmpinsensitive( (char*)titulo_procurado, 
 		  ((tipo_registro_pk*)vetor_de_registros)->titulo,TAM_TIT));
