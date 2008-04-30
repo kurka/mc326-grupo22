@@ -20,6 +20,20 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
   Insere_valor(str_final);
   Insere_imagem(str_final);
 
+  /* Verifica onde a string deve ser inserida na base */
+  posicao_a_inserir = VerificaAvailBase();
+
+  if(posicao_a_inserir==-1) {
+    fseek(arq_base,0,SEEK_END);
+    fprintf(arq_base,"%s",str_final);
+  }
+  else {
+
+  }
+
+
+  printf("Obra adicionada com sucesso.\n\n\n");
+  return;
 }
 
 
