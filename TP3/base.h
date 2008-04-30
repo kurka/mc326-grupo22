@@ -22,6 +22,9 @@ void Insere_valor(char *str_final);
 /* Funcao que le da entrada padrao (teclado) e verifica coerencia do identificador da obra */
 void Insere_imagem(char *str_final);
 
+/* Funcao que verifica onde o novo registro deve ser inserido */
+int VerificaAvailBase();
+
 /* Funcao de remocao de registro da base de dados */
 void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *avail_base);
 
