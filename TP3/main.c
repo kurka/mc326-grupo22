@@ -62,15 +62,13 @@ int main() {
 /*   } */	
   
   
-  if(DEBUG)
-    printf("\n>>>Numero de registros: %d\n",n_registros);
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo */
   if(pk!=0){
     if(DEBUG)
       printf("\n>>>Lendo arquivo de chaves primarias (pk.dat)...\n\n");   
-    vetor_registros = lerArquivoPK(arq_pk, vetor_registros, limite, n_registros);
+    vetor_registros = lerArquivoPK(arq_pk, vetor_registros, limite, pk);
     /* Fecha o arquivo com os registros atuais */
     fclose(arq_pk);
   }
@@ -81,12 +79,21 @@ int main() {
   if(pk==0){
     
     if(DEBUG)
-      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n\n");   
+      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...");   
     
     vetor_registros = inserePKBase(arq_base, vetor_registros, limite, n_registros);
+
+    /*se existir uma avail list, apaga os registros apontados por ela*/
+    if(cabeca_avail != -1){
+      if(DEBUG)
+	printf(">>>limpando chaves primarias\n\n");
+      vetor_registros = limpa_pk(arq_base, vetor_registros, limite, cabeca_avail);
+    }
   }
 
-
+  if(DEBUG)
+    printf("\n>>>Numero de registros: %d\n\n\n",limite[0]);
+  
   /* Interface*/
   do {
 

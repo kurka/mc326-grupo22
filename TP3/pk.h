@@ -8,11 +8,15 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
 /* le todos os dados do arquivo PK.dat e os adiciona em um vetor, mantendo a ordem de registros, que é alfabética */
 ap_tipo_registro_pk lerArquivoPK(FILE *arq_pk, ap_tipo_registro_pk vetor, int * limite, int n_registros);
 
-/*caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
+/* caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
   e cria os indices no arquivo.*/
 ap_tipo_registro_pk inserePKBase(FILE *arqBase, ap_tipo_registro_pk vetor, int * limite, int n_registros);
 
-/*pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
+/* remove chaves primarias no vetor_registros que na verdade sao 
+   elementos de avail_list*/
+ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail);
+
+/* pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
 ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite);
 
 /* insere um novo registro no nosos vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */

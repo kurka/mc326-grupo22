@@ -21,8 +21,6 @@ FILE * abre_base22(FILE *arq_base, int *n_registros){
 
   *n_registros = temp;
   
-  if(DEBUG)
-    printf("\n>>>Numero de registros: %d\n",(*n_registros));
 
   return arq_base;
 }
@@ -41,7 +39,7 @@ FILE * abre_pk(FILE *arq_pk, int *pk){
     fseek(arq_pk,0,SEEK_END);
     /*se pk possui tamanho 0, as chaves primarias serao
       coletadas a partir do arquivo base.dat */ 
-    temp = ftell(arq_pk);
+    temp = ftell(arq_pk)/TAM_PK;
   }
 
   if(temp==0){
