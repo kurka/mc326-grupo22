@@ -619,10 +619,7 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 
   cabeca_avail_base = *cabeca_avail_base_original;
 
-  if(DEBUG)
-    printf("Debug: Numero de registros = %d\n\n",n_registros);
-
-  if(n_registros == 0) {
+   if(n_registros == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
     return;
   }
@@ -636,7 +633,7 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
   
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
-    printf("O titulo nao foi encontrado.\n\n");
+    printf("\nO titulo nao foi encontrado! Tente novamente!\n\n");
   }
 
   /* Caso contrario, a partir do NRR, faz o procedimento de remocao do registro: */
