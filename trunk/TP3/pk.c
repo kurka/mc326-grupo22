@@ -48,8 +48,15 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int * l
   fseek(arqPK,0,SEEK_SET);
   
   for(i=0;i<n_registros;i++){
-    for(j=0; j<TAM_TIT; j++)
+    for(j=0; j<TAM_TIT; j++){
       fscanf(arqPK, "%c", &(novo.titulo[j]));
+    }
+/*     /\*se a pk foi apagada, nao a coloca no vetor*\/ */
+/*     if(novo.titulo[0] == " "){ */
+/*       i--; */
+/*       continue; */
+/*     } */
+    
     fscanf(arqPK, "%d", &(novo.nrr));
     
     limite[0]++;
@@ -89,6 +96,39 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * l
 }
 
 
+/**
+   \brief remove chaves primarias no vetor_registros que na verdade sao elementos de avail_list
+*/
+ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail){
+  
+  int *avail;
+  int i, tam = 1;
+  
+  /*cria vetor onde serao armazenadas as nrrs dos
+    indices dos elementos da avail_list*/
+  avail = (int *) malloc(sizeof(int)*tam);
+  avail[0] = cabeca_avail;
+    
+  /*a cada novo elemento encontrado, realoca o vetor e o adiciona a lista*/
+  while(cabeca_avail != -1){
+    /*le o proximo elemento no arquivo base.dat*/
+    fseek(arq_base, (cabeca_avail-1)*TAM_REGISTRO, SEEK_SET);
+    fscanf(arq_base, "%05d", &cabeca_avail);
+    
+    tam++;
+    avail = realloc(avail, sizeof(int)*(tam));
+    avail[tam-1]=cabeca_avail;
+  } 
+  
+  /*remove os elementos encontrados*/
+  for(i=0;i<tam-1;i++)
+    vetor_pk = remove_pk(vetor_pk, limite, avail[i]);
+  
+  
+  return vetor_pk;
+}
+
+
 /** 
     \brief pega o ultimo titulo lido e registra ele como novo,
     para ser inserido no vetor de chaves primarias
@@ -118,10 +158,6 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
 */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
  
-  if(DEBUG)
-    printf(">>>%d) insercao da chave primaria %d\n", limite[0], novo.nrr);
-  
-  
   /*  verifica se ainda cabe dados no vetor (limite 0 contem 
      o numero de chaves primariase limite 1 o tamanho do vetor) */
   if(limite[0] > limite[1])
@@ -139,7 +175,7 @@ ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo
 /** 
     \brief remove a chave primaria que acabou de ser removida da base22.dat
 */
-ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail){
+ap_tipo_registro_pk remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail){
 
   int i;
 
@@ -152,7 +188,7 @@ ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int c
   }
   
   /*desloca as pks seguintes*/
-  for(;i<limite[0]-1;i++)
+  for(;i<limite[0];i++)
     vetor_pk[i]=vetor_pk[i+1];
 
   return vetor_pk;
@@ -171,7 +207,7 @@ void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
     for(j=0; j<TAM_TIT; j++)
       fprintf(arq_pk, "%c", vetor[i].titulo[j]);
     
-    fprintf(arq_pk, "%d", vetor[i].nrr);     
+    fprintf(arq_pk, "%08d", vetor[i].nrr);     
   }
   
 }

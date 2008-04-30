@@ -3,6 +3,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 
 
 #define TAM_REGISTRO 450
+#define TAM_PK 208
 #define INSERIR '1'
 #define LISTAR '2'
 #define CONSULTA_PK '3'
@@ -26,7 +27,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MAX_IMG 450
 #define TAM_FORM 3
 #define MEM_INIT 10
-#define DEBUG 1 /*if(DEBUG) imprime etapas e outras infos para debugar*/ 
+#define DEBUG 1 /*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
 
 typedef struct {
@@ -37,8 +38,7 @@ typedef struct {
 typedef tipo_registro_pk * ap_tipo_registro_pk;
 
 
-
-typedef struct 
+typedef struct
 {
   char *chave;
   int endereco_li; /*endereço na lista invertida*/
