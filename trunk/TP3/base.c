@@ -24,16 +24,39 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
   posicao_a_inserir = VerificaAvailBase();
 
   if(posicao_a_inserir==-1) {
+    /* Insercao no fim do arquivo */
     fseek(arq_base,0,SEEK_END);
     fprintf(arq_base,"%s",str_final);
   }
   else {
-
+    /* Insercao no lugar do registro apontado pela cabeca da avail */
+    fseek(arq_base,(posicao_a_inserir-1)*TAM_REGISTRO,SEEK_SET);
+    fprintf(arq_base,"%s",str_final);
   }
-
 
   printf("Obra adicionada com sucesso.\n\n\n");
   return;
+}
+
+int VerificaAvailBase() {
+
+  FILE *arq_base, *arq_cabeca_avail_base;
+
+  arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
+
+  /* Caso o arquivo nao exista, o novo registro sera inserido no final da base */
+  if(arq_cabeca_avail_base==NULL)
+    return(-1);
+
+  /* Caso o arquivo exista, ha 2 possibilidades:
+     1-) A cabeca da avail nele contida eh -1. Neste caso, o registro tb eh inserido no final da base;
+     2-) A cabeca aponta p/ algum registro. Nesse caso, o novo registro eh inserido no lugar desta cabeca,
+     e a cabeca eh atualizada.*/
+  else{
+    
+  }
+  
+
 }
 
 
@@ -577,17 +600,17 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
     if(DEBUG)
       printf(">>>NRR a remover: %d\n", NRR_a_remover);
 
-/*     /\* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita *\/ */
-/*     arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+"); */
+    /* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita */
+    arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+"); */
 
     /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
     if (cabeca_avail_base== -1) {
 
-/*       if(DEBUG) */
-/* 	printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n"); */
+      if(DEBUG) 
+ 	printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n");
 
-      /* /\* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. *\/ */
-/*       arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+"); */
+      /* O arquivo eh criado e dentro dele eh escrito o NRR a ser removido. */
+      arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
       fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
       
       /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
