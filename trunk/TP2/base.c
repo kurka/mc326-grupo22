@@ -2,15 +2,18 @@
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
 #include <stdio.h>
-#include "base.h"
+#include <string.h>
 #include "defines.h"
+#include "base.h"
 #include "pk.h"
 
-/* Funcao da insercao propriamente dita (insercao no arquivo) */
-void Insere_base(FILE *arq_base, char * str_final) {
+/** 
+    \brief Funcao da insercao propriamente dita (insercao no arquivo) 
+*/
+void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
 
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
-  Insere_titulo(str_final);
+  Insere_titulo(str_final, vetor, n_registros);
   Insere_tipo(str_final);
   Insere_autor(str_final);
   Insere_ano(str_final);
@@ -21,7 +24,7 @@ void Insere_base(FILE *arq_base, char * str_final) {
 }
 
 
-void Insere_titulo(char *str_final) {
+void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
   int i,resposta;
   char c;
   
@@ -76,10 +79,20 @@ void Insere_titulo(char *str_final) {
       }
     }
 
+  for(i=0; i<n_registros; i++){ 
+    if(strncmp(str_final, vetor[i].titulo, TAM_TIT) == 0){
+      printf("Erro! Titulo inserido já existente!\n");
+      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+      resposta = ERRO;
+      break;
+    }
+
+  }
+
   } while(resposta==ERRO);
   
 
-    printf("Titulo lido com sucesso.\n");
+  printf("Titulo lido com sucesso.\n");
 
 
   return;
@@ -149,8 +162,10 @@ void Insere_tipo(char *str_final) {
 }
 
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do nome do autor da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do nome do autor da obra.
+*/
 void Insere_autor(char *str_final) {
 
   int i,resposta;
@@ -212,8 +227,10 @@ void Insere_autor(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do ano da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do ano da obra.
+*/
 void Insere_ano(char *str_final) {
 
   int i,resposta;
@@ -282,8 +299,10 @@ void Insere_ano(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do valor da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do valor da obra.
+*/
 void Insere_valor(char *str_final) {
 
   int i,j,k,resposta;
@@ -358,8 +377,10 @@ void Insere_valor(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do identificador da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do identificador da obra.
+*/
 void Insere_imagem(char *str_final) {
 
   int i, j, resposta;
@@ -441,8 +462,10 @@ void Insere_imagem(char *str_final) {
 }
 
 
-/*retira informacoes sobre obra de arte, gerando um arquivo .html com elas
-  chamada dentro da funcao consulta_pk, do arquivo pk.c*/
+/**
+   \brief Funcao que retira informacoes sobre obra de arte, gerando um arquivo .html com elas
+   chamada dentro da funcao consulta_pk, do arquivo pk.c
+*/
 void busca_registro(int NRR, FILE * arq_base) {
 
   FILE *arq_html;
@@ -524,7 +547,7 @@ void busca_registro(int NRR, FILE * arq_base) {
 /*         Funcoes Auxiliares         */
 /**************************************/
 
-/* funcao que ignora espacos antes do comeco da entrada*/
+/*funcao que ignora espacos antes do comeco da entrada*/
 char come_espaco(char c){
   /* sobrescreve o valor de "c" ate achar algum valor diferente de espaco */
   while(c==' ') {
