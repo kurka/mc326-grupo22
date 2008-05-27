@@ -1,16 +1,16 @@
-    MC326 - Estrutura de Arquivos
+	MC326 - Estrutura de Arquivos
 
-    TP2
-    Grupo 22
+	Trabalho Pratico 2
+	Grupo 22
 
 
 * Descricao do Trabalho
 
 Implementamos, neste trabalho pratico, um sistema de consulta por chave primaria em uma base de dados.
-Alem disso, o programa tambem lista todos os registros da base de dados. Ambas funcionalidades geram um
-arquivo html para visualizacao.
+Alem disso, o programa tambem lista todos os registros da base de dados. Ambas funcionalidades geram 
+um arquivo em HTML (tp2.html) para visualizacao do resultado da consulta.
 A chave primaria utilizada foi o campo 'titulo' de cada registro.
-Como este trabalho eh a continuacao do trabalho pratico 1, tambem fizemos algumas mudancas e correcoes
+Como este trabalho eh a continuacao do trabalho pratico 1, tambem fizemos algumas mudancas e correcoes 
 nas funcoes de insercao de registros na base de dados.
 
 
@@ -28,13 +28,12 @@ Ao iniciar o programa, ha 3 possibilidades:
 Papa a insercao no pk.dat, eh realizado o seguinte procedimento:
 - Abre o pk.dat somente para leitura, calcula o numero de registros, carrega todos os dados contidos 
 nele num vetor dinamico (vetor de registros). Fecha o pk.dat;
-- Abre em seguida o pk.dat como w (apagando seu conteudo pq vai salvar o novo no final);
-- Gera o arquivo pk.dat a partir dos titulos lidos do base.dat.
+- Abre em seguida o pk.dat como w (sobrescrevendo seu conteudo);
+- Gera o arquivo pk.dat a partir dos titulos lidos do arquivo base.dat.
 
 Listagem:
-A funcao de listagem gera um HTML contendo os titulos de todos os registros na base.
-Para isso, ela abre o arquivo de chaves primarias e, a partir do numero de registros, insere cada titulo
-de uma vez no arquivo HTML.
+A funcao de listagem gera um HTML contendo os titulos (em ordem alfabetica) de todos os registros contidos na base.
+Para isso, ela abre o arquivo de chaves primarias e insere cada titulo por vez no arquivo HTML.
 Utilizamos as funcoes fgetc para ler os caracteres do arquivo das chaves, fprintf para escrever no arquivo
 HTML e fseek para pular os espaços correspondentes ao NRR no arquivo pk.dat.
 
@@ -48,13 +47,3 @@ Para isso, fizemos uma funcao que:
 - Caso o titulo procurado seja encontrado, seu NRR eh transformado pra inteiro pela funcao atoi;
 - Com o NRR em maos, chama-se outra funcao (busca_registro) que busca os campos do registro na base de
 dados (direto no lugar certo) e insere-os num arquivo HTML.
-
-
-* Problemas
-
-Nao conseguimos de maneira alguma fazer o vetor dobravel e por isso usamos um vetor dinamico que realoca
-memoria a cada nova insercao.
-Apesar de nao ser o melhor metodo, realiza a funcao de insercao corretamente.
-
-
-PS: Utilizamos SVN (vide diretorio oculto .svn na pasta dos arquivos).
