@@ -65,6 +65,7 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
       printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n");
     /* O arquivo eh criado com valor -1*/
     arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
+    fseek(arq_cabeca_avail_base,0,SEEK_SET);
     fprintf(arq_cabeca_avail_base, "%05d", temp);
   }
   else{
