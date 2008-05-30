@@ -47,19 +47,22 @@ int main() {
 
 	
 
-/*   /\* verificando a existência de um arquivo de sk *\/ */
-/*   arq_sk=fopen("sk.dat","r"); */
+    /* verificando a existência de um arquivo de sk */
+    arq_sk=fopen("sk.dat","r");
 	
-/*   if(arq_sk == NULL) /\*se não existe um arquivo de sk*\/ */
-/*     {       			 /\*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*\/ */
-/*       vetores_sk = criarVetorSK(arq_base, n_registros); */
-/*     } */
-/*   if(arq_sk){ */
-/*     fseek(arq_sk,0,SEEK_END); */
-/*     /\*se sk possui tamanho 0, as chaves primarias serao */
-/*       coletadas a partir do arquivo base.dat *\/  */
-/*     sk = ftell(arq_sk); */
-/*   } */	
+    if(arq_sk == NULL) /*se não existe um arquivo de sk*/
+      {
+	/*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
+	if(DEBUG)
+	  printf("\n>>>criando vetores sk\n");
+	vetores_sk = criarVetorSK(arq_base, n_registros);
+      }
+    if(arq_sk){
+      fseek(arq_sk,0,SEEK_END);
+      /*se sk possui tamanho 0, as chaves primarias serao
+        coletadas a partir do arquivo base.dat */
+      sk = ftell(arq_sk);
+    }
   
   
 
@@ -74,7 +77,7 @@ int main() {
   }
 
   /* Caso o arquivo pk.dat nao exista, ou seja vazio, pega os valores 
-     da base (se existirem) e os coloca no vetor_registro, para serem
+     da ase (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
   if(pk==0){
     
@@ -143,8 +146,7 @@ int main() {
       /* Procurar pro registro via chave secundaria */
     case CONSULTA_SK:
       printf("Consulta SK.\n\n");
-      /* ***Definir funcao!*** */
-      /* consulta_sk(); */
+ /*      consulta_sk();  */
       break;
 
       /* Remove um registro do catalogo */
