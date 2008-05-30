@@ -1,3 +1,4 @@
+
 /* Nesta biblioteca estao definidas as funcoes de operacao na
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
