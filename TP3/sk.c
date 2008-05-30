@@ -495,6 +495,75 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
  */
 
 
-void consulta_sk() {
+/**
+   \brief funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
+*/
+int strcmpinsensitive(char * a, char * b){
+  int i=0;
+  while(a[i]!='\0'){
+    if( tolower(a[i]) > tolower(b[i]) )
+      return 1;
+    if( tolower(a[i]) < tolower(b[i]) )
+      return -1;
+    
+    i++;
+  }
+  return 0;
+}
+
+
+/**
+   \brief funcao auxiliar usada na funcao bsearch
+*/
+int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
+  return(strcmpinsensitive( (char*)titulo_procurado, 
+		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave));
+}
+
+
+void consulta_sk(int limite_reg, tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FILE *arq_base) {
+
+  int NRR;
+  char titulo_procurado[MAX_TIT];
+  ap_tipo_registro_pk elto_encontrado;
+
+
+  if(limite_reg==0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta por chave secundaria no catalogo:\n");
+  /* titulo_procurado eh lido*/
+  printf("Digite a chave secundaria a ser pesquisada")
+    scanf("%s" &titulo_procurado);
+  
+
+  /* Busca o titulo procurado no vetor de structs. */
+  elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch);
+  
+  /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("O titulo nao foi encontrado.\n\n");
+  }
+  /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
+  else {
+
+    endereco_li=((*elto_encontrado).endereco_li);
+
+
+		      
+    /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+    while(vetores_li->vetor_li_titulo[endereco_li].prox != -1) 
+      {
+	strcpy(vetores_li->vetor_li_ano[endereco_li].chave, titulo_procurado);
+      }
+    vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
+    
+    busca_registro(NRR, arq_base); /* funcao definida em base.c */
+    printf("Obra encontrada. Para visualizar suas informações consulte\n");
+    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n"); 
+  }
+
   return;
 }
