@@ -74,4 +74,9 @@ typedef struct
 }tipo_vetores_li;
 
 
-
+/*estrutura temporaria*/
+typedef struct
+{
+  tipo_vetores_sk * vetores_sk;
+  tipo_vetores_li * vetores_li;
+}tipo_vetorzao;

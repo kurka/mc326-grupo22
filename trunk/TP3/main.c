@@ -26,7 +26,8 @@ int main() {
   FILE *arq_base,*arq_pk, *arq_avail, *arq_sk;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
-  tipo_vetores_sk *vetores_sk;
+ /*  tipo_vetores_sk *vetores_sk; */
+  tipo_vetorzao * vetorzao;
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
@@ -55,7 +56,8 @@ int main() {
 	/*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
 	if(DEBUG)
 	  printf("\n>>>criando vetores sk\n");
-	vetores_sk = criarVetorSK(arq_base, n_registros);
+/* 	vetores_sk = criarVetorSK(arq_base, n_registros); */
+ 	vetorzao = criarVetorSK(arq_base, n_registros); 
       }
     if(arq_sk){
       fseek(arq_sk,0,SEEK_END);
@@ -146,6 +148,7 @@ int main() {
       /* Procurar pro registro via chave secundaria */
     case CONSULTA_SK:
       printf("Consulta SK.\n\n");
+      consulta_sk(vetorzao->vetores_sk, vetorzao->vetores_li, arq_base, vetor_registros, limite[0]);
  /*      consulta_sk();  */
       break;
 
