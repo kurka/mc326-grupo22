@@ -6,6 +6,10 @@
 
 tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros);
 
+/* salva todos os registros da lista invertida de chaves secundarias nos arquivos *li.dat */
+void salvaArquivosLi(tipo_vetores_li *vetores_li);
+
+
 void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FILE *arq_base, tipo_registro_pk * vetor_pk, int n_pk);
 
 
