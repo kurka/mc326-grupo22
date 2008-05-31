@@ -253,16 +253,12 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 }
 
 /**
-   \brief Funcao principal de consulta por chave primaria.
-   Le o titulo procurado e verifica no arquivo de chaves primarias se ele
-   esta la. Em caso positivo, chama uma funcao da biblioteca da base de dados
-   que busca o registro e gera o HTML da consulta. 
+   \brief Funcao para leitura de chave primaria a ser procurada na base
 */
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
 
-  int NRR;
   char titulo_procurado[MAX_TIT];
-  ap_tipo_registro_pk elto_encontrado;
+
 
 
   if(limite_reg==0) {
@@ -274,6 +270,16 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado, vetor_de_registros, 0);
 
+  acha_pk(titulo_procurado, vetor_de_registros, arq_base, limite_reg);
+}
+
+
+/**
+   \brief Funcao que, dada uma chave primaria de entrada, procura para leitura de chave primaria a ser procurada na base
+*/
+void acha_pk(char titulo_procurado[MAX_TIT],  ap_tipo_registro_pk vetor_de_registros, FILE * arq_base, int limite_reg){
+  ap_tipo_registro_pk elto_encontrado;
+  int NRR;
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
   

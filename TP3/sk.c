@@ -5,19 +5,26 @@
 #include <ctype.h>
 #include "defines.h"
 #include "base.h"
+#include "pk.h"
 #include "sk.h"
 
+
 /*cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
-tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
+/* tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros) */
+tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 {
   int i, j, k, l;
   
   char registro[TAM_REGISTRO], temp_sk[TAM_TIT];
+
+  tipo_vetorzao *vetorzao = (tipo_vetorzao *)malloc(sizeof(tipo_vetorzao));
+
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
   tipo_vetores_li *vetores_li = (tipo_vetores_li *)malloc(sizeof(tipo_vetores_li));
   int novaSK, endereco_li;
   
-  
+  vetorzao->vetores_sk = vetores_sk;
+  vetorzao->vetores_li = vetores_li;
   
   vetores_sk->n_titulos = 0;
   vetores_sk->n_autores = 0;
@@ -67,7 +74,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		  novaSK = 1;
 		  for(l=0; l<vetores_sk->n_titulos; l++)
 		    {
-		      if(strcmp(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
 			novaSK = 0;
 		    }
 		  		  
@@ -100,7 +107,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		    {
 		      for(l=0; l<vetores_sk->n_titulos; l++) 
 			{  
-			  if(strcmp(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
+			  if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
 			    /*encontramos a SK no vetor de SKs*/
  			    { 
 			      
@@ -169,7 +176,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		  
 		  for(l=0; l<vetores_sk->n_tipos; l++)
 		    {
-		      if(strcmp(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
 			novaSK = 0;
 		    }
 		  
@@ -204,7 +211,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		    {
 		      for(l=0; l<vetores_sk->n_tipos; l++) 
 			{  
-			  if(strcmp(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0) 
+			  if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0) 
 			    /*encontramos a SK no vetor de SKs*/
  			    { 
 			      
@@ -267,7 +274,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		  
 		  for(l=0; l<vetores_sk->n_autores; l++)
 		    {
-		      if(strcmp(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
 			novaSK = 0;
 		    }
 		
@@ -303,7 +310,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		    {
 		      for(l=0; l<vetores_sk->n_autores; l++) 
 			{  
-			  if(strcmp(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)  
+			  if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)  
 			    /*encontramos a SK no vetor de SKs*/
  			    { 
 			      
@@ -363,7 +370,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		  
 		  for(l=0; l<vetores_sk->n_anos; l++)
 		    {
-		      if(strcmp(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
 			novaSK = 0;
 		    }
 		  
@@ -398,7 +405,7 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 		    {
 		      for(l=0; l<vetores_sk->n_anos; l++) 
 			{  
-			  if(strcmp(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0) 
+			  if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0) 
 			    /*encontramos a SK no vetor de SKs*/
  			    { 
 			      
@@ -435,14 +442,8 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
 	    {
 	      temp_sk[k] = registro[j];
 	      k++;
-	      
-	      
 	    }
-	}
-      
-      
-      
-      
+	}   
     }
   
   
@@ -456,8 +457,8 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
       }
   }
   
-  return vetores_sk;
-  
+  /*  return vetores_sk;*/
+  return vetorzao;
 }
 
 
@@ -495,6 +496,73 @@ tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros)
  */
 
 
+/* /\** */
+/*    \brief funcao auxiliar usada na funcao bsearch */
+/* *\/ */
+/* int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) { */
+/*   return(strcmpinsensitive( (char*)titulo_procurado,  */
+/* 		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave)); */
+/* } */
+
+
+void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FILE *arq_base, tipo_registro_pk * vetor_pk, int n_pk) {
+
+  int endereco_li, i;
+  char titulo_procurado[MAX_TIT];
+  tipo_registro_sk * elto_encontrado;
+
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta por chave secundaria no catalogo:\n");
+  /* titulo_procurado eh lido*/
+  printf("Digite a chave secundaria a ser pesquisada\n\n");
+  scanf("%s", titulo_procurado);
+  
+
+  /* Busca o titulo procurado no vetor de structs. */
+  /*   elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch); */
+
+  elto_encontrado = NULL;
+
+  for(i=0; i<vetores_sk->n_titulos; i++)
+    {
+      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[i].chave, titulo_procurado) == 0){
+	elto_encontrado = &(vetores_sk->vetor_SK_titulo[i]);
+	break;
+      }
+    }
+  
+  /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("O titulo nao foi encontrado.\n\n");
+  }
+  /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
+  else {
+
+    endereco_li=((*elto_encontrado).endereco_li);
+    
+    acha_pk(vetores_li->vetor_li_titulo[endereco_li].chave, vetor_pk, arq_base, n_pk);
+		      
+/*     /\* chegando no final da lista invertida, para ele poder apontar para a nova entrada*\/ */
+/*     while(vetores_li->vetor_li_titulo[endereco_li].prox != -1)  */
+/*       { */
+/* 	strcpy(vetores_li->vetor_li_ano[endereco_li].chave, titulo_procurado); */
+/*       } */
+/*     vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos; */
+  }
+
+  return;
+}
+
+
+/**************************************/
+/*         Funcoes Auxiliares         */
+/**************************************/
+
 /**
    \brief funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
 */
@@ -509,61 +577,4 @@ int strcmpinsensitive(char * a, char * b){
     i++;
   }
   return 0;
-}
-
-
-/**
-   \brief funcao auxiliar usada na funcao bsearch
-*/
-int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) {
-  return(strcmpinsensitive( (char*)titulo_procurado, 
-		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave));
-}
-
-
-void consulta_sk(int limite_reg, tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FILE *arq_base) {
-
-  int NRR;
-  char titulo_procurado[MAX_TIT];
-  ap_tipo_registro_pk elto_encontrado;
-
-
-  if(limite_reg==0) {
-    printf("Nao ha obras registradas no catalogo.\n\n");
-    return;
-  }
-
-  printf("Consulta por chave secundaria no catalogo:\n");
-  /* titulo_procurado eh lido*/
-  printf("Digite a chave secundaria a ser pesquisada")
-    scanf("%s" &titulo_procurado);
-  
-
-  /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch);
-  
-  /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
-  if(elto_encontrado==NULL) {
-    printf("O titulo nao foi encontrado.\n\n");
-  }
-  /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
-  else {
-
-    endereco_li=((*elto_encontrado).endereco_li);
-
-
-		      
-    /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-    while(vetores_li->vetor_li_titulo[endereco_li].prox != -1) 
-      {
-	strcpy(vetores_li->vetor_li_ano[endereco_li].chave, titulo_procurado);
-      }
-    vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
-    
-    busca_registro(NRR, arq_base); /* funcao definida em base.c */
-    printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n"); 
-  }
-
-  return;
 }

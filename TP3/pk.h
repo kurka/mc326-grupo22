@@ -29,8 +29,11 @@ ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int c
 void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
 
 
-/* Consulta por chave primaria */
+/* Faz a leitura de uma chave primaria que sera buscada na base */
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arqBase);
+
+/*busca no arquivo base.h a chave primaria procurada */
+void acha_pk(char titulo_procurado[MAX_TIT],  ap_tipo_registro_pk vetor_de_registros, FILE * arq_base, int limite_reg);
 
 /* Lista todas as chaves primarias presentes*/
 void lista_registros( int limite_reg,  ap_tipo_registro_pk vetor_de_registros);
