@@ -428,9 +428,16 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 /*       } */
 /*   } */
   
-
+  /*salva em arquivo as listas invertidas de chaves secundarias*/
   salvaArquivosLi(vetores_li, arqs_li);
-  
+
+  /*libera a memoria alocada*/
+  free(vetores_li->vetor_li_titulo);
+  free(vetores_li->vetor_li_autor);
+  free(vetores_li->vetor_li_ano);
+  free(vetores_li->vetor_li_tipo);
+  free(vetores_li);  
+
   return vetores_sk;
 }
 
