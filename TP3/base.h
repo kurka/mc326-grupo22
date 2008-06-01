@@ -4,7 +4,7 @@
 /* Funcao de insercao na base */
 void Insere_base(FILE *arq_base, char * str_final, ap_tipo_registro_pk vetor, int n_registros);
 
-void busca_registro(int NRR, FILE *arq_base);
+void busca_registro(int NRR, FILE *arq_base, FILE *arq_html);
 
 /* ********************************* */
 /* Funcoes de tratamento de entradas */

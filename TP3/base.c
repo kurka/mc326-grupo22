@@ -510,9 +510,8 @@ void Insere_imagem(char *str_final) {
    \brief Funcao que retira informacoes sobre obra de arte, gerando um arquivo .html com elas
    chamada dentro da funcao consulta_pk, do arquivo pk.c
 */
-void busca_registro(int NRR, FILE * arq_base) {
+void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
 
-  FILE *arq_html;
   int i;
   char identificador[TAM_IMG];
 
@@ -522,8 +521,6 @@ void busca_registro(int NRR, FILE * arq_base) {
 
 
   /* Geracao do arquivo de consulta em HTML: */
-
-  arq_html=fopen("tp3.html","w");
 
   /* Cabecalho do arquivo */
   fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\"><br>\n");
@@ -577,8 +574,6 @@ void busca_registro(int NRR, FILE * arq_base) {
 
   /* Fim do html */
   fprintf(arq_html,"<br></div></body></html>");
-
-  fclose(arq_html);
 
   return;
 }

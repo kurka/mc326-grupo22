@@ -159,7 +159,6 @@ int main() {
       if(DEBUG)     
 	printf(">>>Numero de registros: %d\n\n",limite[0]);
       break;
-
     }
     
   } while(opcao!=SAIR);
