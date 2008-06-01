@@ -72,7 +72,7 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
     /*guarda em cabeca_avail_base a cabeca do avail list*/
     fscanf(arq_cabeca_avail_base, "%05d", &temp);
   }
-  
+   
   if(DEBUG)
     printf(">>>Cabeca avail list = %d", temp);
 
