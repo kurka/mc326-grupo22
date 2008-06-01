@@ -258,6 +258,7 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
 
   char titulo_procurado[MAX_TIT];
+  FILE *arq_html;
 
 
 
@@ -270,14 +271,19 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado, vetor_de_registros, 0);
 
-  acha_pk(titulo_procurado, vetor_de_registros, arq_base, limite_reg);
+  /*como a chave primaria eh unica, arq_html eh criado em modo "w"*/
+  arq_html=fopen("tp3.html","w");
+
+  acha_pk(vetor_de_registros, titulo_procurado, limite_reg, arq_base, arq_html);
+
+  fclose(arq_html);
 }
 
 
 /**
    \brief Funcao que, dada uma chave primaria de entrada, procura para leitura de chave primaria a ser procurada na base
 */
-void acha_pk(char titulo_procurado[MAX_TIT],  ap_tipo_registro_pk vetor_de_registros, FILE * arq_base, int limite_reg){
+void acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html){
   ap_tipo_registro_pk elto_encontrado;
   int NRR;
   /* Busca o titulo procurado no vetor de structs. */
@@ -290,9 +296,9 @@ void acha_pk(char titulo_procurado[MAX_TIT],  ap_tipo_registro_pk vetor_de_regis
   /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
   else {
     NRR=((*elto_encontrado).nrr);
-    busca_registro(NRR, arq_base); /* funcao definida em base.c */
+    busca_registro(NRR, arq_base, arq_html); /* funcao definida em base.c */
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n"); 
+    printf("sua pasta atual e abra o arquivo tp3.html\n\n"); 
   }
 
   return;

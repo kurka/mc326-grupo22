@@ -511,7 +511,7 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
   int endereco_li, i;
   char titulo_procurado[MAX_TIT+1];
   char pk[MAX_TIT];
-
+  FILE *arq_html;
   tipo_registro_sk * elto_encontrado;
 
 
@@ -554,8 +554,14 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
     fseek(arq_tit_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
     fread(pk, sizeof(char)*TAM_TIT, 1, arq_tit_li);
 
-    acha_pk(pk, vetor_pk, arq_base, n_pk); 
-		      
+
+    /*como pode haver mais de uma chave primaria no resultado, arq_html eh no modo "append"*/
+    arq_html=fopen("tp3.html","w");  
+  
+    acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html); 
+
+    fclose(arq_html);
+    
 /*     /\* chegando no final da lista invertida, para ele poder apontar para a nova entrada*\/ */
 /*     while(vetores_li->vetor_li_titulo[endereco_li].prox != -1)  */
 /*       { */
