@@ -176,7 +176,6 @@ int main() {
     printf("\n>>>Salvando arquivos e liberando memoria\n");  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
 
-  free(vetor_registros);
   /*fecha os arquivos*/
   fclose(arq_pk);
   fclose(arq_base);
@@ -186,6 +185,15 @@ int main() {
   fclose(arqs_li->arq_tip_li); 
   fclose(arqs_li->arq_aut_li); 
   fclose(arqs_li->arq_ano_li); 
+
+  /*libera memoria*/
+  free(vetor_registros);
+  free(arqs_li);
+  free(vetores_sk->vetor_SK_titulo);
+  free(vetores_sk->vetor_SK_autor);
+  free(vetores_sk->vetor_SK_ano);
+  free(vetores_sk->vetor_SK_tipo);
+  free(vetores_sk);
 
   if(DEBUG)
     printf(">>>Fim da execucao!\n");
