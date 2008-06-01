@@ -15,7 +15,7 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 {
   int i, j, k, l;
   
-  char registro[TAM_REGISTRO], temp_sk[TAM_TIT];
+  char registro[TAM_REGISTRO], temp_sk[TAM_TIT], pk[TAM_TIT+1];
 
   tipo_vetorzao *vetorzao = (tipo_vetorzao *)malloc(sizeof(tipo_vetorzao));
 
@@ -53,7 +53,12 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
       
       fread(registro, sizeof(char)*TAM_REGISTRO, 1, arqBase);
       
-      
+      /*guarda a chave primaria (titulo)*/
+      for(j=0; j<TAM_TIT; j++)
+	pk[j] = registro[j];
+
+      pk[TAM_TIT]='\0'; 
+
       /* criando vetor sk e lista invertida para titulo */	
       /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
       k=0;
@@ -92,11 +97,8 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 		      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 		      
 		      
-		      for(l=0; l<TAM_TIT; l++) /*copiando a chave*/
-			{
-			  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[l] = registro[l];
-			}	
-		      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[TAM_TIT] = '\0';
+                      /*copiando a chave*/
+		      strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 
 		      
 		      
 		      vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
@@ -121,11 +123,8 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 			      vetores_li->vetor_li_titulo[endereco_li].prox = vetores_li->n_titulos;
 			      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 			      
-			      for(l=0; l<TAM_TIT; l++) /*copiando a chave*/
-				{
-				  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[l] = registro[l];
-				}	
-			      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave[TAM_TIT] = '\0';
+	                      /*copiando a chave*/
+			      strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 		      
 			      
 			      vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
 			      vetores_li->n_titulos++;
@@ -191,15 +190,10 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 
 		      /* criando a li */ 
 		      vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos-1].endereco_li = vetores_li->n_tipos;
-		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIP+1));
+		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 		      
-		      
-		      for(l=MAX_TIT; l<MAX_TIP; l++) /*copiando a chave*/
-			{
-			  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave[l-MAX_TIT] = registro[l];
-			}	
-		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave[TAM_TIP] = '\0';
-		      
+		      /*copiando a chave*/
+ 		      strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
 		      
 		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
 		      vetores_li->n_tipos++;
@@ -223,14 +217,11 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 				  endereco_li = vetores_li->vetor_li_tipo[endereco_li].prox;
 				}
 			      vetores_li->vetor_li_tipo[endereco_li].prox = vetores_li->n_tipos;
-			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIP+1));
-			      
-			      for(l=MAX_TIT; l<MAX_TIP; l++) /*copiando a chave*/
-				{
-				  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave[l-MAX_TIT] = registro[l];
-				}	
-			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave[TAM_TIP] = '\0';
-			      
+			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		
+			      /*copiando a chave*/
+			      strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
+	      
 			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
 			      vetores_li->n_tipos++;
 			      
@@ -290,15 +281,11 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 		      
 		      /* criando a li */ 
 		      vetores_sk->vetor_SK_autor[vetores_sk->n_autores-1].endereco_li = vetores_li->n_autores;
-		      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_AUT+1));
+		      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 		      
 		      
-		      for(l=MAX_TIP; l<MAX_AUT; l++) /*copiando a chave*/
-			{
-			  vetores_li->vetor_li_autor[vetores_li->n_autores].chave[l-MAX_TIP] = registro[l];
-			}	
-		      vetores_li->vetor_li_autor[vetores_li->n_autores].chave[TAM_AUT] = '\0';
-		      
+		      /*copiando a chave*/
+		      strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
 		      
 		      vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
 		      vetores_li->n_autores++;
@@ -322,14 +309,11 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 				  endereco_li = vetores_li->vetor_li_autor[endereco_li].prox;
 				}
 			      vetores_li->vetor_li_autor[endereco_li].prox = vetores_li->n_autores;
-			      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_AUT+1));
+			      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 			      
-			      for(l=MAX_TIP; l<MAX_AUT; l++) /*copiando a chave*/
-				{
-				  vetores_li->vetor_li_autor[vetores_li->n_autores].chave[l-MAX_TIP] = registro[l];
-				}	
-			      vetores_li->vetor_li_autor[vetores_li->n_autores].chave[TAM_AUT] = '\0';
-			      
+			      /*copiando a chave*/
+			      strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
+
 			      vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
 			      vetores_li->n_autores++;
 			      
@@ -385,15 +369,11 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 
 		      /* criando a li */ 
 		      vetores_sk->vetor_SK_ano[vetores_sk->n_anos-1].endereco_li = vetores_li->n_anos;
-		      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_ANO+1));
+		      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 		      
 		      
-		      for(l=MAX_AUT; l<MAX_ANO; l++) /*copiando a chave*/
-			{
-			  vetores_li->vetor_li_ano[vetores_li->n_anos].chave[l-MAX_AUT] = registro[l];
-			}	
-		      vetores_li->vetor_li_ano[vetores_li->n_anos].chave[TAM_ANO] = '\0';
-		      
+		      /*copiando a chave*/
+ 		      strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
 		      
 		      vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
 		      vetores_li->n_anos++;
@@ -417,14 +397,11 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 				  endereco_li = vetores_li->vetor_li_ano[endereco_li].prox;
 				}
 			      vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
-			      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_ANO+1));
+			      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
 			      
-			      for(l=MAX_AUT; l<MAX_ANO; l++) /*copiando a chave*/
-				{
-				  vetores_li->vetor_li_ano[vetores_li->n_anos].chave[l-MAX_AUT] = registro[l];
-				}	
-			      vetores_li->vetor_li_ano[vetores_li->n_anos].chave[TAM_ANO] = '\0';
-			      
+			      /*copiando a chave*/
+			      strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
+
 			      vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
 			      vetores_li->n_anos++;
 			      
