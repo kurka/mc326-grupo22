@@ -499,10 +499,12 @@ void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 /* 		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave)); */
 /* } */
 
-void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk * vetor_pk, int n_pk, FILE * arq_tit_li, FILE *arq_base) {
+void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
   int endereco_li, i;
-  char titulo_procurado[MAX_TIT];
+  char titulo_procurado[MAX_TIT+1];
+  char pk[MAX_TIT];
+
   tipo_registro_sk * elto_encontrado;
 
 
@@ -514,7 +516,8 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk * vetor_pk, int 
   printf("Consulta por chave secundaria no catalogo:\n");
   /* titulo_procurado eh lido*/
   printf("Digite a chave secundaria a ser pesquisada\n\n");
-  scanf("%s", titulo_procurado);
+  scanf(" %s", titulo_procurado);
+  getchar();
   
 
   /* Busca o titulo procurado no vetor de structs. */
@@ -539,7 +542,12 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk * vetor_pk, int 
 
     endereco_li=((*elto_encontrado).endereco_li);
     
-/*     acha_pk(vetores_li->vetor_li_titulo[endereco_li].chave, vetor_pk, arq_base, n_pk); */
+
+    /* Desloca o cursor para o inicio do registro. */
+    fseek(arq_tit_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
+    fread(pk, sizeof(char)*TAM_TIT, 1, arq_tit_li);
+
+    acha_pk(pk, vetor_pk, arq_base, n_pk); 
 		      
 /*     /\* chegando no final da lista invertida, para ele poder apontar para a nova entrada*\/ */
 /*     while(vetores_li->vetor_li_titulo[endereco_li].prox != -1)  */
