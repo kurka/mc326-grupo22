@@ -74,9 +74,11 @@ typedef struct
 }tipo_vetores_li;
 
 
-/*estrutura temporaria*/
+/*estrutura que guarda arquivos preenchidos com lista invertida de registros de chaves secundarias*/
 typedef struct
 {
-  tipo_vetores_sk * vetores_sk;
-  tipo_vetores_li * vetores_li;
-}tipo_vetorzao;
+  FILE * arq_tit_li;
+  FILE * arq_tip_li;
+  FILE * arq_aut_li;
+  FILE * arq_ano_li;
+}tipo_arqs_li;
