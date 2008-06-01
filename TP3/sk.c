@@ -10,21 +10,15 @@
 
 
 /*cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
-/* tipo_vetores_sk * criarVetorSK(FILE *arqBase, int n_registros) */
-tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
+tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase)
 {
   int i, j, k, l;
   
   char registro[TAM_REGISTRO], temp_sk[TAM_TIT], pk[TAM_TIT+1];
 
-  tipo_vetorzao *vetorzao = (tipo_vetorzao *)malloc(sizeof(tipo_vetorzao));
-
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
   tipo_vetores_li *vetores_li = (tipo_vetores_li *)malloc(sizeof(tipo_vetores_li));
   int novaSK, endereco_li;
-  
-  vetorzao->vetores_sk = vetores_sk;
-  vetorzao->vetores_li = vetores_li;
   
   vetores_sk->n_titulos = 0;
   vetores_sk->n_autores = 0;
@@ -435,10 +429,9 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 /*   } */
   
 
-  /*  return vetores_sk;*/
-  salvaArquivosLi(vetores_li);
+  salvaArquivosLi(vetores_li, arqs_li);
   
-  return vetorzao;
+  return vetores_sk;
 }
 
 
@@ -446,62 +439,55 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
 /**
     \brief salva todos os registros da lista invertida de chaves secundarias nos arquivos *li.dat
 */
-void salvaArquivosLi(tipo_vetores_li * vetores_li)
+void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 {
 
-  FILE * arq_tit_li;
-  FILE * arq_tip_li;
-  FILE * arq_aut_li;
-  FILE * arq_ano_li;
+/*   FILE * arq_tit_li; */
+/*   FILE * arq_tip_li; */
+/*   FILE * arq_aut_li; */
+/*   FILE * arq_ano_li; */
   int i;
 
-  arq_tit_li = fopen("li_titulos.dat", "w+");  
-  arq_tip_li = fopen("li_tipos.dat", "w+");  
-  arq_aut_li = fopen("li_autores.dat", "w+");  
-  arq_ano_li = fopen("li_anos.dat", "w+");  
+  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");  
+  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
+  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
+  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
 
 
   /*salva arquivos lista invertida de chaves secundarias relacionadas a titulos*/  
-  fseek(arq_tit_li,0,SEEK_SET);
+  fseek(arqs_li->arq_tit_li,0,SEEK_SET);
   
   for(i=0; i<vetores_li->n_titulos; i++){
-    fprintf(arq_tit_li, "%s", vetores_li->vetor_li_titulo[i].chave); 
-    fprintf(arq_tit_li, "%08d", vetores_li->vetor_li_titulo[i].prox);     
+    fprintf(arqs_li->arq_tit_li, "%s", vetores_li->vetor_li_titulo[i].chave); 
+    fprintf(arqs_li->arq_tit_li, "%08d", vetores_li->vetor_li_titulo[i].prox);     
   }
 
 
   /*salva arquivos lista invertida de chaves secundarias relacionadas a tipos*/  
-  fseek(arq_tip_li,0,SEEK_SET);
+  fseek(arqs_li->arq_tip_li,0,SEEK_SET);
   
   for(i=0; i<vetores_li->n_tipos; i++){
-    fprintf(arq_tip_li, "%s", vetores_li->vetor_li_tipo[i].chave); 
-    fprintf(arq_tip_li, "%08d", vetores_li->vetor_li_tipo[i].prox);     
+    fprintf(arqs_li->arq_tip_li, "%s", vetores_li->vetor_li_tipo[i].chave); 
+    fprintf(arqs_li->arq_tip_li, "%08d", vetores_li->vetor_li_tipo[i].prox);     
   }
 
 
   /*salva arquivos lista invertida de chaves secundarias relacionadas a autores*/  
-  fseek(arq_aut_li,0,SEEK_SET);
+  fseek(arqs_li->arq_aut_li,0,SEEK_SET);
   
   for(i=0; i<vetores_li->n_autores; i++){
-    fprintf(arq_aut_li, "%s", vetores_li->vetor_li_autor[i].chave); 
-    fprintf(arq_aut_li, "%08d", vetores_li->vetor_li_autor[i].prox);     
+    fprintf(arqs_li->arq_aut_li, "%s", vetores_li->vetor_li_autor[i].chave); 
+    fprintf(arqs_li->arq_aut_li, "%08d", vetores_li->vetor_li_autor[i].prox);     
   }
 
 
   /*salva arquivos lista invertida de chaves secundarias relacionadas a anos*/  
-  fseek(arq_ano_li,0,SEEK_SET);
+  fseek(arqs_li->arq_ano_li,0,SEEK_SET);
   
   for(i=0; i<vetores_li->n_anos; i++){
-    fprintf(arq_ano_li, "%s", vetores_li->vetor_li_ano[i].chave); 
-    fprintf(arq_ano_li, "%08d", vetores_li->vetor_li_ano[i].prox);     
+    fprintf(arqs_li->arq_ano_li, "%s", vetores_li->vetor_li_ano[i].chave); 
+    fprintf(arqs_li->arq_ano_li, "%08d", vetores_li->vetor_li_ano[i].prox);     
   }
-
-
-
-  fclose(arq_tit_li); 
-  fclose(arq_tip_li); 
-  fclose(arq_aut_li); 
-  fclose(arq_ano_li); 
 }
 
 
@@ -513,8 +499,7 @@ void salvaArquivosLi(tipo_vetores_li * vetores_li)
 /* 		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave)); */
 /* } */
 
-
-void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FILE *arq_base, tipo_registro_pk * vetor_pk, int n_pk) {
+void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk * vetor_pk, int n_pk, FILE * arq_tit_li, FILE *arq_base) {
 
   int endereco_li, i;
   char titulo_procurado[MAX_TIT];
@@ -554,7 +539,7 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_vetores_li * vetores_li, FIL
 
     endereco_li=((*elto_encontrado).endereco_li);
     
-    acha_pk(vetores_li->vetor_li_titulo[endereco_li].chave, vetor_pk, arq_base, n_pk);
+/*     acha_pk(vetores_li->vetor_li_titulo[endereco_li].chave, vetor_pk, arq_base, n_pk); */
 		      
 /*     /\* chegando no final da lista invertida, para ele poder apontar para a nova entrada*\/ */
 /*     while(vetores_li->vetor_li_titulo[endereco_li].prox != -1)  */
