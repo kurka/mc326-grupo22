@@ -72,8 +72,9 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		  for(l=0; l<vetores_sk->n_titulos; l++)
 		    {
 		      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
-			novaSK = 0;
-		    }
+			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_titulo[l].chave) == 0)
+			  novaSK = 0;
+		      }
 		  		  
 		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
 		    {
@@ -99,9 +100,6 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		    }
 		  else /* a SK já existe, mas precisamos inserir a chave na lista invertida */
 		    {
-
-		      printf("sk = %s\n", temp_sk);
-		  
 
 		      for(l=0; l<vetores_sk->n_titulos; l++) 
 			{  
@@ -172,7 +170,8 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		  for(l=0; l<vetores_sk->n_tipos; l++)
 		    {
 		      if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
-			novaSK = 0;
+			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_tipo[l].chave) == 0)
+			  novaSK = 0;
 		    }
 		  
 		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
@@ -262,7 +261,8 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		  for(l=0; l<vetores_sk->n_autores; l++)
 		    {
 		      if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
-			novaSK = 0;
+			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_autor[l].chave) == 0)
+			  novaSK = 0;
 		    }
 		
   		  
@@ -351,7 +351,8 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		  for(l=0; l<vetores_sk->n_anos; l++)
 		    {
 		      if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
-			novaSK = 0;
+			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_ano[l].chave) == 0)
+			  novaSK = 0;
 		    }
 		  
 		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
@@ -420,15 +421,15 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
     }
   
   
-  if(DEBUG){
-    printf("\n NUMERO %d", vetores_li->n_titulos);
-    for(l=0; l< vetores_li->n_titulos; l++)
-      {
-	printf("l = %d", l);
-	printf("%-50s", vetores_li->vetor_li_titulo[l].chave);
-	printf("%d\n", vetores_li->vetor_li_titulo[l].prox);
-      }
-  }
+/*   if(DEBUG){ */
+/*     printf("\n NUMERO %d", vetores_li->n_titulos); */
+/*     for(l=0; l< vetores_li->n_titulos; l++) */
+/*       { */
+/* 	printf("l = %d", l); */
+/* 	printf("%-50s", vetores_li->vetor_li_titulo[l].chave); */
+/* 	printf("%d\n", vetores_li->vetor_li_titulo[l].prox); */
+/*       } */
+/*   } */
   
   /*salva em arquivo as listas invertidas de chaves secundarias*/
   salvaArquivosLi(vetores_li, arqs_li);
