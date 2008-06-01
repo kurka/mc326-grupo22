@@ -67,8 +67,6 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		  /*temos um nome simples(possivel SK) em temp_sk*/
 		  temp_sk[k]='\0';
 		  
-		  
-		  
 		  /* novaSK(1 = true, 0 = false)*/
 		  novaSK = 1;
 		  for(l=0; l<vetores_sk->n_titulos; l++)
@@ -101,6 +99,10 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 		    }
 		  else /* a SK já existe, mas precisamos inserir a chave na lista invertida */
 		    {
+
+		      printf("sk = %s\n", temp_sk);
+		  
+
 		      for(l=0; l<vetores_sk->n_titulos; l++) 
 			{  
 			  if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
@@ -418,15 +420,15 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
     }
   
   
-/*   if(DEBUG){ */
-/*     printf("\n NUMERO %d", vetores_li->n_titulos);	 */
-/*     for(l=0; l< vetores_li->n_titulos; l++) */
-/*       { */
-/* 	printf("l = %d", l); */
-/* 	printf("%-50s", vetores_li->vetor_li_titulo[l].chave); */
-/* 	printf("%d\n", vetores_li->vetor_li_titulo[l].prox);	 */
-/*       } */
-/*   } */
+  if(DEBUG){
+    printf("\n NUMERO %d", vetores_li->n_titulos);
+    for(l=0; l< vetores_li->n_titulos; l++)
+      {
+	printf("l = %d", l);
+	printf("%-50s", vetores_li->vetor_li_titulo[l].chave);
+	printf("%d\n", vetores_li->vetor_li_titulo[l].prox);
+      }
+  }
   
   /*salva em arquivo as listas invertidas de chaves secundarias*/
   salvaArquivosLi(vetores_li, arqs_li);
@@ -508,7 +510,7 @@ void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 
 void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
-  int endereco_li, i;
+  int endereco_li, i, res;
   char titulo_procurado[MAX_TIT+1];
   char pk[MAX_TIT];
   FILE *arq_html;
@@ -520,9 +522,9 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
     return;
   }
 
-  printf("Consulta por chave secundaria no catalogo:\n");
+  printf("Consulta de titulo no catalogo:\n");
   /* titulo_procurado eh lido*/
-  printf("Digite a chave secundaria a ser pesquisada\n\n");
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 200 letras)\n\n");
   scanf(" %s", titulo_procurado);
   getchar();
   
@@ -542,32 +544,41 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
   
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
-    printf("O titulo nao foi encontrado.\n\n");
+    printf("Nenhuma obra possui os termos procurados.\n\n");
   }
   /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
   else {
 
-    endereco_li=((*elto_encontrado).endereco_li);
-    
-
-    /* Desloca o cursor para o inicio do registro. */
-    fseek(arq_tit_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
-    fread(pk, sizeof(char)*TAM_TIT, 1, arq_tit_li);
-
-
     /*como pode haver mais de uma chave primaria no resultado, arq_html eh no modo "append"*/
     arq_html=fopen("tp3.html","w");  
-  
-    acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html); 
+   
+    endereco_li=((*elto_encontrado).endereco_li); 
+    
+    do{
+      /* Desloca o cursor para o inicio do registro. */
+      fseek(arq_tit_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
+      fread(pk, sizeof(char)*TAM_TIT, 1, arq_tit_li);
+      
+      fseek(arq_tit_li, (endereco_li+1)*(TAM_TIT+8)-8, SEEK_SET);
+      fscanf(arq_tit_li, "%08d", &endereco_li);
+ 
+      printf("endereco_li = %d", endereco_li);
+        
+      res= acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
+      
+    }
+    while(endereco_li != -1);
+
+    if(res){
+      printf("Foram encontradas uma ou mais obras com os termos procurados. \n");
+      printf("Para visualizar suas informações consulte sua pasta atual e abra o arquivo tp3.html\n\n"); 
+    }
+    else
+      printf("Nenhuma obra possui os termos procurados.\n\n");
+
 
     fclose(arq_html);
     
-/*     /\* chegando no final da lista invertida, para ele poder apontar para a nova entrada*\/ */
-/*     while(vetores_li->vetor_li_titulo[endereco_li].prox != -1)  */
-/*       { */
-/* 	strcpy(vetores_li->vetor_li_ano[endereco_li].chave, titulo_procurado); */
-/*       } */
-/*     vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos; */
   }
 
   return;
