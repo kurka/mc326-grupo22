@@ -148,7 +148,6 @@ int main() {
 
       /* Procurar pro registro via chave secundaria */
     case CONSULTA_SK:
-      printf("Consulta SK.\n\n");
       consulta_sk(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
       break;
 
