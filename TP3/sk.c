@@ -65,7 +65,7 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
       for(j=0; j<TAM_TIT; j++)
 	{
 	  /*printf("registro[j]=%c", registro[j]);*/
-	  if(registro[j] == ' ')
+	  if(registro[j] == ' ' || j==TAM_TIT-1)
 	    {
 	      /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
 	      if(k!=0)  
@@ -161,7 +161,7 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
       k=0;
       for(j=MAX_TIT; j<MAX_TIP; j++)
 	{
-	  if(registro[j] == ' ')
+	  if(registro[j] == ' ' || j == MAX_TIP-1)
 	    {
 	      
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
@@ -251,7 +251,7 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
       k=0;
       for(j=MAX_TIP; j<MAX_AUT; j++)
 	{
-	  if(registro[j] == ' ')
+	  if(registro[j] == ' ' || j == MAX_AUT-1)
 	    {
 	      
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
@@ -340,7 +340,7 @@ tipo_vetorzao * criarVetorSK(FILE *arqBase, int n_registros)
       k=0;
       for(j=MAX_AUT; j<MAX_ANO; j++)
 	{
-	  if(registro[j] == ' ')
+	  if(registro[j] == ' ' || j == MAX_ANO-1)
 	    {
 	      
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
