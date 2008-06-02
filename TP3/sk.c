@@ -56,11 +56,18 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
       /* criando vetor sk e lista invertida para titulo */	
       /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
       k=0;
-      for(j=0; j<TAM_TIT; j++)
+      for(j=0; j<MAX_TIT; j++)
 	{
 	  /*printf("registro[j]=%c", registro[j]);*/
-	  if(registro[j] == ' ' || j==TAM_TIT-1)
+	  if(registro[j] == ' ' || j==MAX_TIT-1)
 	    {
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_TIT-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+	      
 	      /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
 	      if(k!=0)  
 		{ 
@@ -158,6 +165,12 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 	  if(registro[j] == ' ' || j == MAX_TIP-1)
 	    {
 	      
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_TIP-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 		{
 		  temp_sk[k]='\0';
@@ -249,6 +262,12 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 	  if(registro[j] == ' ' || j == MAX_AUT-1)
 	    {
 	      
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_AUT-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 		{
 		  temp_sk[k]='\0';
@@ -338,6 +357,12 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 	{
 	  if(registro[j] == ' ' || j == MAX_ANO-1)
 	    {
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_ANO-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
 	      
 	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 		{
@@ -754,7 +779,7 @@ void consulta_sk_ano(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, i
 
   printf("Consulta de ano no catalogo:\n");
   /* ano_procurado eh lido*/
-  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 4 letras)\n\n");
+  printf("Digite um ano a ser pesquisado (max 4 letras)\n\n");
   scanf(" %s", ano_procurado);
   getchar();
   
