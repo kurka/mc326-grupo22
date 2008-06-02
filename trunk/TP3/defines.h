@@ -7,9 +7,12 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define INSERIR '1'
 #define LISTAR '2'
 #define CONSULTA_PK '3'
-#define CONSULTA_SK '4'
-#define REMOVER '5'
-#define SAIR '6'
+#define CONSULTA_SK_TIT '4'
+#define CONSULTA_SK_TIP '5'
+#define CONSULTA_SK_AUT '6'
+#define CONSULTA_SK_ANO '7'
+#define REMOVER '8'
+#define SAIR '0'
 #define OK 0
 #define ERRO -1
 #define ERRO2 -2
