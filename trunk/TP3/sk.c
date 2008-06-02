@@ -12,13 +12,12 @@
 /*cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
 tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase)
 {
-  int i, j, k, l;
+  int i, j;
   
-  char registro[TAM_REGISTRO], temp_sk[TAM_TIT], pk[TAM_TIT+1];
+  char registro[TAM_REGISTRO], pk[TAM_TIT+1];
 
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
   tipo_vetores_li *vetores_li = (tipo_vetores_li *)malloc(sizeof(tipo_vetores_li));
-  int novaSK, endereco_li;
   
   vetores_sk->n_titulos = 0;
   vetores_sk->n_autores = 0;
@@ -53,396 +52,13 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
       pk[TAM_TIT]='\0'; 
 
-      /* criando vetor sk e lista invertida para titulo */	
-      /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
-      k=0;
-      for(j=0; j<MAX_TIT; j++)
-	{
-	  /*printf("registro[j]=%c", registro[j]);*/
-	  if(registro[j] == ' ' || j==MAX_TIT-1)
-	    {
-
-	      /*excecao quando a palavra termina no ultimo caracter do campo*/
-	      if(j == MAX_TIT-1){
-		temp_sk[k] = registro[j];
-		k++;	      
-	      }
-	      
-	      /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
-	      if(k!=0)  
-		{ 
-		  /*temos um nome simples(possivel SK) em temp_sk*/
-		  temp_sk[k]='\0';
-		  
-		  /* novaSK(1 = true, 0 = false)*/
-		  novaSK = 1;
-		  for(l=0; l<vetores_sk->n_titulos; l++)
-		    {
-		      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
-			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_titulo[l].chave) == 0)
-			  novaSK = 0;
-		      }
-		  		  
-		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
-		    {
-		      
-		      vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave = (char *)malloc(sizeof(char)*(k+1));
-		      
-		      strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
-		      vetores_sk->n_titulos++;
-		      
-		      
-		      /* criando a li */ 
-		      vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
-		      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-		      
-		      
-                      /*copiando a chave*/
-		      strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 
-		      
-		      
-		      vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
-		      vetores_li->n_titulos++;
-		      
-		    }
-		  else /* a SK já existe, mas precisamos inserir a chave na lista invertida */
-		    {
-
-		      for(l=0; l<vetores_sk->n_titulos; l++) 
-			{  
-			  if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
-			    /*encontramos a SK no vetor de SKs*/
- 			    { 
-			      
-			      endereco_li = vetores_sk->vetor_SK_titulo[l].endereco_li;
-			      
-			      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			      while(vetores_li->vetor_li_titulo[endereco_li].prox != -1) 
-				{
-				  endereco_li = vetores_li->vetor_li_titulo[endereco_li].prox;
-				}
-			      vetores_li->vetor_li_titulo[endereco_li].prox = vetores_li->n_titulos;
-			      vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			      
-	                      /*copiando a chave*/
-			      strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 		      
-			      
-			      vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
-			      vetores_li->n_titulos++;
-			      
-			      break;
-			      
-			    }
- 			}  
- 		    }  
-		  
-		} 
-	      k = 0;
-	      
-	    }
-	  else
-	    {
-	      temp_sk[k] = registro[j];
-	      k++;
-	      
-	      
-	    }
-	}
       
+      /*cria as chaves secundarias e listas invertidas, para cada campo*/      
+      cria_vetor_titulo(registro, pk, vetores_sk, vetores_li);
+      cria_vetor_tipo(registro, pk, vetores_sk, vetores_li);
+      cria_vetor_autor(registro, pk, vetores_sk, vetores_li);
+      cria_vetor_ano(registro, pk, vetores_sk, vetores_li);
       
-      
-      
-      
-      
-      
-      
-      /*criando vetor sk e lista invertida p/ tipo*/
-      /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
-	e verifica se essa SK já existe ou se deve ser inserida	*/
-      k=0;
-      for(j=MAX_TIT; j<MAX_TIP; j++)
-	{
-	  if(registro[j] == ' ' || j == MAX_TIP-1)
-	    {
-	      
-	      /*excecao quando a palavra termina no ultimo caracter do campo*/
-	      if(j == MAX_TIP-1){
-		temp_sk[k] = registro[j];
-		k++;	      
-	      }
-
-	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
-		{
-		  temp_sk[k]='\0';
-		  
-		  
-		  
-		  /* novaSK(1 = true, 0 = false)*/
-		  novaSK = 1;
-		  
-		  for(l=0; l<vetores_sk->n_tipos; l++)
-		    {
-		      if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
-			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_tipo[l].chave) == 0)
-			  novaSK = 0;
-		    }
-		  
-		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
-		    {
-		      
-		      vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave = (char *)malloc(sizeof(char)*(k+1));
-		      
-		      strcpy(vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave, temp_sk);
-		      vetores_sk->n_tipos++;
-		      
-
-		      /* criando a li */ 
-		      vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos-1].endereco_li = vetores_li->n_tipos;
-		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-		      
-		      /*copiando a chave*/
- 		      strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
-		      
-		      vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
-		      vetores_li->n_tipos++;
-		      
-		    }
-
-		  /* a SK já existe, mas precisamos inserir a chave na lista invertida */
-		  else 
-		    {
-		      for(l=0; l<vetores_sk->n_tipos; l++) 
-			{  
-			  if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0) 
-			    /*encontramos a SK no vetor de SKs*/
- 			    { 
-			      
-			      endereco_li = vetores_sk->vetor_SK_tipo[l].endereco_li;
-			      
-			      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			      while(vetores_li->vetor_li_tipo[endereco_li].prox != -1) 
-				{
-				  endereco_li = vetores_li->vetor_li_tipo[endereco_li].prox;
-				}
-			      vetores_li->vetor_li_tipo[endereco_li].prox = vetores_li->n_tipos;
-			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-		
-			      /*copiando a chave*/
-			      strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
-	      
-			      vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
-			      vetores_li->n_tipos++;
-			      
-			      break;
-			      
-			    }
-			}
-		    }
-		  
-		  
-		  
-		  k = 0;
-		}
-	    }
-	  else
-	    {
-	      temp_sk[k] = registro[j];
-	      k++;
-	      
-	      
-	    }
-	}
-      
-      
-      /*criando vetor sk e lista invertida p/ autor*/
-      /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
-      k=0;
-      for(j=MAX_TIP; j<MAX_AUT; j++)
-	{
-	  if(registro[j] == ' ' || j == MAX_AUT-1)
-	    {
-	      
-	      /*excecao quando a palavra termina no ultimo caracter do campo*/
-	      if(j == MAX_AUT-1){
-		temp_sk[k] = registro[j];
-		k++;	      
-	      }
-
-	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
-		{
-		  temp_sk[k]='\0';
-		  
-		  
-		  
-		  /* novaSK(1 = true, 0 = false)*/
-		  novaSK = 1;
-		  
-		  for(l=0; l<vetores_sk->n_autores; l++)
-		    {
-		      if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
-			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_autor[l].chave) == 0)
-			  novaSK = 0;
-		    }
-		
-  		  
-		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
-		    {
-		      
-		      vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave = (char *)malloc(sizeof(char)*(k+1));
-		      
-		      strcpy(vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave, temp_sk);
-		      vetores_sk->n_autores++;
-		      
-		      
-		      /* criando a li */ 
-		      vetores_sk->vetor_SK_autor[vetores_sk->n_autores-1].endereco_li = vetores_li->n_autores;
-		      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-		      
-		      
-		      /*copiando a chave*/
-		      strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
-		      
-		      vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
-		      vetores_li->n_autores++;
-		       
-		    }
-
-		  /* a SK já existe, mas precisamos inserir a chave na lista invertida */
-		  else 
-		    {
-		      for(l=0; l<vetores_sk->n_autores; l++) 
-			{  
-			  if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)  
-			    /*encontramos a SK no vetor de SKs*/
- 			    { 
-			      
-			      endereco_li = vetores_sk->vetor_SK_autor[l].endereco_li;
-			      
-			      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			      while(vetores_li->vetor_li_autor[endereco_li].prox != -1) 
-				{
-				  endereco_li = vetores_li->vetor_li_autor[endereco_li].prox;
-				}
-			      vetores_li->vetor_li_autor[endereco_li].prox = vetores_li->n_autores;
-			      vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			      
-			      /*copiando a chave*/
-			      strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
-
-			      vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
-			      vetores_li->n_autores++;
-			      
-			      break;
-			      
-			    }
-			}
-		    }
-		  
-		  k = 0;
-		}
-	    }
-	  else
-	    {
-	      temp_sk[k] = registro[j];
-	      k++;
-	      
-	      
-	    }
-	}
-      
-      /*criando vetor sk e lista invertida p/ ano*/
-      /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK já existe ou se deve ser inserida	*/
-      k=0;
-      for(j=MAX_AUT; j<MAX_ANO; j++)
-	{
-	  if(registro[j] == ' ' || j == MAX_ANO-1)
-	    {
-
-	      /*excecao quando a palavra termina no ultimo caracter do campo*/
-	      if(j == MAX_ANO-1){
-		temp_sk[k] = registro[j];
-		k++;	      
-	      }
-	      
-	      if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
-		{
-		  temp_sk[k]='\0';
-		  
-		  
-		  
-		  /* novaSK(1 = true, 0 = false)*/
-		  novaSK = 1;
-		  
-		  for(l=0; l<vetores_sk->n_anos; l++)
-		    {
-		      if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
-			if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_ano[l].chave) == 0)
-			  novaSK = 0;
-		    }
-		  
-		  if(novaSK == 1) /*se uma nova SK vai ser inserida*/
-		    {
-		      
-		      vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave = (char *)malloc(sizeof(char)*(k+1));
-		      
-		      strcpy(vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave, temp_sk);
-		      vetores_sk->n_anos++;
-		      
-
-		      /* criando a li */ 
-		      vetores_sk->vetor_SK_ano[vetores_sk->n_anos-1].endereco_li = vetores_li->n_anos;
-		      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-		      
-		      
-		      /*copiando a chave*/
- 		      strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
-		      
-		      vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
-		      vetores_li->n_anos++;
-		    }
-
-
-		  /* a SK já existe, mas precisamos inserir a chave na lista invertida */
-		  else 
-		    {
-		      for(l=0; l<vetores_sk->n_anos; l++) 
-			{  
-			  if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0) 
-			    /*encontramos a SK no vetor de SKs*/
- 			    { 
-			      
-			      endereco_li = vetores_sk->vetor_SK_ano[l].endereco_li;
-			      
-			      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			      while(vetores_li->vetor_li_ano[endereco_li].prox != -1) 
-				{
-				  endereco_li = vetores_li->vetor_li_ano[endereco_li].prox;
-				}
-			      vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
-			      vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			      
-			      /*copiando a chave*/
-			      strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
-
-			      vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
-			      vetores_li->n_anos++;
-			      
-			      break;
-			      
-			    }
-			}
-		    }
-		  
-
-		  k = 0;
-		}
-	    }
-	  else
-	    {
-	      temp_sk[k] = registro[j];
-	      k++;
-	    }
-	}   
     }
   
   
@@ -470,17 +86,409 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
+/* cria vetor sk e lista invertida para titulo */	
+void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+ 
+
+  int j, k, l;   
+  char temp_sk[TAM_TIT];
+  int novaSK, endereco_li;
+  
+  /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
+    já existe ou se deve ser inserida	*/
+  k=0;
+  for(j=0; j<MAX_TIT; j++)
+    {
+      /*printf("registro[j]=%c", registro[j]);*/
+      if(registro[j] == ' ' || j==MAX_TIT-1)
+	{
+	  /*excecao quando a palavra termina no ultimo caracter do campo*/
+	  if(j == MAX_TIT-1){
+	    temp_sk[k] = registro[j];
+	    k++;	      
+	  }
+	  
+	  /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
+	  if(k!=0)  
+	    { 
+	      /*temos um nome simples(possivel SK) em temp_sk*/
+	      temp_sk[k]='\0';
+	      
+	      /* novaSK(1 = true, 0 = false)*/
+	      novaSK = 1;
+	      for(l=0; l<vetores_sk->n_titulos; l++)
+		{
+		  if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0)
+		    if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_titulo[l].chave) == 0)
+		      novaSK = 0;
+		}
+	      
+	      if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+		{
+		  
+		  vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave = (char *)malloc(sizeof(char)*(k+1));
+		  
+		  strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
+		  vetores_sk->n_titulos++;
+		  
+		  
+		  /* criando a li */ 
+		  vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
+		  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  
+		  /*copiando a chave*/
+		  strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 
+		  
+		  vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
+		  vetores_li->n_titulos++;
+		  
+		}
+	      else /* a SK já existe, mas precisamos inserir a chave na lista invertida */
+		{
+		  
+		  for(l=0; l<vetores_sk->n_titulos; l++) 
+		    {  
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
+			/*encontramos a SK no vetor de SKs*/
+			{ 
+			  
+			  endereco_li = vetores_sk->vetor_SK_titulo[l].endereco_li;
+			  
+			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+			  while(vetores_li->vetor_li_titulo[endereco_li].prox != -1) 
+			    {
+			      endereco_li = vetores_li->vetor_li_titulo[endereco_li].prox;
+			    }
+			  vetores_li->vetor_li_titulo[endereco_li].prox = vetores_li->n_titulos;
+			  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+			  
+			  /*copiando a chave*/
+			  strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 		      
+			  
+			  vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
+			  vetores_li->n_titulos++;
+			  
+			  break;
+			  
+			}
+		    }  
+		}  
+	      
+	    } 
+	  k = 0;
+	  
+	}
+      else
+	{
+	  temp_sk[k] = registro[j];
+	  k++;
+	  
+	  
+	}
+    }
+  
+}
+
+
+
+/* cria vetor sk e lista invertida para tipo */	
+void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+ 
+
+  int j, k, l;   
+  char temp_sk[TAM_TIT];
+  int novaSK, endereco_li;
+
+  /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
+    e verifica se essa SK já existe ou se deve ser inserida	*/
+  k=0;
+  for(j=MAX_TIT; j<MAX_TIP; j++)
+    {
+      if(registro[j] == ' ' || j == MAX_TIP-1)
+	{
+	  
+	  /*excecao quando a palavra termina no ultimo caracter do campo*/
+	  if(j == MAX_TIP-1){
+	    temp_sk[k] = registro[j];
+	    k++;	      
+	  }
+	  
+	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+	    {
+	      temp_sk[k]='\0';
+	      
+	      /* novaSK(1 = true, 0 = false)*/
+	      novaSK = 1;
+	      
+	      for(l=0; l<vetores_sk->n_tipos; l++)
+		{
+		  if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0)
+		    if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_tipo[l].chave) == 0)
+		      novaSK = 0;
+		}
+	      
+	      if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+		{
+		  vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave = (char *)malloc(sizeof(char)*(k+1));
+		  
+		  strcpy(vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave, temp_sk);
+		  vetores_sk->n_tipos++;
+		  
+		  /* criando a li */ 
+		  vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos-1].endereco_li = vetores_li->n_tipos;
+		  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  
+		  /*copiando a chave*/
+		  strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
+		  
+		  vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
+		  vetores_li->n_tipos++;
+		}
+	      
+	      /* a SK já existe, mas precisamos inserir a chave na lista invertida */
+	      else 
+		{
+		  for(l=0; l<vetores_sk->n_tipos; l++) 
+		    {  
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[l].chave, temp_sk) == 0) 
+			/*encontramos a SK no vetor de SKs*/
+			{ 
+			  
+			  endereco_li = vetores_sk->vetor_SK_tipo[l].endereco_li;
+			  
+			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+			  while(vetores_li->vetor_li_tipo[endereco_li].prox != -1) 
+			    {
+			      endereco_li = vetores_li->vetor_li_tipo[endereco_li].prox;
+			    }
+			  vetores_li->vetor_li_tipo[endereco_li].prox = vetores_li->n_tipos;
+			  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+			  
+			  /*copiando a chave*/
+			  strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
+			  
+			  vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
+			  vetores_li->n_tipos++;
+			  
+			  break;
+			  
+			}
+		    }
+		}
+	      
+	      
+	      
+	      k = 0;
+	    }
+	}
+      else
+	{
+	  temp_sk[k] = registro[j];
+	  k++;  
+	}
+    }
+}
+
+
+
+/* cria vetor sk e lista invertida para autor */	
+void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+ 
+
+  int j, k, l;   
+  char temp_sk[TAM_TIT];
+  int novaSK, endereco_li;
+ 
+  /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
+    e verifica se essa SK já existe ou se deve ser inserida	*/
+  k=0;
+  for(j=MAX_TIP; j<MAX_AUT; j++)
+    {
+      if(registro[j] == ' ' || j == MAX_AUT-1)
+	{
+	  /*excecao quando a palavra termina no ultimo caracter do campo*/
+	  if(j == MAX_AUT-1){
+	    temp_sk[k] = registro[j];
+	    k++;	      
+	  }
+	  
+	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+	    {
+	      temp_sk[k]='\0';
+	      
+	      /* novaSK(1 = true, 0 = false)*/
+	      novaSK = 1;
+	      
+	      for(l=0; l<vetores_sk->n_autores; l++)
+		{
+		  if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)
+		    if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_autor[l].chave) == 0)
+		      novaSK = 0;
+		}
+	      
+	      if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+		{
+		  vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave = (char *)malloc(sizeof(char)*(k+1));
+		  
+		  strcpy(vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave, temp_sk);
+		  vetores_sk->n_autores++;
+		  
+		  /* criando a li */ 
+		  vetores_sk->vetor_SK_autor[vetores_sk->n_autores-1].endereco_li = vetores_li->n_autores;
+		  vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  
+		  /*copiando a chave*/
+		  strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
+		  
+		  vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
+		  vetores_li->n_autores++;
+		}
+	      
+	      /* a SK já existe, mas precisamos inserir a chave na lista invertida */
+	      else 
+		{
+		  for(l=0; l<vetores_sk->n_autores; l++) 
+		    {  
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_autor[l].chave, temp_sk) == 0)  
+			/*encontramos a SK no vetor de SKs*/
+			{ 
+			  endereco_li = vetores_sk->vetor_SK_autor[l].endereco_li;
+			  
+			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+			  while(vetores_li->vetor_li_autor[endereco_li].prox != -1) 
+			    {
+			      endereco_li = vetores_li->vetor_li_autor[endereco_li].prox;
+			    }
+			  vetores_li->vetor_li_autor[endereco_li].prox = vetores_li->n_autores;
+			  vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+			  
+			  /*copiando a chave*/
+			  strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
+			  
+			  vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
+			  vetores_li->n_autores++;
+			  break;
+			}
+		    }
+		}
+	      k = 0;
+	    }
+	}
+      else
+	{
+	  temp_sk[k] = registro[j];
+	  k++;
+	}
+    }
+}
+
+
+/* cria vetor sk e lista invertida para ano */	
+void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+ 
+
+  int j, k, l;   
+  char temp_sk[TAM_TIT];
+  int novaSK, endereco_li;
+
+   
+  /*criando vetor sk e lista invertida p/ ano*/
+  /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
+    e verifica se essa SK já existe ou se deve ser inserida */
+  k=0;
+  for(j=MAX_AUT; j<MAX_ANO; j++)
+    {
+      if(registro[j] == ' ' || j == MAX_ANO-1)
+	{
+	  /*excecao quando a palavra termina no ultimo caracter do campo*/
+	  if(j == MAX_ANO-1){
+	    temp_sk[k] = registro[j];
+	    k++;	      
+	  }
+	  
+	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
+	    {
+	      temp_sk[k]='\0';
+	      
+	      /* novaSK(1 = true, 0 = false)*/
+	      novaSK = 1;
+	      
+	      for(l=0; l<vetores_sk->n_anos; l++)
+		{
+		  if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0)
+		    if(strcmpinsensitive(temp_sk, vetores_sk->vetor_SK_ano[l].chave) == 0)
+		      novaSK = 0;
+		}
+	      
+	      if(novaSK == 1) /*se uma nova SK vai ser inserida*/
+		{
+		  vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave = (char *)malloc(sizeof(char)*(k+1));
+		  
+		  strcpy(vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave, temp_sk);
+		  vetores_sk->n_anos++;
+		  
+		  /* criando a li */ 
+		  vetores_sk->vetor_SK_ano[vetores_sk->n_anos-1].endereco_li = vetores_li->n_anos;
+		  vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  
+		  
+		  /*copiando a chave*/
+		  strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
+		  
+		  vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
+		  vetores_li->n_anos++;
+		}
+	      
+	      
+	      /* a SK já existe, mas precisamos inserir a chave na lista invertida */
+	      else 
+		{
+		  for(l=0; l<vetores_sk->n_anos; l++) 
+		    {  
+		      if(strcmpinsensitive(vetores_sk->vetor_SK_ano[l].chave, temp_sk) == 0) 
+			/*encontramos a SK no vetor de SKs*/
+			{ 
+			  
+			  endereco_li = vetores_sk->vetor_SK_ano[l].endereco_li;
+			  
+			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+			  while(vetores_li->vetor_li_ano[endereco_li].prox != -1) 
+			    {
+			      endereco_li = vetores_li->vetor_li_ano[endereco_li].prox;
+			    }
+			  vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
+			  vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+			  
+			  /*copiando a chave*/
+			  strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
+			  
+			  vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
+			  vetores_li->n_anos++;
+			  
+			  break;
+			  
+			}
+		    }
+		}
+	      
+	      
+	      k = 0;
+	    }
+	}
+      else
+	{
+	  temp_sk[k] = registro[j];
+	  k++;
+	}
+    }   
+}
+
 
 /**
     \brief salva todos os registros da lista invertida de chaves secundarias nos arquivos *li.dat
 */
 void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 {
-
-/*   FILE * arq_tit_li; */
-/*   FILE * arq_tip_li; */
-/*   FILE * arq_aut_li; */
-/*   FILE * arq_ano_li; */
   int i;
 
   arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");  
