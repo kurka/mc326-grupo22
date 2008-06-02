@@ -289,6 +289,7 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 
 /**
    \brief Funcao que, dada uma chave primaria de entrada, procura para leitura de chave primaria a ser procurada na base
+   (retorna 1 caso encontre e 0 caso nao encontre)
 */
 int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html){
   ap_tipo_registro_pk elto_encontrado;
@@ -298,7 +299,7 @@ int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TI
   
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
-    return 1;
+    return 0;
   }
   /* Caso contrario, chama a funcao de busca na base de dados com o NRR. */
   else {
@@ -306,7 +307,7 @@ int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TI
     busca_registro(NRR, arq_base, arq_html); /* funcao definida em base.c */
   }
 
-  return 0;
+  return 1;
 }
 
 

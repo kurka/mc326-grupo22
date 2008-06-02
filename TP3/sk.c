@@ -509,7 +509,7 @@ void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 /* 		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave)); */
 /* } */
 
-void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
+void consulta_sk_tit(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
   int endereco_li, i, res;
   char titulo_procurado[MAX_TIT+1];
@@ -550,7 +550,7 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
   /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
   else {
 
-    /*como pode haver mais de uma chave primaria no resultado, arq_html eh no modo "append"*/
+    /*tp3.html eh aberto, para guardar os resultados da busca*/
     arq_html=fopen("tp3.html","w");  
    
     endereco_li=((*elto_encontrado).endereco_li); 
@@ -563,8 +563,6 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
       fseek(arq_tit_li, (endereco_li+1)*(TAM_TIT+8)-8, SEEK_SET);
       fscanf(arq_tit_li, "%08d", &endereco_li);
  
-      printf("endereco_li = %d", endereco_li);
-        
       res= acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
       
     }
@@ -582,6 +580,235 @@ void consulta_sk(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n
     
   }
 
+  return;
+}
+
+
+
+
+void consulta_sk_tip(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) {
+
+  int endereco_li, i, res;
+  char tipo_procurado[MAX_TIT+1];
+  char pk[MAX_TIT];
+  FILE *arq_html;
+  tipo_registro_sk * elto_encontrado;
+
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta de tipo catalogo:\n");
+  /* titulo_procurado eh lido*/
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n");
+  scanf(" %s", tipo_procurado);
+  getchar();
+  
+  
+  /* Busca o tipo procurado no vetor de structs. */
+  /*   elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch); */
+  
+  elto_encontrado = NULL;
+  
+  for(i=0; i<vetores_sk->n_tipos; i++)
+    {
+      if(strcmpinsensitive(vetores_sk->vetor_SK_tipo[i].chave, tipo_procurado) == 0){
+	elto_encontrado = &(vetores_sk->vetor_SK_tipo[i]);
+	break;
+      }
+    }
+  
+  /* Caso o tipo nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("Nenhuma obra possui os termos procurados.\n\n");
+  }
+  /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
+  else {
+
+    /*tp3.html eh aberto, para guardar os resultados da busca*/
+    arq_html=fopen("tp3.html","w");  
+   
+    endereco_li=((*elto_encontrado).endereco_li); 
+    
+    do{
+      /* Desloca o cursor para o inicio do registro. */
+      fseek(arq_tip_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
+      fread(pk, sizeof(char)*TAM_TIT, 1, arq_tip_li);
+      
+      fseek(arq_tip_li, (endereco_li+1)*(TAM_TIT+8)-8, SEEK_SET);
+      fscanf(arq_tip_li, "%08d", &endereco_li);
+ 
+      res= acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
+      
+    }
+    while(endereco_li != -1);
+    
+    if(res){
+      printf("Foram encontradas uma ou mais obras com os termos procurados. \n");
+      printf("Para visualizar suas informações consulte sua pasta atual e abra o arquivo tp3.html\n\n"); 
+    }
+    else
+      printf("Nenhuma obra possui os termos procurados.\n\n");
+    
+    
+    fclose(arq_html);
+    
+  }
+
+  return;
+}
+
+
+
+void consulta_sk_aut(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) {
+
+  int endereco_li, i, res;
+  char autor_procurado[MAX_TIT+1];
+  char pk[MAX_TIT];
+  FILE *arq_html;
+  tipo_registro_sk * elto_encontrado;
+
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta de autor no catalogo:\n");
+  /* titulo_procurado eh lido*/
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n");
+  scanf(" %s", autor_procurado);
+  getchar();
+  
+
+  /* Busca o autor procurado no vetor de structs. */
+  /*   elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch); */
+
+  elto_encontrado = NULL;
+
+  for(i=0; i<vetores_sk->n_autores; i++)
+    {
+      if(strcmpinsensitive(vetores_sk->vetor_SK_autor[i].chave, autor_procurado) == 0){
+	elto_encontrado = &(vetores_sk->vetor_SK_autor[i]);
+	break;
+      }
+    }
+  
+  /* Caso o autor nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("Nenhuma obra possui os termos procurados.\n\n");
+  }
+  /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
+  else {
+
+    /*tp3.html eh aberto, para guardar os resultados da busca*/
+    arq_html=fopen("tp3.html","w");  
+   
+    endereco_li=((*elto_encontrado).endereco_li); 
+    
+    do{
+      /* Desloca o cursor para o inicio do registro. */
+      fseek(arq_aut_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
+      fread(pk, sizeof(char)*TAM_TIT, 1, arq_aut_li);
+      
+      fseek(arq_aut_li, (endereco_li+1)*(TAM_TIT+8)-8, SEEK_SET);
+      fscanf(arq_aut_li, "%08d", &endereco_li);
+ 
+      res= acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
+      
+    }
+    while(endereco_li != -1);
+    
+    if(res){
+      printf("Foram encontradas uma ou mais obras com os termos procurados. \n");
+      printf("Para visualizar suas informações consulte sua pasta atual e abra o arquivo tp3.html\n\n"); 
+    }
+    else
+      printf("Nenhuma obra possui os termos procurados.\n\n");
+
+
+    fclose(arq_html);
+    
+  }
+
+  return;
+}
+
+
+
+void consulta_sk_ano(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) {
+
+  int endereco_li, i, res;
+  char ano_procurado[MAX_TIT+1];
+  char pk[MAX_TIT];
+  FILE *arq_html;
+  tipo_registro_sk * elto_encontrado;
+
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta de ano no catalogo:\n");
+  /* ano_procurado eh lido*/
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 4 letras)\n\n");
+  scanf(" %s", ano_procurado);
+  getchar();
+  
+
+  /* Busca o ano procurado no vetor de structs. */
+  /*   elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch); */
+
+  elto_encontrado = NULL;
+
+  for(i=0; i<vetores_sk->n_anos; i++)
+    {
+      if(strcmpinsensitive(vetores_sk->vetor_SK_ano[i].chave, ano_procurado) == 0){
+	elto_encontrado = &(vetores_sk->vetor_SK_ano[i]);
+	break;
+      }
+    }
+  
+  /* Caso o ano nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("Nenhuma obra possui os termos procurados.\n\n");
+  }
+  /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
+  else {
+
+    /*tp3.html eh aberto, para guardar os resultados da busca*/
+    arq_html=fopen("tp3.html","w");  
+   
+    endereco_li=((*elto_encontrado).endereco_li); 
+    
+    do{
+      /* Desloca o cursor para o inicio do registro. */
+      fseek(arq_ano_li, (endereco_li)*(TAM_TIT+8), SEEK_SET);
+      fread(pk, sizeof(char)*TAM_TIT, 1, arq_ano_li);
+      
+      fseek(arq_ano_li, (endereco_li+1)*(TAM_TIT+8)-8, SEEK_SET);
+      fscanf(arq_ano_li, "%08d", &endereco_li);
+ 
+      res= acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
+      
+    }
+    while(endereco_li != -1);
+
+    if(res){
+      printf("Foram encontradas uma ou mais obras com os termos procurados. \n");
+      printf("Para visualizar suas informações consulte sua pasta atual e abra o arquivo tp3.html\n\n"); 
+    }
+    else
+      printf("Nenhuma obra possui os termos procurados.\n\n");
+
+    
+    fclose(arq_html);
+    
+  }
+  
   return;
 }
 

@@ -106,16 +106,22 @@ int main() {
     printf("Escolha uma das opcoes abaixo e tecle Enter.\n");
     printf("1-) Adicionar uma obra ao catalogo.\n");
     printf("2-) Listar obras do catalogo.\n");
-    printf("3-) Procurar por uma obra no catalogo via chave primaria (titulo).\n");
-    printf("4-) Procurar por uma obra no catalogo via chave secundaria.\n");
-    printf("5-) Remover uma obra do catalogo.\n");
-    printf("6-) Sair.\n");
+    printf("3-) Procurar por um titulo de obra no catalogo.\n");
+    printf("4-) Procurar por palavra do titulo no catalogo.\n");
+    printf("5-) Procurar por um tipo de obra no catalogo.\n");
+    printf("6-) Procurar por um autor no catalogo.\n");
+    printf("7-) Procurar por um ano de obra no catalogo.\n");
+    printf("8-) Remover uma obra do catalogo.\n");
+    printf("0-) Sair.\n");
 
     opcao=getchar();
     c=getchar();
 
     /* Tratamento de caractere invalido ou caractere(s) a mais */
-    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA_PK)&&(opcao!=CONSULTA_SK)&&(opcao!=REMOVER)&&(opcao!=SAIR)) ) {
+    if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA_PK)&&
+		      (opcao!=CONSULTA_SK_TIT)&& (opcao!=CONSULTA_SK_TIP)&& 
+		      (opcao!=CONSULTA_SK_AUT)&& (opcao!=CONSULTA_SK_ANO)&&
+		      (opcao!=REMOVER)&&(opcao!=SAIR)) ) {
       while(c!='\n') {
 	c=getchar();
       }
@@ -146,9 +152,18 @@ int main() {
       consulta_pk(limite[0],vetor_registros, arq_base);
       break;
 
-      /* Procurar pro registro via chave secundaria */
-    case CONSULTA_SK:
-      consulta_sk(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
+      /* Procurar por registros via chave secundaria */
+    case CONSULTA_SK_TIT:
+      consulta_sk_tit(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
+      break;
+    case CONSULTA_SK_TIP:
+      consulta_sk_tip(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base);
+      break;
+    case CONSULTA_SK_AUT:
+      consulta_sk_aut(vetores_sk, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base);
+      break;
+    case CONSULTA_SK_ANO:
+      consulta_sk_ano(vetores_sk, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base);
       break;
 
       /* Remove um registro do catalogo */
