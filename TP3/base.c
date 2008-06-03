@@ -58,6 +58,7 @@ int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cab
 
      
     /* Escrita da nova cabeca no arquivo */
+    fseek(arq_cabeca_avail_base,0,SEEK_SET);     
     fprintf(arq_avail,"%05d",NRR_nova_cabeca);
 
     /* Insercao no lugar do registro apontado pela cabeca da avail */
