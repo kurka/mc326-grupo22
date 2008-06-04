@@ -14,9 +14,6 @@ void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_au
 /* cria vetor sk e lista invertida para ano */	
 void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_anos_li, tipo_vetores_sk *vetores_sk, FILE *arq_ano_li);
 
-/* salva todos os registros da lista invertida de chaves secundarias nos arquivos *li.dat */
-void salvaArquivosLi(tipo_vetores_li *vetores_li, tipo_arqs_li * arqs_li);
-
 
 void consulta_sk_tit(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base);
 void consulta_sk_tip(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base);

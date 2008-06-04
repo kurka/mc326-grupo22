@@ -58,25 +58,6 @@ typedef struct
 	
 }tipo_vetores_sk;
 
-
-/*estrutura que representa um registro da lista invertida*/
-typedef struct
-{
-   char *chave;
-   int prox;	
-}tipo_registro_li;
-
-/*estrutura com 4 apontadores para o inicio de cada uma das 4 listas invertidas(titulo, tipo, autor, ano), e com 4 inteiros que informam o tamanho dessas listas*/
-typedef struct 
-{
-  tipo_registro_li *vetor_li_titulo; int n_titulos;
-  tipo_registro_li *vetor_li_autor; int n_autores;
-  tipo_registro_li *vetor_li_ano; int n_anos;
-  tipo_registro_li *vetor_li_tipo; int n_tipos;
-	
-}tipo_vetores_li;
-
-
 /*estrutura que guarda arquivos preenchidos com lista invertida de registros de chaves secundarias*/
 typedef struct
 {
