@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -138,6 +139,10 @@ int main() {
       /*pega o ultimo titulo lido e insere no vetor de registros*/
       nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
       vetor_registros = novopk(str_final, vetor_registros, limite, nrr);   
+      /*insere as novas sks*/
+      insereVetorSK(str_final, vetores_sk, arqs_li);
+
+
       if(DEBUG)     
 	printf(">>>Numero de registros: %d\n\n",limite[0]);
       break;
