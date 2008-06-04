@@ -1,15 +1,20 @@
+
 /* Nesta biblioteca estao definidas as funcoes de operacao na
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
 
-/* Funcao da insercao propriamente dita (insercao no arquivo) */
+/** 
+    \brief Funcao da insercao propriamente dita (insercao no arquivo) 
+*/
 void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
-  
+
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
   Insere_titulo(str_final, vetor, n_registros);
   Insere_tipo(str_final);
@@ -18,8 +23,55 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
   Insere_valor(str_final);
   Insere_imagem(str_final);
 
-
 }
+
+/** 
+    \brief Funcao que verifica onde o novo registro deve ser inserido e o insere
+*/
+int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cabeca){
+
+  int NRR_nova_cabeca;
+  int nrr = *NRR_cabeca;
+  /* Caso o arquivo exista, ha 2 possibilidades:
+     1-) A cabeca da avail nele contida eh -1. Neste caso, o registro eh inserido no final da base;
+     2-) A cabeca aponta p/ algum registro. Nesse caso, o novo registro eh inserido no lugar desta cabeca,
+     e a cabeca eh atualizada. */
+  
+  /* Possibilidade 1*/
+  if(nrr == -1){
+
+    if(DEBUG)
+      printf(">>>guardando registro no final do arquivo base.dat\n");
+    /* Insercao no fim do arquivo */
+    fseek(arq_base,0,SEEK_END);
+    fprintf(arq_base,"%s",str_final);
+  }   
+  /* Possibilidade 2 */
+  else{
+    if(DEBUG)
+      printf(">>>guardando registro em avail list do arquivo base.dat\n");
+
+    /* Procedimento para atualizacao da cabeca */
+    fseek(arq_base,(nrr-1)*TAM_REGISTRO,SEEK_SET);
+    /* Leitura da nova cabeca */
+    fscanf(arq_base, "%05d", &NRR_nova_cabeca); 
+
+     
+    /* Escrita da nova cabeca no arquivo */
+    fseek(arq_cabeca_avail_base,0,SEEK_SET);     
+    fprintf(arq_avail,"%05d",NRR_nova_cabeca);
+
+    /* Insercao no lugar do registro apontado pela cabeca da avail */
+    fseek(arq_base,(nrr-1)*TAM_REGISTRO,SEEK_SET);
+    fprintf(arq_base,"%s",str_final);
+
+    *NRR_cabeca = NRR_nova_cabeca;
+  }
+  
+  printf("Obra adicionada com sucesso.\n\n\n");
+  return nrr;
+}
+  
 
 
 void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
@@ -77,20 +129,15 @@ void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) 
       }
     }
 
-  for(i=0; i<n_registros; i++){ 
-    if(strncmp(str_final, vetor[i].titulo, TAM_TIT) == 0){
-      printf("Erro! Titulo inserido já existente!\n");
-      printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
-      resposta = ERRO;
-      break;
-    }
 
-  }
+    resposta = checa_redundancia_tit(str_final, vetor, n_registros);
+
+
 
   } while(resposta==ERRO);
   
 
-    printf("Titulo lido com sucesso.\n");
+  printf("Titulo lido com sucesso.\n");
 
 
   return;
@@ -160,8 +207,10 @@ void Insere_tipo(char *str_final) {
 }
 
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do nome do autor da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do nome do autor da obra.
+*/
 void Insere_autor(char *str_final) {
 
   int i,resposta;
@@ -223,8 +272,10 @@ void Insere_autor(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do ano da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do ano da obra.
+*/
 void Insere_ano(char *str_final) {
 
   int i,resposta;
@@ -293,8 +344,10 @@ void Insere_ano(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do valor da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do valor da obra.
+*/
 void Insere_valor(char *str_final) {
 
   int i,j,k,resposta;
@@ -369,8 +422,10 @@ void Insere_valor(char *str_final) {
   
 }
 
-/*Funcao que le da entrada padrao (teclado) e verifica
-  coerencia do identificador da obra.*/
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do identificador da obra.
+*/
 void Insere_imagem(char *str_final) {
 
   int i, j, resposta;
@@ -452,11 +507,12 @@ void Insere_imagem(char *str_final) {
 }
 
 
-/*retira informacoes sobre obra de arte, gerando um arquivo .html com elas
-  chamada dentro da funcao consulta_pk, do arquivo pk.c*/
-void busca_registro(int NRR, FILE * arq_base) {
+/**
+   \brief Funcao que retira informacoes sobre obra de arte, gerando um arquivo .html com elas
+   chamada dentro da funcao consulta_pk, do arquivo pk.c
+*/
+void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
 
-  FILE *arq_html;
   int i;
   char identificador[TAM_IMG];
 
@@ -466,8 +522,6 @@ void busca_registro(int NRR, FILE * arq_base) {
 
 
   /* Geracao do arquivo de consulta em HTML: */
-
-  arq_html=fopen("tp2.html","w");
 
   /* Cabecalho do arquivo */
   fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\"><br>\n");
@@ -522,21 +576,96 @@ void busca_registro(int NRR, FILE * arq_base) {
   /* Fim do html */
   fprintf(arq_html,"<br></div></body></html>");
 
-  fclose(arq_html);
-  /*  fclose(arq_base);*/
-
   return;
 }
 
+/** 
+    \brief Funcao de remocao de registro - avail list da base de dados 
+*/
+void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *cabeca_avail_base_original) {
 
+  int NRR_a_remover, NRR_cabeca_antiga, cabeca_avail_base;
+  char titulo_a_remover[MAX_TIT];
+  ap_tipo_registro_pk elto_encontrado;
 
+  cabeca_avail_base = *cabeca_avail_base_original;
+
+   if(n_registros == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("ATENCAO! Remocao de obra do catalogo\n\n");
+  /* titulo_a_remover eh lido pela mesma funcao de insercao de registro */
+  Insere_titulo(titulo_a_remover, vetor_registros, 0);
+
+  /* Busca o titulo procurado no vetor de structs. */
+  elto_encontrado = bsearch(titulo_a_remover, vetor_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);
+  
+  /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
+  if(elto_encontrado==NULL) {
+    printf("\nO titulo nao foi encontrado! Tente novamente!\n\n");
+  }
+
+  /* Caso contrario, a partir do NRR, faz o procedimento de remocao do registro: */
+  else {
+
+    NRR_a_remover=((*elto_encontrado).nrr);
+
+    if(DEBUG)
+      printf(">>>NRR a remover: %d\n", NRR_a_remover);
+
+      
+      /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
+    if (cabeca_avail_base == -1) {
+ 
+      fseek(arq_cabeca_avail_base,0,SEEK_SET);     
+      fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
+      
+      /* Atribui-se o final da lista '-1' no comeco do registro que deseja-se remover */
+      fseek(arq_base, (NRR_a_remover-1)*TAM_REGISTRO, SEEK_SET);
+      fprintf(arq_base, "%05d",-1);
+    }
+    
+
+    /* Caso ja exista registros removidos (arq existe) */
+    else {
+
+      if(DEBUG)
+	printf("\n>>>O arquivo cabeca avail ja existia. Atualizando a lista... \n\n");
+      
+      /* Leitura do NRR da cabeca da lista a partir do arquivo que ja existia */
+      NRR_cabeca_antiga = cabeca_avail_base;
+      
+      /* Atualizacao da cabeca: cabeca=NRR_a_remover */
+      fseek(arq_cabeca_avail_base,0,SEEK_SET);
+      fprintf(arq_cabeca_avail_base, "%05d", NRR_a_remover);
+      /* Adiciona o endereco da antiga cabeca no inicio do registro a ser removido */
+      fseek(arq_base, (NRR_a_remover -1)*TAM_REGISTRO, SEEK_SET);
+      fprintf(arq_base,"%05d",NRR_cabeca_antiga);
+      
+      if(DEBUG){
+	printf(">>>Nova cabeca da Avail List: %d\n", NRR_a_remover);
+	printf(">>>Antiga cabeca (segundo elemento): %d\n\n", NRR_cabeca_antiga);
+	  }
+    }
+    
+    printf("Obra removida com sucesso.\n\n"); 
+  }
+  
+  *cabeca_avail_base_original = NRR_a_remover;
+
+  return;
+}
 
 
 /**************************************/
 /*         Funcoes Auxiliares         */
 /**************************************/
 
-/* funcao que ignora espacos antes do comeco da entrada*/
+/** 
+    \brief Funcao aux que ignora espacos antes do comeco da entrada
+*/
 char come_espaco(char c){
   /* sobrescreve o valor de "c" ate achar algum valor diferente de espaco */
   while(c==' ') {
@@ -546,7 +675,9 @@ char come_espaco(char c){
   return(c);
 }
 
-/* funcao que recebe caracteres alem do esperado pelo campo*/
+/** 
+    \brief Funcao aux que recebe caracteres alem do esperado pelo campo
+*/
 int come_excesso(char c){
   char resposta = OK;
   /*continua a receber a entrada ate o usuario apertar "enter" */
@@ -558,4 +689,29 @@ int come_excesso(char c){
     c=getchar();
   }
   return(resposta);
+}
+
+/** 
+    \brief Funcao aux que verifica se titulo ja foi inserido anteriormente (case insensitive)
+*/
+int checa_redundancia_tit(char * str_final, ap_tipo_registro_pk vetor, int n_registros){
+  
+  int i, j;
+  
+  for(i=0; i<n_registros; i++){ 
+    for(j=0; j<TAM_TIT; j++){ 
+
+      if(tolower(str_final[j]) != tolower(vetor[i].titulo[j]))
+	break;
+
+      if(j == TAM_TIT-1){
+	printf("Erro! Titulo inserido já existente!\n");
+	printf("Todos os titulos de obras devem ser diferentes! Repita a operação!\n\n");
+	return ERRO;
+      }
+
+    }
+  }
+ 
+  return OK;     
 }
