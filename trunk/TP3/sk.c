@@ -80,6 +80,49 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
+/*insere um novo vetor de SKs, um para cada chave secundaria nova do registro, assim como as suas respectivas listas invertidas*/
+tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li)
+{
+  int j;
+  char pk[TAM_TIT+1];
+  int n_titulos_li, n_autores_li, n_anos_li, n_tipos_li;
+  
+
+  vetores_sk->n_titulos = 0;
+  vetores_sk->n_autores = 0;
+  vetores_sk->n_anos = 0;
+  vetores_sk->n_tipos = 0;
+  
+  /*  //dar realloc (depois que concertar a alocacao do vetor)*/
+  
+  /*  vetores_sk->vetor_SK_titulo = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*100);
+      vetores_sk->vetor_SK_autor = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
+      vetores_sk->vetor_SK_ano = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
+      vetores_sk->vetor_SK_tipo = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100); */
+	
+  n_titulos_li = ftell(arqs_li->arq_tit_li)/(TAM_TIT+8);
+  n_tipos_li = ftell(arqs_li->arq_tip_li)/(TAM_TIT+8);
+  n_autores_li = ftell(arqs_li->arq_aut_li)/(TAM_TIT+8);
+  n_anos_li = ftell(arqs_li->arq_ano_li)/(TAM_TIT+8);
+ 
+
+  /*guarda a chave primaria (titulo)*/
+  for(j=0; j<TAM_TIT; j++)
+    pk[j] = registro[j];
+  
+  pk[TAM_TIT]='\0'; 
+
+      
+  /*adiciona as chaves secundarias e listas invertidas, para cada campo*/      
+  cria_vetor_titulo(registro, pk, &n_titulos_li, vetores_sk, arqs_li->arq_tit_li);
+  cria_vetor_tipo(registro, pk, &n_tipos_li, vetores_sk, arqs_li->arq_tip_li);
+  cria_vetor_autor(registro, pk, &n_autores_li, vetores_sk, arqs_li->arq_aut_li);
+  cria_vetor_ano(registro, pk, &n_anos_li, vetores_sk, arqs_li->arq_ano_li);
+  
+  return vetores_sk;
+}
+
+
 /* cria vetor sk e lista invertida para titulo */	
 void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int * n_titulos_li, tipo_vetores_sk *vetores_sk, FILE * arq_tit_li){
  

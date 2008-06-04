@@ -4,6 +4,9 @@
 /*cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
 tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase);
 
+/*insere um novo vetor de SKs, um para cada chave secundaria do novo registro, assim como as suas respectivas listas invertidas*/
+tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li );
+
 
 /* cria vetor sk e lista invertida para titulo */	
 void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_titulos_li, tipo_vetores_sk *vetores_sk, FILE *arq_tit_li);
