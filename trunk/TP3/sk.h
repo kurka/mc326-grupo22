@@ -6,13 +6,13 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
 
 /* cria vetor sk e lista invertida para titulo */	
-void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li);
+void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_titulos_li, tipo_vetores_sk *vetores_sk, FILE *arq_tit_li);
 /* cria vetor sk e lista invertida para tipo */	
-void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li);
+void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_tipos_li, tipo_vetores_sk *vetores_sk, FILE *arq_tip_li);
 /* cria vetor sk e lista invertida para autor */	
-void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li);
+void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_autores_li, tipo_vetores_sk *vetores_sk, FILE *arq_aut_li);
 /* cria vetor sk e lista invertida para ano */	
-void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li);
+void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_anos_li, tipo_vetores_sk *vetores_sk, FILE *arq_ano_li);
 
 /* salva todos os registros da lista invertida de chaves secundarias nos arquivos *li.dat */
 void salvaArquivosLi(tipo_vetores_li *vetores_li, tipo_arqs_li * arqs_li);

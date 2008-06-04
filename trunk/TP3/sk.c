@@ -18,6 +18,8 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
   tipo_vetores_li *vetores_li = (tipo_vetores_li *)malloc(sizeof(tipo_vetores_li));
+
+  int n_titulos_li, n_autores_li, n_anos_li, n_tipos_li;
   
   vetores_sk->n_titulos = 0;
   vetores_sk->n_autores = 0;
@@ -29,15 +31,26 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   vetores_sk->vetor_SK_ano = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
   vetores_sk->vetor_SK_tipo = (tipo_registro_sk *)malloc(sizeof(tipo_registro_sk)*100);
 	
-  vetores_li->n_titulos = 0;
-  vetores_li->n_autores = 0;
-  vetores_li->n_anos = 0;
-  vetores_li->n_tipos = 0;
+
+  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");  
+  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
+  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
+  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
   
-  vetores_li->vetor_li_titulo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
-  vetores_li->vetor_li_autor = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
-  vetores_li->vetor_li_ano = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
-  vetores_li->vetor_li_tipo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100);
+  
+  n_titulos_li = 0;
+  n_tipos_li = 0;
+  n_autores_li = 0;
+  n_anos_li = 0;
+
+  
+/*   vetores_li->vetor_li_titulo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100); */
+/*   vetores_li->vetor_li_autor = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100); */
+/*   vetores_li->vetor_li_ano = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100); */
+/*   vetores_li->vetor_li_tipo = (tipo_registro_li *)malloc(sizeof(tipo_registro_li)*100); */
+
+
+ 
   
   fseek(arqBase,0,SEEK_SET);
   
@@ -54,17 +67,17 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
       
       /*cria as chaves secundarias e listas invertidas, para cada campo*/      
-      cria_vetor_titulo(registro, pk, vetores_sk, vetores_li);
-      cria_vetor_tipo(registro, pk, vetores_sk, vetores_li);
-      cria_vetor_autor(registro, pk, vetores_sk, vetores_li);
-      cria_vetor_ano(registro, pk, vetores_sk, vetores_li);
+      cria_vetor_titulo(registro, pk, &n_titulos_li, vetores_sk, arqs_li->arq_tit_li);
+      cria_vetor_tipo(registro, pk, &n_tipos_li, vetores_sk, arqs_li->arq_tip_li);
+      cria_vetor_autor(registro, pk, &n_autores_li, vetores_sk, arqs_li->arq_aut_li);
+      cria_vetor_ano(registro, pk, &n_anos_li, vetores_sk, arqs_li->arq_ano_li);
       
     }
   
   
 /*   if(DEBUG){ */
-/*     printf("\n NUMERO %d", vetores_li->n_titulos); */
-/*     for(l=0; l< vetores_li->n_titulos; l++) */
+/*     printf("\n NUMERO %d", n_titulos); */
+/*     for(l=0; l< n_titulos; l++) */
 /*       { */
 /* 	printf("l = %d", l); */
 /* 	printf("%-50s", vetores_li->vetor_li_titulo[l].chave); */
@@ -76,24 +89,26 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   salvaArquivosLi(vetores_li, arqs_li);
 
   /*libera a memoria alocada*/
-  free(vetores_li->vetor_li_titulo);
-  free(vetores_li->vetor_li_autor);
-  free(vetores_li->vetor_li_ano);
-  free(vetores_li->vetor_li_tipo);
-  free(vetores_li);  
+ /*  free(vetores_li->vetor_li_titulo); */
+/*   free(vetores_li->vetor_li_autor); */
+/*   free(vetores_li->vetor_li_ano); */
+/*   free(vetores_li->vetor_li_tipo); */
+/*   free(vetores_li);   */
 
   return vetores_sk;
 }
 
 
 /* cria vetor sk e lista invertida para titulo */	
-void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int * n_titulos_li, tipo_vetores_sk *vetores_sk, FILE * arq_tit_li){
  
 
-  int j, k, l;   
+  int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
   
+  int n_titulos = * n_titulos_li;
+
   /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
     já existe ou se deve ser inserida	*/
   k=0;
@@ -102,15 +117,18 @@ void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vet
       /*printf("registro[j]=%c", registro[j]);*/
       if(registro[j] == ' ' || j==MAX_TIT-1)
 	{
-	  /*excecao quando a palavra termina no ultimo caracter do campo*/
-	  if(j == MAX_TIT-1){
-	    temp_sk[k] = registro[j];
-	    k++;	      
-	  }
 	  
 	  /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
 	  if(k!=0)  
 	    { 
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_TIT-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+
+
 	      /*temos um nome simples(possivel SK) em temp_sk*/
 	      temp_sk[k]='\0';
 	      
@@ -125,7 +143,6 @@ void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vet
 	      
 	      if(novaSK == 1) /*se uma nova SK vai ser inserida*/
 		{
-		  
 		  vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave = (char *)malloc(sizeof(char)*(k+1));
 		  
 		  strcpy(vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos].chave, temp_sk);
@@ -133,19 +150,18 @@ void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vet
 		  
 		  
 		  /* criando a li */ 
-		  vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = vetores_li->n_titulos;
-		  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  vetores_sk->vetor_SK_titulo[vetores_sk->n_titulos-1].endereco_li = n_titulos;
+		  prox = -1;
 		  
-		  /*copiando a chave*/
-		  strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 
+		  fseek(arq_tit_li, (n_titulos)*(TAM_TIT+8),SEEK_SET);	  
+		  fprintf(arq_tit_li, "%s", pk); 
+		  fprintf(arq_tit_li, "%08d", prox);     	  
 		  
-		  vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
-		  vetores_li->n_titulos++;
+		  n_titulos++;
 		  
 		}
 	      else /* a SK já existe, mas precisamos inserir a chave na lista invertida */
 		{
-		  
 		  for(l=0; l<vetores_sk->n_titulos; l++) 
 		    {  
 		      if(strcmpinsensitive(vetores_sk->vetor_SK_titulo[l].chave, temp_sk) == 0) 
@@ -154,19 +170,27 @@ void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vet
 			  
 			  endereco_li = vetores_sk->vetor_SK_titulo[l].endereco_li;
 			  
+
+			  fseek(arq_tit_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fscanf(arq_tit_li, "%08d", &prox);
 			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			  while(vetores_li->vetor_li_titulo[endereco_li].prox != -1) 
+			  while(prox != -1) 
 			    {
-			      endereco_li = vetores_li->vetor_li_titulo[endereco_li].prox;
+			      endereco_li = prox;
+			      fseek(arq_tit_li, ((prox)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			      fscanf(arq_tit_li, "%08d", &prox);
 			    }
-			  vetores_li->vetor_li_titulo[endereco_li].prox = vetores_li->n_titulos;
-			  vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			  
-			  /*copiando a chave*/
-			  strcpy(vetores_li->vetor_li_titulo[vetores_li->n_titulos].chave,  pk); 		      
-			  
-			  vetores_li->vetor_li_titulo[vetores_li->n_titulos].prox = -1;
-			  vetores_li->n_titulos++;
+
+
+			  fseek(arq_tit_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fprintf(arq_tit_li, "%08d", n_titulos);     	  
+
+
+			  fseek(arq_tit_li, ((n_titulos)*(TAM_TIT+8)), SEEK_SET);
+			  fprintf(arq_tit_li, "%s", pk); 
+			  fprintf(arq_tit_li, "%08d", prox);     	  
+		
+			  n_titulos++;
 			  
 			  break;
 			  
@@ -187,17 +211,19 @@ void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vet
 	}
     }
   
+  *n_titulos_li = n_titulos;
 }
 
 
-
 /* cria vetor sk e lista invertida para tipo */	
-void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_tipos_li, tipo_vetores_sk *vetores_sk, FILE * arq_tip_li){
  
 
-  int j, k, l;   
+  int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
+  
+  int n_tipos = * n_tipos_li;
 
   /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
     e verifica se essa SK já existe ou se deve ser inserida	*/
@@ -207,14 +233,15 @@ void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetor
       if(registro[j] == ' ' || j == MAX_TIP-1)
 	{
 	  
-	  /*excecao quando a palavra termina no ultimo caracter do campo*/
-	  if(j == MAX_TIP-1){
-	    temp_sk[k] = registro[j];
-	    k++;	      
-	  }
-	  
 	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 	    {
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_TIP-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+	  
 	      temp_sk[k]='\0';
 	      
 	      /* novaSK(1 = true, 0 = false)*/
@@ -233,16 +260,17 @@ void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetor
 		  
 		  strcpy(vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos].chave, temp_sk);
 		  vetores_sk->n_tipos++;
-		  
+	
+
 		  /* criando a li */ 
-		  vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos-1].endereco_li = vetores_li->n_tipos;
-		  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  vetores_sk->vetor_SK_tipo[vetores_sk->n_tipos-1].endereco_li = n_tipos;
+		  prox = -1;
+
+		  fseek(arq_tip_li, (n_tipos)*(TAM_TIT+8),SEEK_SET);
+		  fprintf(arq_tip_li, "%s", pk); 
+		  fprintf(arq_tip_li, "%08d", prox);     	  
 		  
-		  /*copiando a chave*/
-		  strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
-		  
-		  vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
-		  vetores_li->n_tipos++;
+		  n_tipos++;
 		}
 	      
 	      /* a SK já existe, mas precisamos inserir a chave na lista invertida */
@@ -256,22 +284,29 @@ void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetor
 			  
 			  endereco_li = vetores_sk->vetor_SK_tipo[l].endereco_li;
 			  
+
+			  fseek(arq_tip_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fscanf(arq_tip_li, "%08d", &prox);
 			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			  while(vetores_li->vetor_li_tipo[endereco_li].prox != -1) 
+			  while(prox != -1) 
 			    {
-			      endereco_li = vetores_li->vetor_li_tipo[endereco_li].prox;
+			      endereco_li = prox;
+			      fseek(arq_tip_li, ((prox)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			      fscanf(arq_tip_li, "%08d", &prox);
 			    }
-			  vetores_li->vetor_li_tipo[endereco_li].prox = vetores_li->n_tipos;
-			  vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+
+
+			  fseek(arq_tip_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fprintf(arq_tip_li, "%08d", n_tipos);     	  
 			  
-			  /*copiando a chave*/
-			  strcpy(vetores_li->vetor_li_tipo[vetores_li->n_tipos].chave,  pk); 
-			  
-			  vetores_li->vetor_li_tipo[vetores_li->n_tipos].prox = -1;
-			  vetores_li->n_tipos++;
+
+			  fseek(arq_tip_li, ((n_tipos)*(TAM_TIT+8)), SEEK_SET);
+			  fprintf(arq_tip_li, "%s", pk); 
+			  fprintf(arq_tip_li, "%08d", prox);     	  
+		
+			  n_tipos++;
 			  
 			  break;
-			  
 			}
 		    }
 		}
@@ -287,18 +322,20 @@ void cria_vetor_tipo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetor
 	  k++;  
 	}
     }
+  *n_tipos_li = n_tipos;
 }
 
 
 
 /* cria vetor sk e lista invertida para autor */	
-void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_autores_li, tipo_vetores_sk *vetores_sk, FILE *arq_aut_li){
  
-
-  int j, k, l;   
+  int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
- 
+  
+  int n_autores = * n_autores_li;
+
   /*rotina que separa uma string composta em substrigs simples, que serão as SKs, 
     e verifica se essa SK já existe ou se deve ser inserida	*/
   k=0;
@@ -306,14 +343,15 @@ void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_veto
     {
       if(registro[j] == ' ' || j == MAX_AUT-1)
 	{
-	  /*excecao quando a palavra termina no ultimo caracter do campo*/
-	  if(j == MAX_AUT-1){
-	    temp_sk[k] = registro[j];
-	    k++;	      
-	  }
-	  
 	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 	    {
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_AUT-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+	      
 	      temp_sk[k]='\0';
 	      
 	      /* novaSK(1 = true, 0 = false)*/
@@ -333,15 +371,16 @@ void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_veto
 		  strcpy(vetores_sk->vetor_SK_autor[vetores_sk->n_autores].chave, temp_sk);
 		  vetores_sk->n_autores++;
 		  
+
 		  /* criando a li */ 
-		  vetores_sk->vetor_SK_autor[vetores_sk->n_autores-1].endereco_li = vetores_li->n_autores;
-		  vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  vetores_sk->vetor_SK_autor[vetores_sk->n_autores-1].endereco_li = n_autores;
+		  prox = -1;
+
+		  fseek(arq_aut_li, (n_autores)*(TAM_TIT+8),SEEK_SET);
+		  fprintf(arq_aut_li, "%s", pk); 
+		  fprintf(arq_aut_li, "%08d", prox);     	  
 		  
-		  /*copiando a chave*/
-		  strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
-		  
-		  vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
-		  vetores_li->n_autores++;
+		  n_autores++;
 		}
 	      
 	      /* a SK já existe, mas precisamos inserir a chave na lista invertida */
@@ -354,20 +393,28 @@ void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_veto
 			{ 
 			  endereco_li = vetores_sk->vetor_SK_autor[l].endereco_li;
 			  
+			  fseek(arq_aut_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fscanf(arq_aut_li, "%08d", &prox);
 			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			  while(vetores_li->vetor_li_autor[endereco_li].prox != -1) 
+			  while(prox != -1) 
 			    {
-			      endereco_li = vetores_li->vetor_li_autor[endereco_li].prox;
+			      endereco_li = prox;
+			      fseek(arq_aut_li, ((prox)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			      fscanf(arq_aut_li, "%08d", &prox);
 			    }
-			  vetores_li->vetor_li_autor[endereco_li].prox = vetores_li->n_autores;
-			  vetores_li->vetor_li_autor[vetores_li->n_autores].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			  
-			  /*copiando a chave*/
-			  strcpy(vetores_li->vetor_li_autor[vetores_li->n_autores].chave, pk);
-			  
-			  vetores_li->vetor_li_autor[vetores_li->n_autores].prox = -1;
-			  vetores_li->n_autores++;
+
+
+			  fseek(arq_aut_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fprintf(arq_aut_li, "%08d", n_autores);     	  
+
+
+			  fseek(arq_aut_li, ((n_autores)*(TAM_TIT+8)), SEEK_SET);
+			  fprintf(arq_aut_li, "%s", pk); 
+			  fprintf(arq_aut_li, "%08d", prox);     	  
+		
+			  n_autores++;
 			  break;
+			  
 			}
 		    }
 		}
@@ -380,16 +427,19 @@ void cria_vetor_autor(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_veto
 	  k++;
 	}
     }
+  *n_autores_li = n_autores;
 }
 
-
 /* cria vetor sk e lista invertida para ano */	
-void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetores_sk *vetores_sk, tipo_vetores_li *vetores_li){
+void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_anos_li, tipo_vetores_sk *vetores_sk, FILE *arq_ano_li){
  
 
-  int j, k, l;   
+  int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
+  
+  int n_anos = * n_anos_li;
+
 
    
   /*criando vetor sk e lista invertida p/ ano*/
@@ -400,14 +450,16 @@ void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetore
     {
       if(registro[j] == ' ' || j == MAX_ANO-1)
 	{
-	  /*excecao quando a palavra termina no ultimo caracter do campo*/
-	  if(j == MAX_ANO-1){
-	    temp_sk[k] = registro[j];
-	    k++;	      
-	  }
-	  
 	  if(k!=0) /*temos um nome simples(possivel SK) em temp_sk*/
 	    {
+
+	      /*excecao quando a palavra termina no ultimo caracter do campo*/
+	      if(j == MAX_ANO-1){
+		temp_sk[k] = registro[j];
+		k++;	      
+	      }
+	      
+	      
 	      temp_sk[k]='\0';
 	      
 	      /* novaSK(1 = true, 0 = false)*/
@@ -427,16 +479,16 @@ void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetore
 		  strcpy(vetores_sk->vetor_SK_ano[vetores_sk->n_anos].chave, temp_sk);
 		  vetores_sk->n_anos++;
 		  
+
 		  /* criando a li */ 
-		  vetores_sk->vetor_SK_ano[vetores_sk->n_anos-1].endereco_li = vetores_li->n_anos;
-		  vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
+		  vetores_sk->vetor_SK_ano[vetores_sk->n_anos-1].endereco_li = n_anos;
+		  prox = -1;
+
+		  fseek(arq_ano_li, (n_anos)*(TAM_TIT+8),SEEK_SET);
+		  fprintf(arq_ano_li, "%s", pk); 
+		  fprintf(arq_ano_li, "%08d", prox);     	  
 		  
-		  
-		  /*copiando a chave*/
-		  strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
-		  
-		  vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
-		  vetores_li->n_anos++;
+		  n_anos++;
 		}
 	      
 	      
@@ -451,22 +503,27 @@ void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetore
 			  
 			  endereco_li = vetores_sk->vetor_SK_ano[l].endereco_li;
 			  
+			  fseek(arq_ano_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fscanf(arq_ano_li, "%08d", &prox);
 			  /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
-			  while(vetores_li->vetor_li_ano[endereco_li].prox != -1) 
+			  while(prox != -1) 
 			    {
-			      endereco_li = vetores_li->vetor_li_ano[endereco_li].prox;
+			      endereco_li = prox;
+			      fseek(arq_ano_li, ((prox)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			      fscanf(arq_ano_li, "%08d", &prox);
 			    }
-			  vetores_li->vetor_li_ano[endereco_li].prox = vetores_li->n_anos;
-			  vetores_li->vetor_li_ano[vetores_li->n_anos].chave = (char *)malloc(sizeof(char)*(TAM_TIT+1));
-			  
-			  /*copiando a chave*/
-			  strcpy( vetores_li->vetor_li_ano[vetores_li->n_anos].chave,  pk);  
-			  
-			  vetores_li->vetor_li_ano[vetores_li->n_anos].prox = -1;
-			  vetores_li->n_anos++;
-			  
+
+
+			  fseek(arq_ano_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
+			  fprintf(arq_ano_li, "%08d", n_anos);     	  
+
+
+			  fseek(arq_ano_li, ((n_anos)*(TAM_TIT+8)), SEEK_SET);
+			  fprintf(arq_ano_li, "%s", pk); 
+			  fprintf(arq_ano_li, "%08d", prox);     	  
+		
+			  n_anos++;
 			  break;
-			  
 			}
 		    }
 		}
@@ -481,6 +538,7 @@ void cria_vetor_ano(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], tipo_vetore
 	  k++;
 	}
     }   
+  *n_anos_li = n_anos;
 }
 
 
@@ -491,19 +549,13 @@ void salvaArquivosLi(tipo_vetores_li * vetores_li, tipo_arqs_li * arqs_li)
 {
   int i;
 
-  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");  
-  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
-  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
-  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
-
-
   /*salva arquivos lista invertida de chaves secundarias relacionadas a titulos*/  
-  fseek(arqs_li->arq_tit_li,0,SEEK_SET);
+/*   fseek(arqs_li->arq_tit_li,0,SEEK_SET); */
   
-  for(i=0; i<vetores_li->n_titulos; i++){
-    fprintf(arqs_li->arq_tit_li, "%s", vetores_li->vetor_li_titulo[i].chave); 
-    fprintf(arqs_li->arq_tit_li, "%08d", vetores_li->vetor_li_titulo[i].prox);     
-  }
+/*   for(i=0; i<vetores_li->n_titulos; i++){ */
+/*     fprintf(arqs_li->arq_tit_li, "%s", vetores_li->vetor_li_titulo[i].chave);  */
+/*     fprintf(arqs_li->arq_tit_li, "%08d", vetores_li->vetor_li_titulo[i].prox);      */
+/*   } */
 
 
   /*salva arquivos lista invertida de chaves secundarias relacionadas a tipos*/  
