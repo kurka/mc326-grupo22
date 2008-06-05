@@ -9,9 +9,8 @@
 #include "sk.h"
 
 
-/*cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
-tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase)
-{
+/*cria vetores de SKs,a partir da base, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
+tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase){
   int i, j;
   
   char registro[TAM_REGISTRO], pk[TAM_TIT+1];
@@ -19,6 +18,7 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   int n_titulos_li, n_autores_li, n_anos_li, n_tipos_li;
 
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
+
   vetores_sk->titulo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->tipo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->autor = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
@@ -53,13 +53,6 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   vetores_sk->ano->vetor_SK = realoca_memoria_sk(vetores_sk->ano->vetor_SK, &vetores_sk->ano->tam_vetor); 
 
 	
-
-  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");  
-  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
-  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
-  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
-  
-  
   n_titulos_li = 0;
   n_tipos_li = 0;
   n_autores_li = 0;
@@ -80,13 +73,24 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
       
       /*cria as chaves secundarias e listas invertidas, para cada campo*/
-      vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);      
+      printf("titulo:\n");
+      vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);   
+      printf("tipo:\n");
       vetores_sk->tipo = cria_vetor_generico(registro, pk, vetores_sk->tipo, &n_tipos_li, arqs_li->arq_tip_li);      
+      printf("autor:\n");
       vetores_sk->autor = cria_vetor_generico(registro, pk, vetores_sk->autor, &n_autores_li, arqs_li->arq_aut_li);      
+      printf("ano:\n");
       vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li);      
     }
   
-  return vetores_sk;
+  /*ordena registros de sk*/
+  qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->ano->vetor_SK, vetores_sk->ano->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+ 
+
+  return vetores_sk; 
 }
 
 
@@ -118,6 +122,13 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
   vetores_sk->tipo = cria_vetor_generico(registro, pk, vetores_sk->tipo, &n_tipos_li, arqs_li->arq_tip_li);      
   vetores_sk->autor = cria_vetor_generico(registro, pk, vetores_sk->autor, &n_autores_li, arqs_li->arq_aut_li);      
   vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li);
+  
+
+  /*ordena registros de sk*/
+  qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->ano->vetor_SK, vetores_sk->ano->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   
   return vetores_sk;
 }
@@ -167,7 +178,6 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	  /*se uma nova SK vai ser inserida*/
 	  
 	  /*verifica se precisa realocar o tamanho do vetor, para inserir nova SK*/
-	 /*  printf("n_sk = %d, tam_vetor_sk = %d\n", n_sk, tam_vetor_sk); */
 	  if(n_sk == tam_vetor_sk)
 	    generico->vetor_SK = realoca_memoria_sk(generico->vetor_SK, &tam_vetor_sk); 
 	  
@@ -178,7 +188,7 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 
 	  /*ordena o vetor de SKs*/
 	  
-	  qsort(generico->vetor_SK, n_sk, sizeof(tipo_registro_sk), compara_qsort2);  
+/* 	  qsort(generico->vetor_SK, n_sk, sizeof(tipo_registro_sk), compara_qsort2); */
 		  
 		  
 	  /* criando a li */ 
@@ -195,6 +205,7 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	/* a SK já existe, mas precisamos inserir a chave na lista invertida */
 	else{
 	  for(l=0; l<n_sk; l++){  
+
 	    if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0){
 	      
 	      /*encontramos a SK no vetor de SKs*/
@@ -202,6 +213,10 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 			  
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_gen_li, "%08d", &prox);
+
+	      printf("chave repetida = %s", temp_sk);
+	      printf(" nrr = %d\n", prox);
+
 	      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
 	      while(prox != -1){
 		endereco_li = prox;
@@ -219,6 +234,9 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	      
 	      n_li++;
 	      
+
+
+
 	      break;
 			  
 	    }
@@ -242,13 +260,14 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
   generico->tam_vetor = tam_vetor_sk;
 
 
-/*   if(DEBUG){  */
-/*     printf(" NUMERO %d\n", n_sk); */
-/*     for(l=0; l< n_sk; l++) */
-/*       { */
-/* 	printf("%s\n", generico->vetor_SK[l].chave); */
-/*       } */
-/*   } */
+  if(DEBUG){
+    printf(" NUMERO %d\n", n_sk);
+    for(l=0; l< n_sk; l++)
+      {
+	printf("%15s", generico->vetor_SK[l].chave);
+	printf("   %d\n", generico->vetor_SK[l].endereco_li);
+      }
+  }
 
   return generico;
 }
@@ -496,9 +515,10 @@ int strcmpinsensitive(char * a, char * b){
    \brief funcao auxiliar usada na funcao qsort (para ordenar sks)
 */
 int compara_qsort2(const void * vetora, const void * vetorb){
-  return(strcmpinsensitive( ((tipo_registro_sk *)vetora)->chave,
+  return(strcmp( ((tipo_registro_sk *)vetora)->chave,
 		  ((tipo_registro_sk *)vetorb)->chave));
 }
+
 
 
 /**

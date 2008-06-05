@@ -82,11 +82,19 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
 }
 
 
+/*abre arquivos de listas invertidas (vinculados a chaves secundarias)*/
+void abre_lis(tipo_arqs_li * arqs_li){
+  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
+  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
+  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
+  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
+}
+
+
 /*para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir*/
 void espera(){
   printf("\nPressione uma tecla para voltar ao menu...\n");
   getchar();
 }
-
 
 
