@@ -22,6 +22,9 @@ void consulta_sk_ano(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, in
 
 void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk);
 
+/*funcao que le da entrada padrao e trata excecoes de entrada de busca*/
+int le_sk(char* palavra_procurada, int max);
+
 /* Funcoes Auxiliares */
 
 /*funcao analoga a strcmp, mas insensivel a maiusculas/minusculas */
