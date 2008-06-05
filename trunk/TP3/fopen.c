@@ -82,7 +82,11 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
 }
 
 
-
+/*para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir*/
+void espera(){
+  printf("\nPressione uma tecla para voltar ao menu...\n");
+  getchar();
+}
 
 
 
