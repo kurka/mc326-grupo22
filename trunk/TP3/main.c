@@ -67,7 +67,7 @@ int main() {
   }
 
   /* Caso o arquivo pk.dat nao exista, ou seja vazio, pega os valores 
-     da ase (se existirem) e os coloca no vetor_registro, para serem
+     da base (se existirem) e os coloca no vetor_registro, para serem
      adicionados posteriormente ao arquivo pk.dat*/
   if(pk==0){
     
