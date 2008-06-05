@@ -4,6 +4,7 @@
 /* Funcao de insercao na base */
 void Insere_base(FILE *arq_base, char * str_final, ap_tipo_registro_pk vetor, int n_registros);
 
+/* Funcao de busca de registro na base a partir do NRR */
 void busca_registro(int NRR, FILE *arq_base, FILE *arq_html);
 
 /* ********************************* */
@@ -32,5 +33,5 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 char come_espaco(char c);
 /* Funcao que recebe caracteres alem do esperado pelo campo */
 int come_excesso(char c);
-/*funcao que verifica se titulo ja foi inserido anteriormente (case insensitive)*/
+/* Funcao que verifica se titulo ja foi inserido anteriormente (case insensitive) */
 int checa_redundancia_tit(char * str_final, ap_tipo_registro_pk vetor, int n_registros);

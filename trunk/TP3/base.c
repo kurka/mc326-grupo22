@@ -1,4 +1,3 @@
-
 /* Nesta biblioteca estao definidas as funcoes de operacao na
    base de dados (baseXX.dat) e algumas funcoes auxiliares. */
 
@@ -14,7 +13,7 @@
     \brief Funcao da insercao propriamente dita (insercao no arquivo) 
 */
 void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
-
+  
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
   Insere_titulo(str_final, vetor, n_registros);
   Insere_tipo(str_final);
@@ -129,21 +128,21 @@ void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) 
       }
     }
 
-
     resposta = checa_redundancia_tit(str_final, vetor, n_registros);
-
-
 
   } while(resposta==ERRO);
   
 
-  printf("Titulo lido com sucesso.\n");
-
+  printf("Titulo lido com sucesso!\n");
 
   return;
   
 }
 
+/**
+   \brief Funcao que le da entrada padrao (teclado) e verifica
+   coerencia do tipo da obra.
+*/
 
 void Insere_tipo(char *str_final) {
   
@@ -181,7 +180,7 @@ void Insere_tipo(char *str_final) {
 	c=getchar();
       }
 
-      /* Caso a entrada seja maior que o tamanho limite*/
+      /* Caso a entrada seja maior que o tamanho limite */
       if((i>=MAX_TIP)&&(c!='\n')) {
 	resposta = come_excesso(c);
 	
@@ -194,7 +193,7 @@ void Insere_tipo(char *str_final) {
     }
 
     if(resposta==OK){
-      /*preenche o resto do vetor com espacos*/
+      /* Preenche o resto do vetor com espacos */
       for(;i<MAX_TIP;i++)
 	str_final[i]=' ';
     }
@@ -231,7 +230,7 @@ void Insere_autor(char *str_final) {
       resposta=ERRO;
     }
   
-    /*O registro inicia no final do registro anterior*/
+    /* O registro inicia no final do registro anterior */
     i=MAX_TIP;
     
     /* Caracteres a serem inseridos */
@@ -247,7 +246,7 @@ void Insere_autor(char *str_final) {
 	c=getchar();
       }
       
-      /* Caso a entrada seja maior que o tamanho limite*/
+      /* Caso a entrada seja maior que o tamanho limite */
       if((i>=MAX_AUT)&&(c!='\n')) {
 	resposta = come_excesso(c);
 	
@@ -260,7 +259,7 @@ void Insere_autor(char *str_final) {
     }
 
     if(resposta==OK){
-      /*preenche o resto do vetor com espacos*/
+      /* Preenche o resto do vetor com espacos */
       for(;i<MAX_AUT;i++)
 	str_final[i]=' ';
     }
@@ -296,14 +295,14 @@ void Insere_ano(char *str_final) {
       resposta=ERRO;
     }
   
-    /*O registro inicia no final do registro anterior*/
+    /* O registro inicia no final do registro anterior */
     i=MAX_AUT;
     
     /* Caracteres a serem inseridos */
     while(c!='\n' && resposta!=ERRO) {
       
-      /*Confere se o usuario digita algum caracter diferente de numeros
-	(valores extraidos da tabela ascii)*/
+      /* Confere se o usuario digita algum caracter diferente de numeros
+	(valores extraidos da tabela ascii) */
       if (c < '0' || c > '9'){
 	resposta=ERRO2;
       }
@@ -313,7 +312,7 @@ void Insere_ano(char *str_final) {
       }
       c=getchar();
       
-      /* Caso a entrada seja maior que o tamanho limite*/
+      /* Caso a entrada seja maior que o tamanho limite */
       if((i>=MAX_ANO)&&(c!='\n')) {
 	resposta = come_excesso(c);
 	
@@ -325,12 +324,12 @@ void Insere_ano(char *str_final) {
       
     }
 
-    /*Caso tenha encontrado algum caracter diferente de numero.*/
+    /* Caso tenha encontrado algum caracter diferente de numero. */
     if(resposta==ERRO2)
       printf("ERRO: O ano deve conter apenas numeros\n");    
     
     if(resposta==OK){
-      /*Confere se o ano foi preenchido ate o final*/
+      /* Confere se o ano foi preenchido ate o final */
       if(i < MAX_ANO){
 	printf("ERRO: Dados incompletos\n");
 	resposta=ERRO;
@@ -368,14 +367,14 @@ void Insere_valor(char *str_final) {
     }
   
  
-    /*O registro inicia no final do registro anterior*/
+    /* O registro inicia no final do registro anterior */
     i=MAX_ANO;
     j=0;
     /* Caracteres a serem inseridos */
     while(c!='\n' && resposta != ERRO) {
       
-      /*Confere se o usuario digita algum caracter diferente de numeros
-	(valores extraidos da tabela ascii)*/
+      /* Confere se o usuario digita algum caracter diferente de numeros
+	(valores extraidos da tabela ascii) */
       if (c < '0' || c > '9'){
 	resposta=ERRO2;
       }
@@ -386,7 +385,7 @@ void Insere_valor(char *str_final) {
       }
       c=getchar();
       
-      /* Caso a entrada seja maior que o tamanho limite*/
+      /* Caso a entrada seja maior que o tamanho limite */
       if((i>=MAX_VAL)&&(c!='\n')) {
 	resposta = come_excesso(c);
 	
@@ -398,16 +397,16 @@ void Insere_valor(char *str_final) {
       
     }
     
-    /*Caso tenha encontrado algum caracter diferente de numero.*/
+    /* Caso tenha encontrado algum caracter diferente de numero. */
     if(resposta==ERRO2)
       printf("ERRO: O valor deve conter apenas numeros\n");
     
     
     if(resposta==OK){
-      /*preenche o vetor com 0*/ 
+      /* Preenche o vetor com 0 */ 
       for(k=MAX_ANO;k<MAX_VAL;k++)
 	str_final[k]='0';
-      /*copia o valor lido para o final do vetor*/
+      /* Copia o valor lido para o final do vetor */
       i=MAX_VAL-1;
       for(k=j-1;k>=0;k--){
 	str_final[i]=valor[k];
@@ -447,19 +446,19 @@ void Insere_imagem(char *str_final) {
       resposta=ERRO;
     }
     
-    /*O registro inicia no final do registro anterior*/
+    /* O registro inicia no final do registro anterior */
     i=MAX_VAL;
     j=0;
     /* Caracteres a serem inseridos */
     
     while(c!='\n' && resposta!=ERRO) {
       
-      /*Confere se o usuario digita algum caracter diferente de numeros
-	antes da extensao (valores extraidos da tabela ascii)*/
+      /* Confere se o usuario digita algum caracter diferente de numeros
+	antes da extensao (valores extraidos da tabela ascii) */
       if (i < MAX_IMG-TAM_FORM && (c < '0' || c > '9')){
 	resposta=ERRO2;
       }
-      /*Guarda o formato da figura no string "formato"*/
+      /* Guarda o formato da figura no string "formato" */
       if (i > MAX_IMG-TAM_FORM-1 && i < MAX_IMG){
 	formato[j] = c;
 	j++;
@@ -469,7 +468,7 @@ void Insere_imagem(char *str_final) {
       i++;
       c=getchar();
       
-      /*Confere se a extensao do arquivo eh valida*/
+      /* Confere se a extensao do arquivo eh valida */
       if(i == MAX_IMG)
 	if(!((formato[0]=='p'&&formato[1]=='n'&&formato[2]=='g') ||
 	     (formato[0]=='j'&&formato[1]=='p'&&formato[2]=='g') ||
@@ -478,7 +477,7 @@ void Insere_imagem(char *str_final) {
 	  resposta=ERRO;
 	}
 
-      /* Caso a entrada seja maior que o tamanho limite*/
+      /* Caso a entrada seja maior que o tamanho limite */
       if((i>=MAX_IMG)&&(c!='\n')) {
 	resposta = come_excesso(c);
        
@@ -489,12 +488,12 @@ void Insere_imagem(char *str_final) {
       }
     }
 
-    /*Caso tenha encontrado algum caracter diferente de numero.*/
+    /* Caso tenha encontrado algum caracter diferente de numero. */
     if(resposta==ERRO2)
       printf("ERRO: o identificador deve conter apenas digitos e uma extensao valida.\n");
     
     if(resposta==OK){
-      /*Confere se o identificador foi preenchido ate o final*/
+      /* Confere se o identificador foi preenchido ate o final */
       if(i < MAX_IMG){
 	printf("ERRO: dados incompletos\n");
 	resposta = ERRO;
@@ -508,8 +507,7 @@ void Insere_imagem(char *str_final) {
 
 
 /**
-   \brief Funcao que retira informacoes sobre obra de arte, gerando um arquivo .html com elas
-   chamada dentro da funcao consulta_pk, do arquivo pk.c
+   \brief Funcao que acessa a base diretamente a partir do NRR e gera o html.
 */
 void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
 
@@ -681,10 +679,10 @@ char come_espaco(char c){
 */
 int come_excesso(char c){
   char resposta = OK;
-  /*continua a receber a entrada ate o usuario apertar "enter" */
+  /* Continua a receber a entrada ate o usuario apertar "enter" */
   while(c!='\n') {
-    /*aceita que o usuario digite
-      espacos depois que terminar a digitacao*/
+    /* Aceita que o usuario digite
+      espacos depois que terminar a digitacao */
     if(c!=' ')
       resposta=ERRO;
     c=getchar();
