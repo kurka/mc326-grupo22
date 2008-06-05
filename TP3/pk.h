@@ -1,55 +1,51 @@
-/* Funcoes de operacoes a serem realizadas nos arquivos 
-   referentes a chaves primarias */
+/* Funcoes de operacoes a referentes a chaves primarias */
 
-/*sempre que o vetor que armazena as chaves primarias estiver cheio, 
-  ele eh dobrado de tamanho (vetor dinamico dobravel)*/
+/* Sempre que o vetor que armazena as chaves primarias estiver cheio, 
+  ele eh dobrado de tamanho (vetor dinamico dobravel) */
 ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
 
-/* le todos os dados do arquivo PK.dat e os adiciona em um vetor, mantendo a ordem de registros, que é alfabética */
+/* Le todos os dados do arquivo pk.dat e os adiciona em um vetor, mantendo a ordem de registros, que eh alfabetica */
 ap_tipo_registro_pk lerArquivoPK(FILE *arq_pk, ap_tipo_registro_pk vetor, int * limite, int n_registros);
 
-/* caso a lista em PK.dat nao estivesse criada, le os dados da base.dat 
-  e cria os indices no arquivo.*/
+/* Caso a lista em pk.dat nao estivesse criada, le os dados da base.dat 
+  e cria os indices no arquivo */
 ap_tipo_registro_pk inserePKBase(FILE *arqBase, ap_tipo_registro_pk vetor, int * limite, int n_registros);
 
-/* remove chaves primarias no vetor_registros que na verdade sao 
-   elementos de avail_list*/
+/* Remove chaves primarias no vetor_registros que na verdade sao 
+   elementos de avail_list */
 ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail);
 
-/* pega o ultimo titulo lido e registra ele como novo,para ser inserido no vetor de chaves primarias*/
+/* Pega o ultimo titulo lido e registra ele como novo, para ser inserido no vetor de chaves primarias */
 ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite, int nrr);
 
-/* insere um novo registro no nosos vetor dinamico de PKs, essa inserção é ordenada e mantém a ordem alfabética do vetor */
+/* Insere um novo registro no vetor dinamico de PKs. Essa insercao eh ordenada e mantem a ordem alfabetica do vetor */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite);
 
-/* remove a chave primaria que acabou de ser removida da base22.dat*/
+/* Remove a chave primaria que acabou de ser removida da base22.dat */
 ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail);
 
-/* salva todos os registros do nosso vetor de PKs no arquivo PK.dat*/
+/* Salva todos os registros do nosso vetor de PKs no arquivo PK.dat */
 void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
-
 
 /* Faz a leitura de uma chave primaria que sera buscada na base */
 void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arqBase);
 
-/*busca no arquivo base.h a chave primaria procurada */
+/* Busca no arquivo da base a chave primaria procurada */
 int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html);
 
-
-/* Lista todas as chaves primarias presentes*/
+/* Lista todas as chaves primarias presentes */
 void lista_registros( int limite_reg,  ap_tipo_registro_pk vetor_de_registros);
 
 
-/*funcoes auxiliares*/
+/*** Funcoes Auxiliares ***/
 
-/*funcao auxiliar usada na funcao qsort*/
+/* Funcao auxiliar usada na funcao qsort */
 int compara_qsort(const void * vetora, const void * vetorb);
 
-/*funcao analoga a strncmp, mas insensivel a maiusculas/minusculas*/
+/* Funcao analoga a strncmp, mas insensivel a maiusculas/minusculas */
 int strncmpinsensitive(char * a, char * b, int size);
 
-
-/*funcao auxiliar usada na funcao bsearch*/
+/* Funcao auxiliar usada na funcao bsearch */
 int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros);
 
 
