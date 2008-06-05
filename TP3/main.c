@@ -31,7 +31,6 @@ int main() {
   tipo_vetores_sk *vetores_sk; 
 
 
-
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
   limite[0] = 0;
@@ -48,7 +47,7 @@ int main() {
   arq_base = abre_base22(arq_base, &n_registros);
   arq_pk = abre_pk(arq_pk, &pk); 
   arq_avail = abre_avail(arq_avail, &cabeca_avail);
-  
+  abre_lis(arqs_li);
 
   /*criacao das chaves secundarias*/
   if(DEBUG)
