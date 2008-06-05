@@ -15,10 +15,10 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite); 
 
 
-void consulta_sk_tit(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base);
-void consulta_sk_tip(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base);
-void consulta_sk_aut(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base);
-void consulta_sk_ano(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base);
+void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base);
+void consulta_sk_tip(tipo_dados_sk *tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base);
+void consulta_sk_aut(tipo_dados_sk *autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base);
+void consulta_sk_ano(tipo_dados_sk *ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base);
 
 void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk);
 
