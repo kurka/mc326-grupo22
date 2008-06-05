@@ -343,6 +343,52 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 }
 
 
+/*funcao que le da entrada padrao e trata excecoes de entrada de busca*/
+int le_sk(char* palavra_procurada, int max){
+
+  int i, mod=0;
+  char c;
+
+      
+  do{
+    palavra_procurada[0] = getchar();
+  }while(palavra_procurada[0] == ' ' || palavra_procurada[0] == '\n');
+  
+  
+  for(i=1;i<max;i++){
+    palavra_procurada[i]= getchar();
+    if(palavra_procurada[i] == ' ' || palavra_procurada[i] == '\n'){
+      c = palavra_procurada[i];
+      palavra_procurada[i] = '\0';
+      break;
+    }
+  }
+  
+  if(i == max){
+    c = getchar();  
+    palavra_procurada[i] = '\0';
+  }
+  
+  /*pega o "lixo" que o usuario digitar*/
+  while(c != '\n'){
+    c=getchar();
+    i++;
+    mod = 1;
+  }
+
+  if(i>max+1){
+    printf("Voce excedeu o tamanho maximo permitido para termo de pesquisa.\n");
+    printf("Portanto, sua pesquisa nao foi concluida.\n");
+    return 0;
+  }
+
+  if(mod)
+    printf("Atencao! Apenas a primeira palavra digitada sera considerada na busca!\n");
+
+  return 1;
+}
+
+
 void consulta_sk_tit(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
@@ -359,8 +405,11 @@ void consulta_sk_tit(tipo_vetores_sk *vetores_sk, tipo_registro_pk *vetor_pk, in
   scanf(" %s", titulo_procurado);
   getchar();
   
-
-  acha_sk(titulo_procurado, n_pk, arq_base, arq_tit_li, vetores_sk->titulo, vetor_pk);
+  
+  /*le o tipo a ser buscado*/
+  if(le_sk(titulo_procurado, TAM_TIT))
+    /*procura se existe chave secundaria com o termo requisitado*/
+    acha_sk(titulo_procurado, n_pk, arq_base, arq_tit_li, vetores_sk->titulo, vetor_pk);
 
   return;
 }
@@ -371,7 +420,6 @@ void consulta_sk_tip(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, i
 
   char tipo_procurado[TAM_TIP+1];
 
-
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
     return;
@@ -380,11 +428,12 @@ void consulta_sk_tip(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, i
   printf("Consulta de tipo catalogo:\n");
   /* titulo_procurado eh lido*/
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n");
-  scanf(" %s", tipo_procurado);
-  getchar();
-  
-  
-  acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, vetores_sk->tipo, vetor_pk);
+
+
+  /*le o tipo a ser buscado*/
+  if(le_sk(tipo_procurado, TAM_TIP))
+    /*procura se existe chave secundaria com o termo requisitado*/
+    acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, vetores_sk->tipo, vetor_pk);
 
   return;
 }
@@ -408,8 +457,10 @@ void consulta_sk_aut(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, i
   scanf(" %s", autor_procurado);
   getchar();
   
-
-  acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, vetores_sk->autor, vetor_pk);
+  /*le o autor a ser buscado*/
+  if(le_sk(autor_procurado, TAM_AUT))
+    /*procura se existe chave secundaria com o termo requisitado*/
+    acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, vetores_sk->autor, vetor_pk);
 
 
   return;
@@ -430,11 +481,12 @@ void consulta_sk_ano(tipo_vetores_sk * vetores_sk, tipo_registro_pk *vetor_pk, i
   printf("Consulta de ano no catalogo:\n");
   /* ano_procurado eh lido*/
   printf("Digite um ano a ser pesquisado (max 4 letras)\n\n");
-  scanf(" %s", ano_procurado);
-  getchar();
-  
 
-  acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, vetores_sk->ano, vetor_pk);
+
+  /*le o ano a ser buscado*/
+  if(le_sk(ano_procurado, TAM_ANO))
+    /*procura se existe chave secundaria com o termo requisitado*/
+    acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, vetores_sk->ano, vetor_pk);
   
   return;
 }
