@@ -140,7 +140,7 @@ int main() {
       nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
       vetor_registros = novopk(str_final, vetor_registros, limite, nrr);   
       /*insere as novas sks*/
-      insereVetorSK(str_final, vetores_sk, arqs_li);
+/*       insereVetorSK(str_final, vetores_sk, arqs_li); */
 
 
       if(DEBUG)     
@@ -157,19 +157,19 @@ int main() {
       consulta_pk(limite[0],vetor_registros, arq_base);
       break;
 
-      /* Procurar por registros via chave secundaria */
-    case CONSULTA_SK_TIT:
-      consulta_sk_tit(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
-      break;
-    case CONSULTA_SK_TIP:
-      consulta_sk_tip(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base);
-      break;
-    case CONSULTA_SK_AUT:
-      consulta_sk_aut(vetores_sk, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base);
-      break;
-    case CONSULTA_SK_ANO:
-      consulta_sk_ano(vetores_sk, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base);
-      break;
+/*       /\* Procurar por registros via chave secundaria *\/ */
+/*     case CONSULTA_SK_TIT: */
+/*       consulta_sk_tit(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base); */
+/*       break; */
+/*     case CONSULTA_SK_TIP: */
+/*       consulta_sk_tip(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base); */
+/*       break; */
+/*     case CONSULTA_SK_AUT: */
+/*       consulta_sk_aut(vetores_sk, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base); */
+/*       break; */
+/*     case CONSULTA_SK_ANO: */
+/*       consulta_sk_ano(vetores_sk, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base); */
+/*       break; */
 
       /* Remove um registro do catalogo */
     case REMOVER:
@@ -207,10 +207,10 @@ int main() {
   /*libera memoria*/
   free(vetor_registros);
   free(arqs_li);
-  free(vetores_sk->vetor_SK_titulo);
-  free(vetores_sk->vetor_SK_autor);
-  free(vetores_sk->vetor_SK_ano);
-  free(vetores_sk->vetor_SK_tipo);
+  free(vetores_sk->titulo);
+  free(vetores_sk->autor);
+  free(vetores_sk->ano);
+  free(vetores_sk->tipo);
   free(vetores_sk);
 
   if(DEBUG)

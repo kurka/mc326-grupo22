@@ -9,7 +9,8 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 
 
 /* cria vetor sk e lista invertida*/	
-tipo_registro_sk *cria_vetor_generico(char *registro, char *pk, int *n_li_generica, int *n_sk_generica, int *tam_vetor_sk_generico, tipo_registro_sk *vetor_SK_generico, FILE * arq_gen_li);
+tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE * arq_gen_li);
+
 /* /\* cria vetor sk e lista invertida para titulo *\/	 */
 /* void cria_vetor_titulo(char registro[TAM_REGISTRO], char pk[TAM_TIT+1], int *n_titulos_li, tipo_vetores_sk *vetores_sk, FILE *arq_tit_li); */
 /* cria vetor sk e lista invertida para tipo */	

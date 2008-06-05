@@ -29,7 +29,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_IMG 9
 #define MAX_IMG 450
 #define TAM_FORM 3
-#define MEM_INIT 10
+#define MEM_INIT 1
 #define DEBUG 0 /*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
 
@@ -48,13 +48,28 @@ typedef struct
 }tipo_registro_sk;
 
 
-/*esta é uma estrutura com 4 apontadores que apontam para o inicio dos 4 vetores the SKs, além de 4 campos inteiros que informam o tamanho destes vetores */
+/*estrutura com todos os dados necessarios para se manipular as sks de algum parametro*/
 typedef struct 
 {
-  tipo_registro_sk *vetor_SK_titulo; int n_titulos;
-  tipo_registro_sk *vetor_SK_autor; int n_autores;
-  tipo_registro_sk *vetor_SK_ano; int n_anos;
-  tipo_registro_sk *vetor_SK_tipo; int n_tipos;
+  tipo_registro_sk *vetor_SK; 
+  int n_sk;
+  int tam_vetor;
+  int limite_inf;
+  int limite_sup;
+  	
+}tipo_dados_sk;
+
+
+
+/*esta é uma estrutura com 4 apontadores que apontam para o inicio dos 4 vetores the SKs, 
+  além de 4 campos inteiros que informam o tamanho destes vetores */
+typedef struct 
+{
+  tipo_dados_sk *titulo; 
+  tipo_dados_sk *tipo; 
+  tipo_dados_sk *autor; 
+  tipo_dados_sk *ano; 
+  
 	
 }tipo_vetores_sk;
 
