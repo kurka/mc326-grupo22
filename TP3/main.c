@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -43,13 +42,13 @@ int main() {
      para imprimir corretamente o string no arquivo */  
   str_final[TAM_REGISTRO] = '\0';
  
-  /*consulta ou cria arquivos .dat*/
+  /* Consulta ou cria arquivos .dat */
   arq_base = abre_base22(arq_base, &n_registros);
   arq_pk = abre_pk(arq_pk, &pk); 
   arq_avail = abre_avail(arq_avail, &cabeca_avail);
   abre_lis(arqs_li);
 
-  /*criacao das chaves secundarias*/
+  /* Criacao das chaves secundarias */
   if(DEBUG)
     printf("\n>>>criando vetores sk\n");
   vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
@@ -75,7 +74,7 @@ int main() {
     
     vetor_registros = inserePKBase(arq_base, vetor_registros, limite, n_registros);
 
-    /*se existir uma avail list, apaga os registros apontados por ela*/
+    /* Se existir uma avail list, apaga os registros apontados por ela */
     if(cabeca_avail != -1){
       if(DEBUG)
 	printf(">>>limpando chaves primarias\n\n");
@@ -119,12 +118,12 @@ int main() {
       
       /* Insercao no catalogo */
     case INSERIR:
-      /*le da entrada padrao os dados da obra*/
+      /* Le da entrada padrao os dados da obra */
       Insere_base(arq_base, str_final, vetor_registros, limite[0]);
-      /*pega o ultimo titulo lido e insere no vetor de registros*/
+      /* Pega o ultimo titulo lido e insere no vetor de registros */
       nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
       vetor_registros = novopk(str_final, vetor_registros, limite, nrr);   
-      /*insere as novas sks*/
+      /* Insere as novas sks */
       vetores_sk = insereVetorSK(str_final, vetores_sk, arqs_li);
  
 
@@ -179,18 +178,18 @@ int main() {
   } while(opcao!=SAIR);
   
 
-  /* se o arquivo nao era vazio, abre soh no final, 
-     evitando perder dados em caso de erro de execucao*/
+  /* Se o arquivo nao era vazio, abre soh no final, 
+     evitando perder dados em caso de erro de execucao */
   if(pk!=0)
     arq_pk=fopen("pk.dat","w");    
   
   
-  /*guarda o indice de chaves primarias no arquivo*/
+  /* Guarda o indice de chaves primarias no arquivo */
   if(DEBUG)
     printf("\n>>>Salvando arquivos e liberando memoria\n");  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
 
-  /*fecha os arquivos*/
+  /* Fecha os arquivos */
   fclose(arq_pk);
   fclose(arq_base);
   fclose(arq_avail);
@@ -200,7 +199,7 @@ int main() {
   fclose(arqs_li->arq_aut_li); 
   fclose(arqs_li->arq_ano_li); 
 
-  /*libera memoria*/
+  /* Libera memoria */
   free(vetor_registros);
   free(arqs_li);
   free(vetores_sk->titulo);
