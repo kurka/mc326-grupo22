@@ -9,7 +9,10 @@
 #include "sk.h"
 
 
-/*cria vetores de SKs,a partir da base, um para cada chave secundaria, assim como as suas respectivas listas invertidas*/
+/** 
+    \brief Cria vetores de SKs, a partir da base, um para cada chave secundaria, 
+    assim como as suas respectivas listas invertidas
+*/
 tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase){
   int i, j;
   
@@ -19,23 +22,22 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
   tipo_vetores_sk *vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
 
+  /* Alocacao de memoria para o tipo generico de SKs */
   vetores_sk->titulo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->tipo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->autor = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->ano = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
-
   
+  /** Instanciacao dos atributos para cada tipo de SK **/
   vetores_sk->titulo->n_sk = 0;
   vetores_sk->tipo->n_sk = 0;
   vetores_sk->autor->n_sk = 0;
   vetores_sk->ano->n_sk = 0;
   
-  
   vetores_sk->titulo->tam_vetor = MEM_INIT;
   vetores_sk->tipo->tam_vetor = MEM_INIT;
   vetores_sk->autor->tam_vetor = MEM_INIT;
   vetores_sk->ano->tam_vetor = MEM_INIT;
-  
 
   vetores_sk->titulo->limite_inf = 0;
   vetores_sk->titulo->limite_sup = MAX_TIT;
@@ -46,7 +48,7 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   vetores_sk->ano->limite_inf = MAX_AUT;
   vetores_sk->ano->limite_sup = MAX_ANO;
 
-   
+  /* Aloca/realoca o vetor (dobravel) de SKs propriamente dito (um para cada tipo) */
   vetores_sk->titulo->vetor_SK = realoca_memoria_sk(vetores_sk->titulo->vetor_SK, &vetores_sk->titulo->tam_vetor); 
   vetores_sk->tipo->vetor_SK = realoca_memoria_sk(vetores_sk->tipo->vetor_SK, &vetores_sk->tipo->tam_vetor);   
   vetores_sk->autor->vetor_SK = realoca_memoria_sk(vetores_sk->autor->vetor_SK, &vetores_sk->autor->tam_vetor); 
@@ -65,14 +67,14 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
       
       fread(registro, sizeof(char)*TAM_REGISTRO, 1, arqBase);
       
-      /*guarda a chave primaria (titulo)*/
+      /* Guarda a chave primaria (titulo) */
       for(j=0; j<TAM_TIT; j++)
 	pk[j] = registro[j];
 
       pk[TAM_TIT]='\0'; 
 
       
-      /*cria as chaves secundarias e listas invertidas, para cada campo*/
+      /* Cria as chaves secundarias e listas invertidas, para cada campo */
       printf("titulo:\n");
       vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);   
       printf("tipo:\n");
@@ -83,7 +85,7 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
       vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li);      
     }
   
-  /*ordena registros de sk*/
+  /* Ordena registros de sk */
   qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
@@ -94,9 +96,10 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
-
-
-/*insere um novo vetor de SKs, um para cada chave secundaria nova do registro, assim como as suas respectivas listas invertidas*/
+/**
+   \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro, 
+   assim como as suas respectivas listas invertidas
+*/
 tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li)
 {
   int j;
@@ -110,21 +113,21 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
   n_anos_li = ftell(arqs_li->arq_ano_li)/(TAM_TIT+8);
  
 
-  /*guarda a chave primaria (titulo)*/
+  /* Guarda a chave primaria (titulo) */
   for(j=0; j<TAM_TIT; j++)
     pk[j] = registro[j];
   
   pk[TAM_TIT]='\0';
 
       
-  /*adiciona as chaves secundarias e listas invertidas, para cada campo*/
+  /* Adiciona as chaves secundarias e listas invertidas, para cada campo */
   vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);      
   vetores_sk->tipo = cria_vetor_generico(registro, pk, vetores_sk->tipo, &n_tipos_li, arqs_li->arq_tip_li);      
   vetores_sk->autor = cria_vetor_generico(registro, pk, vetores_sk->autor, &n_autores_li, arqs_li->arq_aut_li);      
   vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li);
   
 
-  /*ordena registros de sk*/
+  /* Ordena registros de sk */
   qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
@@ -134,11 +137,10 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 }
 
 
-
-/* cria vetor sk e lista invertidas para diversos parametros*/	
+/** 
+    \brief Cria vetor sk e lista invertidas para diversos parametros
+*/	
 tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE * arq_gen_li){
-  
-  
 
   int j, k, l, prox;   
   char temp_sk[TAM_TIT];
@@ -146,38 +148,37 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
   int n_sk = generico->n_sk;
   int n_li = *n_li_generica;
   int tam_vetor_sk = generico->tam_vetor; 
-
-  /*rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
-    já existe ou se deve ser inserida	*/
+  
+  /* Rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
+     já existe ou se deve ser inserida */
   k=0;
   for(j=generico->limite_inf; j<generico->limite_sup; j++){
     if(registro[j] == ' ' || j==generico->limite_sup-1){
       
-      /*se k=0 significa que estao sendo lidos os espacos no final do titulo*/
+      /* Se k==0 significa que estao sendo lidos os espacos no final do titulo*/
       if(k!=0){ 
-
-	/*excecao quando a palavra termina no ultimo caracter do campo*/
+	
+	/* Excecao quando a palavra termina no ultimo caracter do campo */
 	if(j == generico->limite_sup-1){
 	  temp_sk[k] = registro[j];
 	  k++;	      
 	}
-
-
-	/*temos um nome simples(possivel SK) em temp_sk*/
+	
+	/* Temos um nome simples (possivel SK) em temp_sk */
 	temp_sk[k]='\0';
 	
-	/* novaSK(1 = true, 0 = false)*/
+	/* novaSK (1 = true, 0 = false) */
 	novaSK = 1;
 	for(l=0; l<n_sk; l++){
 	  if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0)
 	    if(strcmpinsensitive(temp_sk, generico->vetor_SK[l].chave) == 0)
 	      novaSK = 0;
 	}
-	
+
+	/* Caso a nova SK for valida, entao eh inserida */
 	if(novaSK == 1){ 
-	  /*se uma nova SK vai ser inserida*/
 	  
-	  /*verifica se precisa realocar o tamanho do vetor, para inserir nova SK*/
+	  /* Verifica se precisa realocar o tamanho do vetor para inserir a nova SK */
 	  if(n_sk == tam_vetor_sk)
 	    generico->vetor_SK = realoca_memoria_sk(generico->vetor_SK, &tam_vetor_sk); 
 	  
@@ -185,16 +186,15 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	  
 	  strcpy(generico->vetor_SK[n_sk].chave, temp_sk);
 	  n_sk++;
-
+	  
 	  /*ordena o vetor de SKs*/
 	  
 /* 	  qsort(generico->vetor_SK, n_sk, sizeof(tipo_registro_sk), compara_qsort2); */
-		  
-		  
-	  /* criando a li */ 
+
+	  /* Criacao da lista invertida */ 
 	  generico->vetor_SK[n_sk-1].endereco_li = n_li;
 	  prox = -1;
-		  
+	  
 	  fseek(arq_gen_li, (n_li)*(TAM_TIT+8),SEEK_SET);	  
 	  fprintf(arq_gen_li, "%s", pk); 
 	  fprintf(arq_gen_li, "%08d", prox);     	  
@@ -202,43 +202,39 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	  n_li++;
 	  
 	}
-	/* a SK já existe, mas precisamos inserir a chave na lista invertida */
+	/* Caso a SK já existe, entao adiciona a chave primaria correspondente na lista invertida */
 	else{
 	  for(l=0; l<n_sk; l++){  
-
+	    
 	    if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0){
 	      
-	      /*encontramos a SK no vetor de SKs*/
+	      /* Encontramos a SK no vetor de SKs */
 	      endereco_li = generico->vetor_SK[l].endereco_li;
-			  
+
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_gen_li, "%08d", &prox);
 
 	      printf("chave repetida = %s", temp_sk);
 	      printf(" nrr = %d\n", prox);
 
-	      /* chegando no final da lista invertida, para ele poder apontar para a nova entrada*/
+	      /* Percorre a lista invertida, para ele poder apontar para a nova entrada */
 	      while(prox != -1){
 		endereco_li = prox;
 		fseek(arq_gen_li, ((prox)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 		fscanf(arq_gen_li, "%08d", &prox);
 	      }
-
+	      
+	      /* Insercao na lista invertida */
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fprintf(arq_gen_li, "%08d", n_li);     	  
-
-
 	      fseek(arq_gen_li, ((n_li)*(TAM_TIT+8)), SEEK_SET);
 	      fprintf(arq_gen_li, "%s", pk); 
 	      fprintf(arq_gen_li, "%08d", prox);     	  
 	      
 	      n_li++;
 	      
-
-
-
 	      break;
-			  
+	      
 	    }
 	  }  
 	}  
@@ -250,16 +246,14 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
     else{
       temp_sk[k] = registro[j];
       k++;
-      
-      
     }
   }
-  
+
+  /* Atualizacao dos parametros */
   generico->n_sk = n_sk;
   *n_li_generica = n_li;
   generico->tam_vetor = tam_vetor_sk;
-
-
+  
   if(DEBUG){
     printf(" NUMERO %d\n", n_sk);
     for(l=0; l< n_sk; l++)
@@ -268,11 +262,13 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	printf("   %d\n", generico->vetor_SK[l].endereco_li);
       }
   }
-
+  
   return generico;
 }
 
-
+/**
+   \brief Funcao de alocacao do vetor (dobravel) de SKs
+*/
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite){
   
   *limite = 2*(*limite);
@@ -290,10 +286,9 @@ tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *l
   return vetor_SK_generico;
 }
 
-
-
-
-
+/**
+   \brief Funcao de procura por chave no vetor de chaves secundarias
+ */
 void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk){
   
   int endereco_li, res;
@@ -304,7 +299,6 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(palavra_procurada, generico->vetor_SK, generico->n_sk, sizeof(tipo_registro_sk), compara_bsearch2);  
-
  
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
@@ -313,7 +307,7 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
   /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
   else {
     
-    /*tp3.html eh aberto, para guardar os resultados da busca*/
+    /* tp3.html eh aberto, para guardar os resultados da busca */
     arq_html=fopen("tp3.html","w");
     
     endereco_li=((*elto_encontrado).endereco_li);
@@ -338,7 +332,6 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
     else
       printf("Nenhuma obra possui os termos procurados.\n\n");
 
-
     fclose(arq_html);
     
   }
@@ -346,17 +339,18 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 }
 
 
-/*funcao que le da entrada padrao e trata excecoes de entrada de busca*/
+/**
+   \brief Funcao que le da entrada padrao e trata excecoes de entrada de busca
+*/
 int le_sk(char* palavra_procurada, int max){
 
   int i, mod=0;
   char c;
 
-      
+  /* Remove espacos em branco do comeco */
   do{
     palavra_procurada[0] = getchar();
-  }while(palavra_procurada[0] == ' ' || palavra_procurada[0] == '\n');
-  
+  } while(palavra_procurada[0] == ' ' || palavra_procurada[0] == '\n');
   
   for(i=1;i<max;i++){
     palavra_procurada[i]= getchar();
@@ -372,19 +366,19 @@ int le_sk(char* palavra_procurada, int max){
     palavra_procurada[i] = '\0';
   }
   
-  /*pega o "lixo" que o usuario digitar*/
+  /* Pega o "lixo" que o usuario digitar */
   while(c != '\n'){
     c=getchar();
     i++;
     mod = 1;
   }
-
+  
   if(i>max){
     printf("Voce excedeu o tamanho maximo permitido para termo de pesquisa.\n");
     printf("Portanto, sua pesquisa nao foi concluida.\n");
     return 0;
   }
-
+  
   if(mod)
     printf("Atencao! Apenas a primeira palavra digitada sera considerada na busca!\n");
   else
@@ -392,11 +386,12 @@ int le_sk(char* palavra_procurada, int max){
   return 1;
 }
 
-
+/**
+   \brief Instancia a estrutura do tipo_dados_sk do campo titulo
+*/
 void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
-
 
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -407,15 +402,17 @@ void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk
   /* titulo_procurado eh lido*/
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 200 letras)\n\n");
   
-  /*le o tipo a ser buscado*/
+  /* Le o tipo a ser buscado */
   if(le_sk(titulo_procurado, TAM_TIT))
-    /*procura se existe chave secundaria com o termo requisitado*/
+    /* Procura se existe chave secundaria com o termo requisitado */
     acha_sk(titulo_procurado, n_pk, arq_base, arq_tit_li, titulo, vetor_pk);
 
   return;
 }
 
-
+/**
+   \brief Instancia a estrutura do tipo_dados_sk do campo tipo
+*/
 
 void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) {
 
@@ -427,25 +424,24 @@ void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk,
   }
 
   printf("Consulta de tipo catalogo:\n");
-  /* titulo_procurado eh lido*/
+  /* tipo_procurado eh lido */
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n");
 
-
-  /*le o tipo a ser buscado*/
+  /* Le o tipo a ser buscado */
   if(le_sk(tipo_procurado, TAM_TIP))
-    /*procura se existe chave secundaria com o termo requisitado*/
+    /* Procura se existe chave secundaria com o termo requisitado */
     acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, tipo, vetor_pk);
 
   return;
 }
 
 
-
+/**
+   \brief Instancia a estrutura do tipo_dados_sk do campo autor
+*/
 void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) {
 
   char autor_procurado[TAM_AUT+1];
- 
-
 
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -453,24 +449,24 @@ void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk
   }
 
   printf("Consulta de autor no catalogo:\n");
-  /* titulo_procurado eh lido*/
+  /* autor_procurado eh lido*/
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n");
   
-  /*le o autor a ser buscado*/
+  /* Le o autor a ser buscado */
   if(le_sk(autor_procurado, TAM_AUT))
-    /*procura se existe chave secundaria com o termo requisitado*/
+    /* Procura se existe chave secundaria com o termo requisitado */
     acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, autor, vetor_pk);
-
 
   return;
 }
 
 
-
+/**
+   \brief Instancia a estrutura do tipo_dados_sk do campo ano
+*/
 void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) {
 
   char ano_procurado[TAM_ANO+1];
-
 
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -478,13 +474,12 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
   }
 
   printf("Consulta de ano no catalogo:\n");
-  /* ano_procurado eh lido*/
+  /* ano_procurado eh lido */
   printf("Digite um ano a ser pesquisado (max 4 letras)\n\n");
 
-
-  /*le o ano a ser buscado*/
+  /* Le o ano a ser buscado */
   if(le_sk(ano_procurado, TAM_ANO))
-    /*procura se existe chave secundaria com o termo requisitado*/
+    /* Procura se existe chave secundaria com o termo requisitado */
     acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, ano, vetor_pk);
   
   return;
@@ -496,7 +491,7 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
 /**************************************/
 
 /**
-   \brief funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
+   \brief Funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
 */
 int strcmpinsensitive(char * a, char * b){
   int i=0;
@@ -512,7 +507,7 @@ int strcmpinsensitive(char * a, char * b){
 }
 
 /**
-   \brief funcao auxiliar usada na funcao qsort (para ordenar sks)
+   \brief Funcao auxiliar usada na funcao qsort (para ordenar sks)
 */
 int compara_qsort2(const void * vetora, const void * vetorb){
   return(strcmp( ((tipo_registro_sk *)vetora)->chave,
@@ -520,12 +515,10 @@ int compara_qsort2(const void * vetora, const void * vetorb){
 }
 
 
-
 /**
-   \brief funcao auxiliar usada na funcao bsearch (para encontrar sks)
+   \brief Funcao auxiliar usada na funcao bsearch (para encontrar sks)
 */
 int compara_bsearch2(const void * titulo_procurado, const void * vetorb) {
   return(strcmpinsensitive( (char*)titulo_procurado,
 			    ((tipo_registro_sk *)vetorb)->chave));
 }
-
