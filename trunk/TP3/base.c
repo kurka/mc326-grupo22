@@ -571,7 +571,8 @@ void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
       fprintf(arq_html,".");
     }
   }
-  fprintf(arq_html,"\"></p>");
+  fprintf(arq_html,"\"></p><hr>");
+
 
   /* Fim do html */
   fprintf(arq_html,"<br></div></body></html>");
