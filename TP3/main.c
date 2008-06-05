@@ -150,19 +150,19 @@ int main() {
 
       /* Procurar por registros via chave secundaria */
     case CONSULTA_SK_TIT:
-      consulta_sk_tit(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
+      consulta_sk_tit(vetores_sk->titulo, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
       espera();
       break;
     case CONSULTA_SK_TIP:
-      consulta_sk_tip(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base);
+      consulta_sk_tip(vetores_sk->tipo, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base);
       espera();      
       break;
     case CONSULTA_SK_AUT:
-      consulta_sk_aut(vetores_sk, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base);
+      consulta_sk_aut(vetores_sk->autor, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base);
       espera();      
       break;
     case CONSULTA_SK_ANO:
-      consulta_sk_ano(vetores_sk, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base);
+      consulta_sk_ano(vetores_sk->ano, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base);
       espera();      
       break;
 
