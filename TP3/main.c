@@ -23,8 +23,8 @@ int main() {
 
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
-  int n_registros, pk, sk, cabeca_avail, nrr;
-  FILE *arq_base,*arq_pk, *arq_avail, *arq_sk;
+  int n_registros, pk, cabeca_avail, nrr;
+  FILE *arq_base,*arq_pk, *arq_avail;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
@@ -48,28 +48,14 @@ int main() {
   arq_base = abre_base22(arq_base, &n_registros);
   arq_pk = abre_pk(arq_pk, &pk); 
   arq_avail = abre_avail(arq_avail, &cabeca_avail);
-
-	
-
-    /* verificando a existência de um arquivo de sk */
-    arq_sk=fopen("sk.dat","r");
-	
-    if(arq_sk == NULL) /*se não existe um arquivo de sk*/
-      {
-	/*então o vetor de sk e a lista invertida devem ser gerados a partir de base22.dat*/
-	if(DEBUG)
-	  printf("\n>>>criando vetores sk\n");
- 	vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
-      }
-    if(arq_sk){
-      fseek(arq_sk,0,SEEK_END);
-      /*se sk possui tamanho 0, as chaves primarias serao
-        coletadas a partir do arquivo base.dat */
-      sk = ftell(arq_sk);
-    }
-  
   
 
+  /*criacao das chaves secundarias*/
+  if(DEBUG)
+    printf("\n>>>criando vetores sk\n");
+  vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
+  
+  
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo */
   if(pk!=0){
@@ -86,7 +72,7 @@ int main() {
   if(pk==0){
     
     if(DEBUG)
-      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...");   
+      printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n");   
     
     vetor_registros = inserePKBase(arq_base, vetor_registros, limite, n_registros);
 

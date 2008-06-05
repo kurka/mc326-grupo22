@@ -70,6 +70,7 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
   }
   else{
     /*guarda em cabeca_avail_base a cabeca do avail list*/
+    fseek(arq_cabeca_avail_base,0,SEEK_SET);
     fscanf(arq_cabeca_avail_base, "%05d", &temp);
   }
    
