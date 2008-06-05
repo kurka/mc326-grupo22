@@ -146,7 +146,7 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
       if(k!=0){ 
 
 	/*excecao quando a palavra termina no ultimo caracter do campo*/
-	if(j == MAX_TIT-1){
+	if(j == generico->limite_sup-1){
 	  temp_sk[k] = registro[j];
 	  k++;	      
 	}
@@ -175,6 +175,10 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	  
 	  strcpy(generico->vetor_SK[n_sk].chave, temp_sk);
 	  n_sk++;
+
+	  /*ordena o vetor de SKs*/
+	  
+	  qsort(generico->vetor_SK, n_sk, sizeof(tipo_registro_sk), compara_qsort2);  
 		  
 		  
 	  /* criando a li */ 
@@ -238,13 +242,13 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
   generico->tam_vetor = tam_vetor_sk;
 
 
-/*   if(DEBUG){ */
+/*   if(DEBUG){  */
 /*     printf(" NUMERO %d\n", n_sk); */
 /*     for(l=0; l< n_sk; l++) */
 /*       { */
 /* 	printf("%s\n", generico->vetor_SK[l].chave); */
 /*       } */
-/*   }  */
+/*   } */
 
   return generico;
 }
@@ -271,38 +275,18 @@ tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *l
 
 
 
-/* /\** */
-/*    \brief funcao auxiliar usada na funcao bsearch */
-/* *\/ */
-/* int compara_bsearch(const void * titulo_procurado, const void * vetor_de_registros) { */
-/*   return(strcmpinsensitive( (char*)titulo_procurado,  */
-/* 		  ((tipo_registro_sk*)vetores_sk->vetor_de_registros_sk)->chave)); */
-/* } */
-
-
-
-
 void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk){
   
-  int endereco_li, i, res;
+  int endereco_li, res;
   char pk[MAX_TIT];
   FILE *arq_html;
   tipo_registro_sk * elto_encontrado;
 
 
   /* Busca o titulo procurado no vetor de structs. */
-  /*   elto_encontrado=bsearch(titulo_procurado, vetores_sk->vetor_SK_titulo, limite_reg, sizeof(tipo_registro_sk), compara_bsearch); */
-  
-  elto_encontrado = NULL;
-  
-  for(i=0; i<generico->n_sk; i++)
-    {
-      if(strcmpinsensitive(generico->vetor_SK[i].chave, palavra_procurada) == 0){
-	elto_encontrado = &(generico->vetor_SK[i]);
-	break;
-      }
-    }
-  
+  elto_encontrado=bsearch(palavra_procurada, generico->vetor_SK, generico->n_sk, sizeof(tipo_registro_sk), compara_bsearch2);  
+
+ 
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     printf("Nenhuma obra possui os termos procurados.\n\n");
@@ -376,7 +360,7 @@ int le_sk(char* palavra_procurada, int max){
     mod = 1;
   }
 
-  if(i>max+1){
+  if(i>max){
     printf("Voce excedeu o tamanho maximo permitido para termo de pesquisa.\n");
     printf("Portanto, sua pesquisa nao foi concluida.\n");
     return 0;
@@ -384,7 +368,8 @@ int le_sk(char* palavra_procurada, int max){
 
   if(mod)
     printf("Atencao! Apenas a primeira palavra digitada sera considerada na busca!\n");
-
+  else
+    printf("Titulo lido com sucesso!\n");
   return 1;
 }
 
@@ -506,3 +491,21 @@ int strcmpinsensitive(char * a, char * b){
   }
   return 0;
 }
+
+/**
+   \brief funcao auxiliar usada na funcao qsort (para ordenar sks)
+*/
+int compara_qsort2(const void * vetora, const void * vetorb){
+  return(strcmpinsensitive( ((tipo_registro_sk *)vetora)->chave,
+		  ((tipo_registro_sk *)vetorb)->chave));
+}
+
+
+/**
+   \brief funcao auxiliar usada na funcao bsearch (para encontrar sks)
+*/
+int compara_bsearch2(const void * titulo_procurado, const void * vetorb) {
+  return(strcmpinsensitive( (char*)titulo_procurado,
+			    ((tipo_registro_sk *)vetorb)->chave));
+}
+

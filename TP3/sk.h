@@ -29,3 +29,7 @@ int le_sk(char* palavra_procurada, int max);
 
 /*funcao analoga a strcmp, mas insensivel a maiusculas/minusculas */
 int strcmpinsensitive(char * a, char * b);
+/* funcao auxiliar usada na funcao qsort (para ordenar sks)*/
+int compara_qsort2(const void * vetora, const void * vetorb);
+/*brief funcao auxiliar usada na funcao bsearch (para encontrar sks)*/
+int compara_bsearch2(const void * titulo_procurado, const void * vetor_de_registros);
