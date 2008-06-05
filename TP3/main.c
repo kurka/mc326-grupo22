@@ -127,34 +127,43 @@ int main() {
       vetor_registros = novopk(str_final, vetor_registros, limite, nrr);   
       /*insere as novas sks*/
       vetores_sk = insereVetorSK(str_final, vetores_sk, arqs_li);
+ 
 
 
       if(DEBUG)     
 	printf(">>>Numero de registros: %d\n\n",limite[0]);
+ 
+      espera();
       break;
       
       /* Listar os registros do catalogo */
     case LISTAR:
       lista_registros(limite[0],vetor_registros);
+      espera();      
       break;
       
       /* Procurar por registro via chave primaria */
     case CONSULTA_PK:
       consulta_pk(limite[0],vetor_registros, arq_base);
+      espera();
       break;
 
       /* Procurar por registros via chave secundaria */
     case CONSULTA_SK_TIT:
       consulta_sk_tit(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base);
+      espera();
       break;
     case CONSULTA_SK_TIP:
       consulta_sk_tip(vetores_sk, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base);
+      espera();      
       break;
     case CONSULTA_SK_AUT:
       consulta_sk_aut(vetores_sk, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base);
+      espera();      
       break;
     case CONSULTA_SK_ANO:
       consulta_sk_ano(vetores_sk, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base);
+      espera();      
       break;
 
       /* Remove um registro do catalogo */
@@ -163,6 +172,8 @@ int main() {
       vetor_registros = remove_pk(vetor_registros, limite, cabeca_avail);
       if(DEBUG)     
 	printf(">>>Numero de registros: %d\n\n",limite[0]);
+ 
+      espera();
       break;
     }
     

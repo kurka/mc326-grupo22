@@ -8,3 +8,6 @@ FILE * abre_pk(FILE *arq_pk, int *pk);
 
 /*confere se existe e abre ou cria arquivo cabeca_avail_base.dat*/
 FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base);
+
+/*para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir*/
+void espera();
