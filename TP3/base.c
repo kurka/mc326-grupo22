@@ -9,9 +9,9 @@
 #include "base.h"
 #include "pk.h"
 
-/** 
-    \brief Funcao da insercao propriamente dita (insercao no arquivo) 
-*/
+/*! 
+ * \brief Funcao da insercao propriamente dita (insercao no arquivo) 
+ */
 void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
   
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
@@ -24,9 +24,9 @@ void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, i
 
 }
 
-/** 
-    \brief Funcao que verifica onde o novo registro deve ser inserido e o insere
-*/
+/*! 
+ * \brief Funcao que verifica onde o novo registro deve ser inserido e o insere
+ */
 int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cabeca){
 
   int NRR_nova_cabeca;
@@ -72,7 +72,9 @@ int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cab
 }
   
 
-
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do titulo da obra.
+ */
 void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
   int i,resposta;
   char c;
@@ -139,11 +141,9 @@ void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) 
   
 }
 
-/**
-   \brief Funcao que le da entrada padrao (teclado) e verifica
-   coerencia do tipo da obra.
-*/
-
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do tipo da obra.
+ */
 void Insere_tipo(char *str_final) {
   
   int i,resposta;
@@ -206,10 +206,9 @@ void Insere_tipo(char *str_final) {
 }
 
 
-/**
-   \brief Funcao que le da entrada padrao (teclado) e verifica
-   coerencia do nome do autor da obra.
-*/
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do nome do autor da obra.
+ */
 void Insere_autor(char *str_final) {
 
   int i,resposta;
@@ -271,10 +270,9 @@ void Insere_autor(char *str_final) {
   
 }
 
-/**
-   \brief Funcao que le da entrada padrao (teclado) e verifica
-   coerencia do ano da obra.
-*/
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do ano da obra.
+ */
 void Insere_ano(char *str_final) {
 
   int i,resposta;
@@ -343,10 +341,9 @@ void Insere_ano(char *str_final) {
   
 }
 
-/**
-   \brief Funcao que le da entrada padrao (teclado) e verifica
-   coerencia do valor da obra.
-*/
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do valor da obra.
+ */
 void Insere_valor(char *str_final) {
 
   int i,j,k,resposta;
@@ -421,10 +418,9 @@ void Insere_valor(char *str_final) {
   
 }
 
-/**
-   \brief Funcao que le da entrada padrao (teclado) e verifica
-   coerencia do identificador da obra.
-*/
+/*!
+ * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do identificador da obra.
+ */
 void Insere_imagem(char *str_final) {
 
   int i, j, resposta;
@@ -506,9 +502,9 @@ void Insere_imagem(char *str_final) {
 }
 
 
-/**
-   \brief Funcao que acessa a base diretamente a partir do NRR e gera o html.
-*/
+/*!
+ * \brief Funcao que acessa a base diretamente a partir do NRR e gera o html.
+ */
 void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
 
   int i;
@@ -578,9 +574,9 @@ void busca_registro(int NRR, FILE * arq_base, FILE * arq_html) {
   return;
 }
 
-/** 
-    \brief Funcao de remocao de registro - avail list da base de dados 
-*/
+/*! 
+ * \brief Funcao de remocao de registro - avail list da base de dados 
+ */
 void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE * arq_base, FILE * arq_cabeca_avail_base, int *cabeca_avail_base_original) {
 
   int NRR_a_remover, NRR_cabeca_antiga, cabeca_avail_base;
@@ -662,9 +658,9 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 /*         Funcoes Auxiliares         */
 /**************************************/
 
-/** 
-    \brief Funcao aux que ignora espacos antes do comeco da entrada
-*/
+/*! 
+ * \brief Funcao aux que ignora espacos antes do comeco da entrada
+ */
 char come_espaco(char c){
   /* sobrescreve o valor de "c" ate achar algum valor diferente de espaco */
   while(c==' ') {
@@ -674,9 +670,9 @@ char come_espaco(char c){
   return(c);
 }
 
-/** 
-    \brief Funcao aux que recebe caracteres alem do esperado pelo campo
-*/
+/*! 
+ * \brief Funcao aux que recebe caracteres alem do esperado pelo campo
+ */
 int come_excesso(char c){
   char resposta = OK;
   /* Continua a receber a entrada ate o usuario apertar "enter" */
@@ -690,9 +686,9 @@ int come_excesso(char c){
   return(resposta);
 }
 
-/** 
-    \brief Funcao aux que verifica se titulo ja foi inserido anteriormente (case insensitive)
-*/
+/*! 
+ * \brief Funcao aux que verifica se titulo ja foi inserido anteriormente (case insensitive)
+ */
 int checa_redundancia_tit(char * str_final, ap_tipo_registro_pk vetor, int n_registros){
   
   int i, j;
