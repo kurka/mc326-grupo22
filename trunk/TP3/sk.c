@@ -9,10 +9,10 @@
 #include "sk.h"
 
 
-/** 
-    \brief Cria vetores de SKs, a partir da base, um para cada chave secundaria, 
-    assim como as suas respectivas listas invertidas
-*/
+/*! 
+ * \brief Cria vetores de SKs, a partir da base, um para cada chave secundaria, 
+ * assim como as suas respectivas listas invertidas
+ */
 tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase){
   int i, j;
   
@@ -28,7 +28,7 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   vetores_sk->autor = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   vetores_sk->ano = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
   
-  /** Instanciacao dos atributos para cada tipo de SK **/
+  /*! Instanciacao dos atributos para cada tipo de SK **/
   vetores_sk->titulo->n_sk = 0;
   vetores_sk->tipo->n_sk = 0;
   vetores_sk->autor->n_sk = 0;
@@ -96,10 +96,10 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
-/**
-   \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro, 
-   assim como as suas respectivas listas invertidas
-*/
+/*!
+ * \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro, 
+ * assim como as suas respectivas listas invertidas
+ */
 tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li)
 {
   int j;
@@ -137,9 +137,9 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 }
 
 
-/** 
-    \brief Cria vetor sk e lista invertidas para diversos parametros
-*/	
+/*! 
+ * \brief Cria vetor sk e lista invertidas para diversos parametros
+ */	
 tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE * arq_gen_li){
 
   int j, k, l, prox;   
@@ -266,9 +266,9 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
   return generico;
 }
 
-/**
-   \brief Funcao de alocacao do vetor (dobravel) de SKs
-*/
+/*!
+ * \brief Funcao de alocacao do vetor (dobravel) de SKs
+ */
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite){
   
   *limite = 2*(*limite);
@@ -286,8 +286,8 @@ tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *l
   return vetor_SK_generico;
 }
 
-/**
-   \brief Funcao de procura por chave no vetor de chaves secundarias
+/*!
+ * \brief Funcao de procura por chave no vetor de chaves secundarias
  */
 void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk){
   
@@ -339,9 +339,9 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 }
 
 
-/**
-   \brief Funcao que le da entrada padrao e trata excecoes de entrada de busca
-*/
+/*!
+ * \brief Funcao que le da entrada padrao e trata excecoes de entrada de busca
+ */
 int le_sk(char* palavra_procurada, int max){
 
   int i, mod=0;
@@ -386,9 +386,9 @@ int le_sk(char* palavra_procurada, int max){
   return 1;
 }
 
-/**
-   \brief Instancia a estrutura do tipo_dados_sk do campo titulo
-*/
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo titulo
+ */
 void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
@@ -410,9 +410,9 @@ void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk
   return;
 }
 
-/**
-   \brief Instancia a estrutura do tipo_dados_sk do campo tipo
-*/
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo tipo
+ */
 
 void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) {
 
@@ -436,9 +436,9 @@ void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk,
 }
 
 
-/**
-   \brief Instancia a estrutura do tipo_dados_sk do campo autor
-*/
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo autor
+ */
 void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) {
 
   char autor_procurado[TAM_AUT+1];
@@ -461,9 +461,9 @@ void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk
 }
 
 
-/**
-   \brief Instancia a estrutura do tipo_dados_sk do campo ano
-*/
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo ano
+ */
 void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) {
 
   char ano_procurado[TAM_ANO+1];
@@ -490,9 +490,9 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
 /*         Funcoes Auxiliares         */
 /**************************************/
 
-/**
-   \brief Funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
-*/
+/*!
+ * \brief Funcao analoga a strcmp, mas insensivel a maiusculas/minusculas
+ */
 int strcmpinsensitive(char * a, char * b){
   int i=0;
   while(a[i]!='\0'){
@@ -506,18 +506,18 @@ int strcmpinsensitive(char * a, char * b){
   return 0;
 }
 
-/**
-   \brief Funcao auxiliar usada na funcao qsort (para ordenar sks)
-*/
+/*!
+ * \brief Funcao auxiliar usada na funcao qsort (para ordenar sks)
+ */
 int compara_qsort2(const void * vetora, const void * vetorb){
   return(strcmp( ((tipo_registro_sk *)vetora)->chave,
 		  ((tipo_registro_sk *)vetorb)->chave));
 }
 
 
-/**
-   \brief Funcao auxiliar usada na funcao bsearch (para encontrar sks)
-*/
+/*!
+ * \brief Funcao auxiliar usada na funcao bsearch (para encontrar sks)
+ */
 int compara_bsearch2(const void * titulo_procurado, const void * vetorb) {
   return(strcmpinsensitive( (char*)titulo_procurado,
 			    ((tipo_registro_sk *)vetorb)->chave));

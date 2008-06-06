@@ -2,9 +2,9 @@
 #include "defines.h" 
 #include "fopen.h"
 
-/**
-   \brief Confere se existe e abre ou cria arquivo base22.dat
-*/
+/*!
+ * \brief Confere se existe e abre ou cria arquivo base22.dat
+ */
 FILE * abre_base22(FILE *arq_base, int *n_registros){
   
   int temp;
@@ -27,9 +27,9 @@ FILE * abre_base22(FILE *arq_base, int *n_registros){
   return arq_base;
 }
 
-/**
-   \brief Confere se existe e abre ou cria arquivo pk.dat
-*/
+/*!
+ * \brief Confere se existe e abre ou cria arquivo pk.dat
+ */
 FILE * abre_pk(FILE *arq_pk, int *pk){
   /* temp (depois pk) indica se o arquivo pk.dat possui 
      conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
@@ -55,9 +55,9 @@ FILE * abre_pk(FILE *arq_pk, int *pk){
 }
 
 
-/**
-   \brief confere se existe e abre ou cria arquivo cabeca_avail_base.dat
-*/
+/*!
+ * \brief confere se existe e abre ou cria arquivo cabeca_avail_base.dat
+ */
 FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
   
   int temp = -1;
@@ -88,9 +88,9 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
 }
 
 
-/** 
-    \brief Abre arquivos de listas invertidas (vinculados a chaves secundarias) 
-*/
+/*! 
+ * \brief Abre arquivos de listas invertidas (vinculados a chaves secundarias) 
+ */
 void abre_lis(tipo_arqs_li * arqs_li){
   arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
   arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
@@ -99,9 +99,9 @@ void abre_lis(tipo_arqs_li * arqs_li){
 }
 
 
-/** 
-    \brief Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
-*/
+/*! 
+ * \brief Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
+ */
 void espera(){
   printf("\nPressione uma tecla para voltar ao menu...\n");
   getchar();
