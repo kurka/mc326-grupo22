@@ -29,7 +29,6 @@ int main() {
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
   tipo_vetores_sk *vetores_sk; 
 
-
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
   limite[0] = 0;
@@ -200,14 +199,8 @@ int main() {
   fclose(arqs_li->arq_ano_li); 
 
   /* Libera memoria */
-  free(vetor_registros);
-  free(arqs_li);
-  free(vetores_sk->titulo);
-  free(vetores_sk->autor);
-  free(vetores_sk->ano);
-  free(vetores_sk->tipo);
-  free(vetores_sk);
-
+  liberamemoria(vetor_registros, arqs_li, vetores_sk);
+ 
   if(DEBUG)
     printf(">>>Fim da execucao!\n");
 
