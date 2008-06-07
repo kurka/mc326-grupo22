@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<malloc.h>
 #include "defines.h" 
 #include "fopen.h"
 
@@ -105,4 +106,36 @@ void abre_lis(tipo_arqs_li * arqs_li){
 void espera(){
   printf("\nPressione a tecla enter para voltar ao menu...\n");
   getchar();
+}
+
+
+/*!
+ * \brief Desaloca memoria alocada nas estruturas durante a execucao
+ */
+void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk){
+  int i;
+
+ 
+  free(vetor_registros);
+  free(arqs_li);
+  
+  for(i=0;i<vetores_sk->titulo->n_sk;i++)
+    free(vetores_sk->titulo->vetor_SK[i].chave);
+  for(i=0;i<vetores_sk->tipo->n_sk;i++)
+    free(vetores_sk->tipo->vetor_SK[i].chave);
+  for(i=0;i<vetores_sk->autor->n_sk;i++)
+    free(vetores_sk->autor->vetor_SK[i].chave);
+  for(i=0;i<vetores_sk->ano->n_sk;i++)
+    free(vetores_sk->ano->vetor_SK[i].chave);
+  
+  free(vetores_sk->titulo->vetor_SK);
+  free(vetores_sk->tipo->vetor_SK);
+  free(vetores_sk->autor->vetor_SK);
+  free(vetores_sk->ano->vetor_SK);
+  free(vetores_sk->titulo);
+  free(vetores_sk->tipo);
+  free(vetores_sk->autor);
+  free(vetores_sk->ano);
+  free(vetores_sk);
+  
 }

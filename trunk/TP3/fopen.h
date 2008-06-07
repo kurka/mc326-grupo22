@@ -14,3 +14,6 @@ void abre_lis(tipo_arqs_li * arqs_li);
 
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera();
+
+/* Desaloca memoria alocada nas estruturas durante a execucao */
+void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk);
