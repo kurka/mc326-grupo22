@@ -103,6 +103,6 @@ void abre_lis(tipo_arqs_li * arqs_li){
  * \brief Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
  */
 void espera(){
-  printf("\nPressione uma tecla para voltar ao menu...\n");
+  printf("\nPressione a tecla enter para voltar ao menu...\n");
   getchar();
 }
