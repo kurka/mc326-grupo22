@@ -75,13 +75,9 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 
       
       /* Cria as chaves secundarias e listas invertidas, para cada campo */
-      printf("titulo:\n");
       vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);   
-      printf("tipo:\n");
       vetores_sk->tipo = cria_vetor_generico(registro, pk, vetores_sk->tipo, &n_tipos_li, arqs_li->arq_tip_li);      
-      printf("autor:\n");
       vetores_sk->autor = cria_vetor_generico(registro, pk, vetores_sk->autor, &n_autores_li, arqs_li->arq_aut_li);      
-      printf("ano:\n");
       vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li);      
     }
   
@@ -213,9 +209,6 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_gen_li, "%08d", &prox);
-
-	      printf("chave repetida = %s", temp_sk);
-	      printf(" nrr = %d\n", prox);
 
 	      /* Percorre a lista invertida, para ele poder apontar para a nova entrada */
 	      while(prox != -1){
