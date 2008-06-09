@@ -90,14 +90,46 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
 
 
 /*! 
- * \brief Abre arquivos de listas invertidas (vinculados a chaves secundarias) 
+ * \brief Abre ou cria arquivos de chaves secundarias 
  */
-void abre_lis(tipo_arqs_li * arqs_li){
-  arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
-  arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
-  arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
-  arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
-}
+
+FILE * abre_sk(FILE *arq_sk, tipo_arqs_li *arqs_li, int *sk){
+
+  /* temp (depois sk) indica se o arquivo sk.dat possui 
+     conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
+  int temp=1;
+  arq_sk=fopen("sk.dat","r");
+  
+  if(!arq_sk){
+    temp=0;
+  }
+  if(arq_sk){
+    fseek(arq_sk,0,SEEK_END);
+    /* Se pk possui tamanho 0, as chaves secundarias serao
+      coletadas a partir do arquivo base.dat */ 
+    temp = ftell(arq_sk);
+  }
+  
+  if(temp==0){
+    arq_sk=fopen("sk.dat","w");
+    arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
+    arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
+    arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
+    arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
+  }
+
+  else
+    arqs_li->arq_tit_li = fopen("li_titulos.dat", "r+");
+    arqs_li->arq_tip_li = fopen("li_tipos.dat", "r+");  
+    arqs_li->arq_aut_li = fopen("li_autores.dat", "r+");  
+    arqs_li->arq_ano_li = fopen("li_anos.dat", "r+");  
+  
+  *sk = temp;
+  return arq_sk;
+
+
+
+ }
 
 
 /*! 
