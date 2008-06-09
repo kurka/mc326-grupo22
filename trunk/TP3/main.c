@@ -22,8 +22,8 @@ int main() {
 
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
-  int n_registros, pk, cabeca_avail, nrr;
-  FILE *arq_base,*arq_pk, *arq_avail;
+  int n_registros, pk, sk, cabeca_avail, nrr;
+  FILE *arq_base,*arq_pk, *arq_sk, *arq_avail;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
@@ -45,14 +45,8 @@ int main() {
   arq_base = abre_base22(arq_base, &n_registros);
   arq_pk = abre_pk(arq_pk, &pk); 
   arq_avail = abre_avail(arq_avail, &cabeca_avail);
-  abre_lis(arqs_li);
+  arq_sk = abre_sk(arq_sk, arqs_li, &sk);
 
-  /* Criacao das chaves secundarias */
-  if(DEBUG)
-    printf("\n>>>criando vetores sk\n");
-  vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
-  
-  
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo */
   if(pk!=0){
@@ -81,8 +75,28 @@ int main() {
     }
   }
 
+  /* Criacao de estrutura de chaves secundarias*/
+  /* Se o arquivo sk.dat existir, carrega as estruturas de chaves secundarias do arquivo*/
+  if(sk!=0){
+    /*
+      vetores_sk = lerArquivoSK(arq_sk);
+    */
+    fclose(arq_sk);
+  }
+  /* Criacao das chaves secundarias */
+  /* Caso nao exista, cria as estruturas de chaves secundarias a partir do arquivo base.dat*/
+  if(sk==0){
+    if(DEBUG)
+      printf("\n>>>criando vetores sk\n");
+    vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
+  }
+   
+
+ 
   if(DEBUG)
     printf("\n>>>Numero de registros: %d\n\n\n",limite[0]);
+
+
   
   /* Interface*/
   do {
@@ -177,19 +191,25 @@ int main() {
   } while(opcao!=SAIR);
   
 
-  /* Se o arquivo nao era vazio, abre soh no final, 
-     evitando perder dados em caso de erro de execucao */
+  /* Se os arquivos pk.dat ou sk.dat nao eram vazios, abre para escrita 
+     somente no final, evitando perder dados em caso de erro de execucao */
   if(pk!=0)
     arq_pk=fopen("pk.dat","w");    
+  if(sk!=0)
+    arq_sk=fopen("sk.dat", "w");
   
   
-  /* Guarda o indice de chaves primarias no arquivo */
+  /* Guarda o indice de chaves primarias e secundarias no arquivo */
   if(DEBUG)
     printf("\n>>>Salvando arquivos e liberando memoria\n");  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
+  /*
+    salvarArquivoSK(vetores_sk, arq_sk);
+  */
 
   /* Fecha os arquivos */
   fclose(arq_pk);
+  fclose(arq_sk);
   fclose(arq_base);
   fclose(arq_avail);
   

@@ -9,8 +9,8 @@ FILE * abre_pk(FILE *arq_pk, int *pk);
 /* Confere se existe e abre ou cria arquivo cabeca_avail_base.dat */
 FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base);
 
-/* Abre arquivos de listas invertidas (vinculados a chaves secundarias) */
-void abre_lis(tipo_arqs_li * arqs_li);
+/* Abre ou cria arquivos de chaves secundarias*/
+FILE * abre_sk(FILE *arq_sk, tipo_arqs_li *arqs_li, int *sk);
 
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera();
