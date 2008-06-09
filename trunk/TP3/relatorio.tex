@@ -62,7 +62,14 @@ Adicionada a implementacao de case insensitive e eliminacao de espacos antes e d
 
 4 - 7) Pesquisa por chave secundaria:
 
-/* ... */
+A pesquisa por chave secundaria eh feita individualmente para cada campo do registro (titulo, tipo, autor e ano). Para cada campo, o sistema implementado baseia-se na seguinte organizacao:
+
+Em memoria - armazena-se as chaves em um vetor de structs que contem, cada struct, a string da chave (a memoria para essa string eh alocada dinamicamente, no tamanho da palavra, sem a necessidade de alocar mais espaco do que o necessario) e o endereco (inteiro) de uma posicao no arquivo da lista invertida.
+Em disco (arquivos das listas invertidas) - cada arquivo do tipo li_<campo>.dat contem listas invertidas, uma lista para cada chave secundaria. Esta lista eh composta pela(s) chave(s) primaria(s) (portanto, de tamanhos fixos) que correspondem a chave secundaria procurada.
+
+Desse modo, quando o usuario procura por um titulo, eh feita uma busca binaria em memoria, que pode encontrar a chave no vetor. Sendo este o caso, havera um endereco para o arquivo da lista invertida, sendo possivel assim ter acesso a todas as chaves primarias que correspondem aos registros contidos na busca daquela chave secundaria.
+No caso da remocao, a chave secundaria continua existindo, porem, a lista fica vazia. Dessa forma, nao serao encontrados registros caso seja procurada aquela chave.
+
 
 
 8) Remocao de registro:
