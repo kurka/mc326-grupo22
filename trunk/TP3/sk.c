@@ -479,6 +479,13 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
 }
 
 
+void salvarArquivoSK(tipo_vetores_sk *vetores_sk, FILE *arq_sk){ 
+
+
+
+} 
+
+
 /**************************************/
 /*         Funcoes Auxiliares         */
 /**************************************/
