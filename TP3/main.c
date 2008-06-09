@@ -23,10 +23,11 @@ int main() {
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
   int n_registros, pk, sk, cabeca_avail, nrr;
-  FILE *arq_base,*arq_pk, *arq_sk, *arq_avail;
+  FILE *arq_base,*arq_pk, *arq_avail;
   ap_tipo_registro_pk vetor_registros;
   int limite[2];
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
+  tipo_arqs_sk * arqs_sk = (tipo_arqs_sk *) malloc(sizeof(tipo_arqs_sk));
   tipo_vetores_sk *vetores_sk; 
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
@@ -45,7 +46,7 @@ int main() {
   arq_base = abre_base22(arq_base, &n_registros);
   arq_pk = abre_pk(arq_pk, &pk); 
   arq_avail = abre_avail(arq_avail, &cabeca_avail);
-  arq_sk = abre_sk(arq_sk, arqs_li, &sk);
+  abre_sk(arqs_sk, arqs_li, &sk);
 
   /* Se existirem no arquivo pk.dat, carrega as 
      chaves primarias vindas do arquivo */
@@ -79,9 +80,13 @@ int main() {
   /* Se o arquivo sk.dat existir, carrega as estruturas de chaves secundarias do arquivo*/
   if(sk!=0){
     /*
-      vetores_sk = lerArquivoSK(arq_sk);
+      vetores_sk = lerArquivoSK(arqs_sk);
     */
-    fclose(arq_sk);
+
+    fclose(arqs_sk->arq_sk_tit);
+    fclose(arqs_sk->arq_sk_tip);
+    fclose(arqs_sk->arq_sk_aut);
+    fclose(arqs_sk->arq_sk_ano);
   }
   /* Criacao das chaves secundarias */
   /* Caso nao exista, cria as estruturas de chaves secundarias a partir do arquivo base.dat*/
@@ -195,9 +200,12 @@ int main() {
      somente no final, evitando perder dados em caso de erro de execucao */
   if(pk!=0)
     arq_pk=fopen("pk.dat","w");    
-  if(sk!=0)
-    arq_sk=fopen("sk.dat", "w");
-  
+  if(sk!=0){
+    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "w");
+    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "w");
+    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "w");
+    arqs_sk->arq_sk_ano = fopen("sk_anos.dat", "w");
+  }
   
   /* Guarda o indice de chaves primarias e secundarias no arquivo */
   if(DEBUG)
@@ -209,9 +217,13 @@ int main() {
 
   /* Fecha os arquivos */
   fclose(arq_pk);
-  fclose(arq_sk);
   fclose(arq_base);
   fclose(arq_avail);
+
+  fclose(arqs_sk->arq_sk_tit);
+  fclose(arqs_sk->arq_sk_tip);
+  fclose(arqs_sk->arq_sk_aut);
+  fclose(arqs_sk->arq_sk_ano);
   
   fclose(arqs_li->arq_tit_li); 
   fclose(arqs_li->arq_tip_li); 
@@ -219,7 +231,7 @@ int main() {
   fclose(arqs_li->arq_ano_li); 
 
   /* Libera memoria */
-  liberamemoria(vetor_registros, arqs_li, vetores_sk);
+  liberamemoria(vetor_registros, arqs_sk, arqs_li, vetores_sk);
  
   if(DEBUG)
     printf(">>>Fim da execucao!\n");
