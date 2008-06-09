@@ -10,10 +10,10 @@ FILE * abre_pk(FILE *arq_pk, int *pk);
 FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base);
 
 /* Abre ou cria arquivos de chaves secundarias*/
-FILE * abre_sk(FILE *arq_sk, tipo_arqs_li *arqs_li, int *sk);
+void abre_sk(tipo_arqs_sk *arq_sk, tipo_arqs_li *arqs_li, int *sk);
 
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera();
 
 /* Desaloca memoria alocada nas estruturas durante a execucao */
-void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk);
+void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk);

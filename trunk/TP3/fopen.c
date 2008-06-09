@@ -93,43 +93,49 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
  * \brief Abre ou cria arquivos de chaves secundarias 
  */
 
-FILE * abre_sk(FILE *arq_sk, tipo_arqs_li *arqs_li, int *sk){
+void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
 
   /* temp (depois sk) indica se o arquivo sk.dat possui 
      conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
   int temp=1;
-  arq_sk=fopen("sk.dat","r");
+
+  /*abre um dos arquivos de chaves secundarias para ver se ele existe*/
+  arqs_sk->arq_sk_ano = fopen("sk_anos.dat","r");
   
-  if(!arq_sk){
+  if(!arqs_sk->arq_sk_ano){
     temp=0;
   }
-  if(arq_sk){
-    fseek(arq_sk,0,SEEK_END);
+  if(arqs_sk->arq_sk_ano){
+    fseek(arqs_sk->arq_sk_ano,0,SEEK_END);
     /* Se pk possui tamanho 0, as chaves secundarias serao
       coletadas a partir do arquivo base.dat */ 
-    temp = ftell(arq_sk);
+    temp = ftell(arqs_sk->arq_sk_ano);
   }
   
   if(temp==0){
-    arq_sk=fopen("sk.dat","w");
+    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "w");
+    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "w");
+    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "w");
+    arqs_sk->arq_sk_ano = fopen("sk_anos.dat", "w");
+
     arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
     arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
     arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
     arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
   }
-
+  
   else
+    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "r");
+    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "r");
+    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "r");
+    
     arqs_li->arq_tit_li = fopen("li_titulos.dat", "r+");
     arqs_li->arq_tip_li = fopen("li_tipos.dat", "r+");  
     arqs_li->arq_aut_li = fopen("li_autores.dat", "r+");  
     arqs_li->arq_ano_li = fopen("li_anos.dat", "r+");  
   
   *sk = temp;
-  return arq_sk;
-
-
-
- }
+}
 
 
 /*! 
@@ -144,13 +150,14 @@ void espera(){
 /*!
  * \brief Desaloca memoria alocada nas estruturas durante a execucao
  */
-void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk){
+void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk){
   int i;
 
  
   free(vetor_registros);
+  free(arqs_sk);
   free(arqs_li);
-  
+
   for(i=0;i<vetores_sk->titulo->n_sk;i++)
     free(vetores_sk->titulo->vetor_SK[i].chave);
   for(i=0;i<vetores_sk->tipo->n_sk;i++)

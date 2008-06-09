@@ -73,7 +73,20 @@ typedef struct
 	
 }tipo_vetores_sk;
 
-/*estrutura que guarda arquivos preenchidos com lista invertida de registros de chaves secundarias*/
+
+/*estrutura que guarda arquivos preenchidos com  chaves secundarias*/
+typedef struct
+{
+  FILE * arq_sk_tit;
+  FILE * arq_sk_tip;
+  FILE * arq_sk_aut;
+  FILE * arq_sk_ano;
+}tipo_arqs_sk;
+
+
+
+/*estrutura que guarda arquivos preenchidos com lista 
+  invertida de registros de chaves secundarias*/
 typedef struct
 {
   FILE * arq_tit_li;
