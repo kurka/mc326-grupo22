@@ -1,5 +1,5 @@
 main: main.o base.o pk.o sk.o fopen.o 
-	gcc -ggdb -ansi -pedantic -Wall -lefence main.o base.o pk.o sk.o fopen.o -o tp3
+	gcc -ggdb -ansi -pedantic -Wall main.o base.o pk.o sk.o fopen.o -o tp3
 main.o: main.c base.h pk.h defines.h fopen.h
 	gcc -ggdb -ansi -pedantic -Wall -c main.c
 
