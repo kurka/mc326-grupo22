@@ -79,10 +79,11 @@ int main() {
   /* Criacao de estrutura de chaves secundarias*/
   /* Se o arquivo sk.dat existir, carrega as estruturas de chaves secundarias do arquivo*/
   if(sk!=0){
-    /*
-      vetores_sk = lerArquivoSK(arqs_sk);
-    */
-
+    if(DEBUG)
+      printf("\n>>>lendo vetores sk do arquivo\n");
+    
+/*     vetores_sk = ler_arquivo_sk(arqs_sk); */
+    
     fclose(arqs_sk->arq_sk_tit);
     fclose(arqs_sk->arq_sk_tip);
     fclose(arqs_sk->arq_sk_aut);
@@ -212,7 +213,7 @@ int main() {
     printf("\n>>>Salvando arquivos e liberando memoria\n");  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
   
-  salvarArquivoSK(vetores_sk, arqs_sk);
+  salvar_arquivo_sk(vetores_sk, arqs_sk);
   
 
   /* Fecha os arquivos */
