@@ -1,15 +1,24 @@
 /* Definicao das funcoes de manipulacao das chaves secundarias */
 
 /* Cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas */
-tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *arqBase);
+tipo_vetores_sk *criarVetorSK(int n_registros, tipo_arqs_li *arqs_li, FILE *arqBase);
+
+
+/* Cria vetores de SKs, a partir de um arquivo ja existente com as chaves criadas*/
+tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk *arqs_sk);
+  
+/* Faz a leitura de cada arquivo, copiando as chaves secundarias para o vetor*/
+tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE *arq_generico);
 
 /* Insere um novo vetor de SKs, um para cada chave secundaria do novo registro, assim como as suas 
    respectivas listas invertidas*/
-tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li );
-
+tipo_vetores_sk *insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li *arqs_li );
 
 /* Cria vetor sk e lista invertida*/	
-tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE * arq_gen_li);
+tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE *arq_gen_li);
+
+/* Aloca memoria inicial das estruturas de chaves secundarias */
+tipo_vetores_sk *aloca_memoria_vetor(tipo_vetores_sk *vetores_sk);
 
 /* Funcao de alocacao do vetor (dobravel) de SKs */
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite); 
@@ -27,10 +36,10 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 int le_sk(char* palavra_procurada, int max);
 
 /* Salva em arquivo a lista com as chaves secundarias e seus apontadores para o arquivo de  lista invertida*/
-void salvarArquivoSK(tipo_vetores_sk *vetores_sk, tipo_arqs_sk *arqs_sk);
+void salvar_arquivo_sk(tipo_vetores_sk *vetores_sk, tipo_arqs_sk *arqs_sk);
 
 /* Salva um  vetor de chaves secundarias de um determinado tipo */
-void salvaVetorSK(tipo_dados_sk *generico, FILE * arq_generico);
+void salva_vetor_sk(tipo_dados_sk *generico, FILE * arq_generico);
 
 
 
