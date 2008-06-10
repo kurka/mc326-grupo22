@@ -92,10 +92,10 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
-tipo_vetores_sk lerArquivoSK(tipo_arqs_sk * arqs_sk){
+/* tipo_vetores_sk lerArquivoSK(tipo_arqs_sk * arqs_sk){ */
 
 
-}
+/* } */
 
 
 /*!
