@@ -211,9 +211,9 @@ int main() {
   if(DEBUG)
     printf("\n>>>Salvando arquivos e liberando memoria\n");  
   salvarArquivoPK(vetor_registros, arq_pk, limite[0]);
-  /*
-    salvarArquivoSK(vetores_sk, arq_sk);
-  */
+  
+  salvarArquivoSK(vetores_sk, arqs_sk);
+  
 
   /* Fecha os arquivos */
   fclose(arq_pk);
