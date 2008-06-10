@@ -92,6 +92,12 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
 }
 
 
+tipo_vetores_sk lerArquivoSK(tipo_arqs_sk * arqs_sk){
+
+
+}
+
+
 /*!
  * \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro, 
  * assim como as suas respectivas listas invertidas
@@ -479,11 +485,37 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
 }
 
 
-void salvarArquivoSK(tipo_vetores_sk *vetores_sk, FILE *arq_sk){ 
 
-
-
+/*!
+ * \brief Salva em arquivo a lista com as chaves secundarias e seus apontadores para o arquivo de  lista invertida
+ */
+void salvarArquivoSK(tipo_vetores_sk *vetores_sk, tipo_arqs_sk *arqs_sk){ 
+  
+  salvaVetorSK(vetores_sk->titulo, arqs_sk->arq_sk_tit);
+  salvaVetorSK(vetores_sk->tipo, arqs_sk->arq_sk_tip);
+  salvaVetorSK(vetores_sk->autor, arqs_sk->arq_sk_aut);
+  salvaVetorSK(vetores_sk->ano, arqs_sk->arq_sk_ano);
 } 
+  
+
+/*!
+ * \brief Salva um  vetor de chaves secundarias de um determinado tipo 
+ */
+void salvaVetorSK(tipo_dados_sk *generico, FILE * arq_generico){
+  int i;
+
+  fseek(arq_generico,0,SEEK_SET);
+  /*primeiro, imprime o numero de chaves secundarias no arquivo*/
+  fprintf(arq_generico, "%08d", generico->n_sk);
+  
+  /*depois, imprime as chaves e seus apontadores, com um espaco entre els, para facilitar a leitura*/
+  for(i=0;i<generico->n_sk;i++){
+    fprintf(arq_generico, "%s", generico->vetor_SK[i].chave);
+    fprintf(arq_generico, " ");
+    fprintf(arq_generico, "%08d", generico->vetor_SK[i].endereco_li);
+  }
+  
+}
 
 
 /**************************************/
