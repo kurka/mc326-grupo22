@@ -55,7 +55,7 @@ tipo_vetores_sk * criarVetorSK(int n_registros, tipo_arqs_li * arqs_li, FILE *ar
   /* Ordena registros de sk */
   qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
-  qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->autor->vetor_SK, vetores_sk->autor->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->ano->vetor_SK, vetores_sk->ano->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
  
 
@@ -147,7 +147,7 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
   /* Ordena registros de sk */
   qsort(vetores_sk->titulo->vetor_SK, vetores_sk->titulo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->tipo->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
-  qsort(vetores_sk->autor->vetor_SK, vetores_sk->tipo->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  qsort(vetores_sk->autor->vetor_SK, vetores_sk->autor->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   qsort(vetores_sk->ano->vetor_SK, vetores_sk->ano->n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
   
   return vetores_sk;
