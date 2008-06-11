@@ -188,8 +188,7 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	novaSK = 1;
 	for(l=0; l<n_sk; l++){
 	  if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0)
-	    if(strcmpinsensitive(temp_sk, generico->vetor_SK[l].chave) == 0)
-	      novaSK = 0;
+	    novaSK = 0;
 	}
 
 	/* Caso a nova SK for valida, entao eh inserida */
@@ -363,6 +362,7 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(palavra_procurada, generico->vetor_SK, generico->n_sk, sizeof(tipo_registro_sk), compara_bsearch2);  
  
+ 
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     printf("Nenhuma obra possui os termos procurados.\n\n");
@@ -384,7 +384,7 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
       fscanf(arq_gen_li, "%08d", &endereco_li);
  
       res = acha_pk(vetor_pk, pk, n_pk, arq_base, arq_html);
-      
+    
     }
     while(endereco_li != -1);
 
@@ -600,6 +600,11 @@ int strcmpinsensitive(char * a, char * b){
     
     i++;
   }
+
+  /*se a string a for menor que b, retorna -1*/
+  if(a[i]=='\0' && b[i]!=0)
+    return -1;
+
   return 0;
 }
 
