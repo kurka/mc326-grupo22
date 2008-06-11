@@ -82,7 +82,7 @@ int main() {
     if(DEBUG)
       printf("\n>>>lendo vetores sk do arquivo\n");
     
-/*     vetores_sk = ler_arquivo_sk(arqs_sk); */
+    vetores_sk = ler_arquivo_sk(arqs_sk); 
     
     fclose(arqs_sk->arq_sk_tit);
     fclose(arqs_sk->arq_sk_tip);
@@ -93,7 +93,7 @@ int main() {
   /* Caso nao exista, cria as estruturas de chaves secundarias a partir do arquivo base.dat*/
   if(sk==0){
     if(DEBUG)
-      printf("\n>>>criando vetores sk\n");
+      printf("\n>>>criando vetores sk a partir da base\n");
     vetores_sk = criarVetorSK(n_registros, arqs_li, arq_base); 
   }
    

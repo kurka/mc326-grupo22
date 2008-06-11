@@ -71,7 +71,7 @@ tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk){
 
   /* Inicializa vetores_sk com memoria e valores iniciais*/
   vetores_sk = aloca_memoria_vetor(vetores_sk);
- 
+
   /*faz a leitura das chaves de cada arquivo e guarda em seus respectivos campos*/
   vetores_sk->titulo = le_chaves_sk(vetores_sk->titulo, arqs_sk->arq_sk_tit);
   vetores_sk->tipo = le_chaves_sk(vetores_sk->tipo, arqs_sk->arq_sk_tip);
@@ -88,7 +88,9 @@ tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk){
 tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE * arq_generico){
 
   int i, n_sk;
+  char temp[TAM_TIT];
   fseek(arq_generico,0,SEEK_SET);
+  
 
   /*le primeiro o numero de chaves secundarias presentes no arquivo*/
   fscanf(arq_generico, "%8d", &n_sk);
@@ -97,12 +99,16 @@ tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE * arq_generico){
     /* Verifica se precisa realocar o tamanho do vetor para inserir a nova SK */
     if(generico->n_sk == generico->tam_vetor)
       generico->vetor_SK = realoca_memoria_sk(generico->vetor_SK, &generico->tam_vetor); 
-   
+    
+    
     /*le as chaves secundarias e seus apontadores*/
-    fscanf(arq_generico, "%s", generico->vetor_SK[i].chave);
+    fscanf(arq_generico, "%s", temp);   
+    generico->vetor_SK[i].chave = (char *)malloc(sizeof(char)*((strlen(temp)+1))); 
+    strcpy(generico->vetor_SK[i].chave, temp);  
     fscanf(arq_generico, "%8d", &generico->vetor_SK[i].endereco_li);
-  }
-
+    generico->n_sk++;
+ }
+  
   return generico;
 }
 
@@ -259,14 +265,14 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
   *n_li_generica = n_li;
   generico->tam_vetor = tam_vetor_sk;
   
-  if(DEBUG){
-    printf(" NUMERO %d\n", n_sk);
-    for(l=0; l< n_sk; l++)
-      {
-	printf("%15s", generico->vetor_SK[l].chave);
-	printf("   %d\n", generico->vetor_SK[l].endereco_li);
-      }
-  }
+/*   if(DEBUG){ */
+/*     printf(" NUMERO %d\n", n_sk); */
+/*     for(l=0; l< n_sk; l++) */
+/*       { */
+/* 	printf("%15s", generico->vetor_SK[l].chave); */
+/* 	printf("   %d\n", generico->vetor_SK[l].endereco_li); */
+/*       } */
+/*   } */
   
   return generico;
 }
@@ -326,14 +332,17 @@ tipo_vetores_sk *aloca_memoria_vetor(tipo_vetores_sk *vetores_sk){
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite){
   
   *limite = 2*(*limite);
-  if(DEBUG)
-    printf(">>>vetor de sk [re]alocado com %d posicoes\n", (*limite) );
+ 
   
   if(*limite==2*MEM_INIT){
+    if(DEBUG)
+      printf(">>>vetor de sk alocado com %d posicoes\n", (*limite) );
     vetor_SK_generico = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(*limite));
   }
 
   else{
+    if(DEBUG)
+      printf(">>>vetor de sk realocado com %d posicoes\n", (*limite) );
     vetor_SK_generico = realloc(vetor_SK_generico, sizeof(tipo_registro_sk)*(*limite));
   }
 
@@ -562,6 +571,7 @@ void salva_vetor_sk(tipo_dados_sk *generico, FILE * arq_generico){
   fseek(arq_generico,0,SEEK_SET);
   /*primeiro, imprime o numero de chaves secundarias no arquivo*/
   fprintf(arq_generico, "%08d", generico->n_sk);
+  
   
   /*depois, imprime as chaves e seus apontadores, com um espaco entre els, para facilitar a leitura*/
   for(i=0;i<generico->n_sk;i++){
