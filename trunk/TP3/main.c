@@ -200,12 +200,12 @@ int main() {
   /* Se os arquivos pk.dat ou sk.dat nao eram vazios, abre para escrita 
      somente no final, evitando perder dados em caso de erro de execucao */
   if(pk!=0)
-    arq_pk=fopen("pk.dat","w");    
+    arq_pk=fopen(ARQPK,"w");    
   if(sk!=0){
-    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "w");
-    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "w");
-    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "w");
-    arqs_sk->arq_sk_ano = fopen("sk_anos.dat", "w");
+    arqs_sk->arq_sk_tit = fopen(ARQSK_TIT, "w");
+    arqs_sk->arq_sk_tip = fopen(ARQSK_TIP, "w");
+    arqs_sk->arq_sk_aut = fopen(ARQSK_AUT, "w");
+    arqs_sk->arq_sk_ano = fopen(ARQSK_ANO, "w");
   }
   
   /* Guarda o indice de chaves primarias e secundarias no arquivo */

@@ -30,8 +30,25 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MAX_IMG 450
 #define TAM_FORM 3
 #define MEM_INIT 10
-#define DEBUG 0 /*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
+#define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
+
+
+/*nomes dos arquivos criados pelo programa*/
+#define ARQBASE "base22.dat"
+#define ARQPK "pk.dat"
+#define ARQAVAIL "avail_head.dat"
+#define ARQSK_TIT "sk_titulos.dat"
+#define ARQSK_TIP "sk_tipos.dat"
+#define ARQSK_AUT "sk_autores.dat"
+#define ARQSK_ANO "sk_anos.dat"
+#define ARQLI_TIT "li_titulos.dat"
+#define ARQLI_TIP "li_tipos.dat"
+#define ARQLI_AUT "li_autores.dat"
+#define ARQLI_ANO "li_anos.dat"
+#define ARQHTML "tp3.html"
+
+
 
 typedef struct {
   char titulo[TAM_TIT];
