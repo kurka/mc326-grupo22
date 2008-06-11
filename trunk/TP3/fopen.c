@@ -124,7 +124,7 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
     arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
   }
   
-  else
+  else{
     arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "r");
     arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "r");
     arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "r");
@@ -133,6 +133,7 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
     arqs_li->arq_tip_li = fopen("li_tipos.dat", "r+");  
     arqs_li->arq_aut_li = fopen("li_autores.dat", "r+");  
     arqs_li->arq_ano_li = fopen("li_anos.dat", "r+");  
+  }
   
   *sk = temp;
 }
