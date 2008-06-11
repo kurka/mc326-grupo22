@@ -371,7 +371,7 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
   else {
     
     /* tp3.html eh aberto, para guardar os resultados da busca */
-    arq_html=fopen("tp3.html","w");
+    arq_html=fopen(ARQHTML,"w");
     
     endereco_li=((*elto_encontrado).endereco_li);
     
@@ -389,8 +389,9 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
     while(endereco_li != -1);
 
     if(res){
-      printf("Foram encontradas uma ou mais obras com os termos procurados. \n");
-      printf("Para visualizar suas informações consulte sua pasta atual e abra o arquivo tp3.html\n\n");
+      printf("Foram encontradas uma ou mais obras com os termos procurados. \n\n");
+      printf("Para visualizar suas informações consulte\n"); 
+      printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML);
     }
     else
       printf("Nenhuma obra possui os termos procurados.\n\n");

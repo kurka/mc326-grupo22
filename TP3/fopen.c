@@ -10,12 +10,12 @@ FILE * abre_base22(FILE *arq_base, int *n_registros){
   
   int temp;
   
-  arq_base=fopen("base22.dat","r+");
+  arq_base=fopen(ARQBASE,"r+");
   
   if(arq_base == NULL){
     if(DEBUG)
       printf("\n>>>Arquivo base22 inexistente: base sera criada\n");
-    arq_base=fopen("base22.dat","w");
+    arq_base=fopen(ARQBASE,"w");
   }
 
   /* Esta rotina retorna o numero de registros do arquivo da base de dados */
@@ -35,7 +35,7 @@ FILE * abre_pk(FILE *arq_pk, int *pk){
   /* temp (depois pk) indica se o arquivo pk.dat possui 
      conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
   int temp=1;
-  arq_pk=fopen("pk.dat","r");
+  arq_pk=fopen(ARQPK,"r");
   
   if(!arq_pk){
     temp=0;
@@ -48,7 +48,7 @@ FILE * abre_pk(FILE *arq_pk, int *pk){
   }
 
   if(temp==0){
-    arq_pk=fopen("pk.dat","w");
+    arq_pk=fopen(ARQPK,"w");
   }
   
   *pk = temp;
@@ -63,7 +63,7 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
   
   int temp = -1;
   /* Abre o arquivo que contem a cabeca da avail list da base em modo leitura e escrita */
-  arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","r+");
+  arq_cabeca_avail_base = fopen(ARQAVAIL,"r+");
   
   /* Caso a avail list seja vazia, nao ha nenhum registro apagado */
   if (arq_cabeca_avail_base==NULL) {
@@ -71,7 +71,7 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
     if(DEBUG)
       printf("\n>>>Nao existe arq com a cabeca da avail. Criando...\n\n");
     /* O arquivo eh criado com valor -1 */
-    arq_cabeca_avail_base = fopen("cabeca_avail_base.dat","w+");
+    arq_cabeca_avail_base = fopen(ARQAVAIL,"w+");
     fseek(arq_cabeca_avail_base,0,SEEK_SET);
     fprintf(arq_cabeca_avail_base, "%05d", temp);
   }
@@ -100,7 +100,7 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
   int temp=1;
 
   /*abre um dos arquivos de chaves secundarias para ver se ele existe*/
-  arqs_sk->arq_sk_ano = fopen("sk_anos.dat","r");
+  arqs_sk->arq_sk_ano = fopen(ARQSK_ANO,"r");
   
   if(!arqs_sk->arq_sk_ano){
     temp=0;
@@ -113,26 +113,26 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
   }
   
   if(temp==0){
-    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "w");
-    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "w");
-    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "w");
-    arqs_sk->arq_sk_ano = fopen("sk_anos.dat", "w");
+    arqs_sk->arq_sk_tit = fopen(ARQSK_TIT, "w");
+    arqs_sk->arq_sk_tip = fopen(ARQSK_TIP, "w");
+    arqs_sk->arq_sk_aut = fopen(ARQSK_AUT, "w");
+    arqs_sk->arq_sk_ano = fopen(ARQSK_ANO, "w");
 
-    arqs_li->arq_tit_li = fopen("li_titulos.dat", "w+");
-    arqs_li->arq_tip_li = fopen("li_tipos.dat", "w+");  
-    arqs_li->arq_aut_li = fopen("li_autores.dat", "w+");  
-    arqs_li->arq_ano_li = fopen("li_anos.dat", "w+");  
+    arqs_li->arq_tit_li = fopen(ARQLI_TIT, "w+");
+    arqs_li->arq_tip_li = fopen(ARQLI_TIP, "w+");  
+    arqs_li->arq_aut_li = fopen(ARQLI_AUT, "w+");  
+    arqs_li->arq_ano_li = fopen(ARQLI_ANO, "w+");  
   }
   
   else{
-    arqs_sk->arq_sk_tit = fopen("sk_titulos.dat", "r");
-    arqs_sk->arq_sk_tip = fopen("sk_tipos.dat", "r");
-    arqs_sk->arq_sk_aut = fopen("sk_autores.dat", "r");
+    arqs_sk->arq_sk_tit = fopen(ARQSK_TIT, "r");
+    arqs_sk->arq_sk_tip = fopen(ARQSK_TIP, "r");
+    arqs_sk->arq_sk_aut = fopen(ARQSK_AUT, "r");
     
-    arqs_li->arq_tit_li = fopen("li_titulos.dat", "r+");
-    arqs_li->arq_tip_li = fopen("li_tipos.dat", "r+");  
-    arqs_li->arq_aut_li = fopen("li_autores.dat", "r+");  
-    arqs_li->arq_ano_li = fopen("li_anos.dat", "r+");  
+    arqs_li->arq_tit_li = fopen(ARQLI_TIT, "r+");
+    arqs_li->arq_tip_li = fopen(ARQLI_TIP, "r+");  
+    arqs_li->arq_aut_li = fopen(ARQLI_AUT, "r+");  
+    arqs_li->arq_ano_li = fopen(ARQLI_ANO, "r+");  
   }
   
   *sk = temp;

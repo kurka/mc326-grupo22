@@ -229,7 +229,7 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
   }
   /* Caso haja, gera o arquivo de consulta em HTML */
   else {
-    arq_html=fopen("tp3.html","w");
+    arq_html=fopen(ARQHTML,"w");
     /* Cabecalho do arquivo */
     fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
     fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>");
@@ -243,7 +243,7 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
     fprintf(arq_html,"<br></div></body></html>");
     fclose(arq_html);
     printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n");
-    printf("sua pasta atual e abra o arquivo ./tp3.html\n\n");
+    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML);
   }
 
   return;
@@ -269,7 +269,7 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
   Insere_titulo(titulo_procurado, vetor_de_registros, 0);
 
   /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
-  arq_html=fopen("tp3.html","w");
+  arq_html=fopen(ARQHTML,"w");
 
   if(acha_pk(vetor_de_registros, titulo_procurado, limite_reg, arq_base, arq_html)){
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
