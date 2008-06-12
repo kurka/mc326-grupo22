@@ -143,7 +143,7 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
  * \brief Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
  */
 void espera(){
-  printf("\nPressione a tecla enter para voltar ao menu...\n");
+  printf("\nPressione enter para voltar ao menu...\n");
   getchar();
 }
 
