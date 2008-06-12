@@ -370,7 +370,8 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
   /* Caso contrario, chama a funcao de busca na base de dados com o endereco_li. */
   else {
     
-    /* tp4.html eh aberto, para guardar os resultados da busca */
+
+    /* ARQHTML eh aberto, para guardar os resultados da busca */
     arq_html=fopen(ARQHTML,"w");
     
     endereco_li=((*elto_encontrado).endereco_li);

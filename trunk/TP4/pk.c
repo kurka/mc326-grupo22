@@ -1,3 +1,6 @@
+
+
+
 /* Esta biblioteca realiza manipulações no arquivo de chaves primarias da
    base de dados, permitindo consultas, listagem e exibicao (em pagina HTML)
    dos registros contidos no banco de dados. */
@@ -160,6 +163,19 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
  */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
  
+
+  /*
+  //calcula o hash
+  //abre o arquivo 
+
+  sera:? 
+  //pega as chaves do arquivo
+  //ordena - se ordenar facilita a busca. se nao ordenar, dificulta, mas economiza agora
+
+  //guarda a nova chave no arquivo
+
+  */
+
   /* Verifica se ainda cabem dados no vetor (limite[0] contem 
      o numero de chaves primarias, e limite[1] o tamanho do vetor) */
   if(limite[0] > limite[1])
@@ -273,7 +289,7 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 
   if(acha_pk(vetor_de_registros, titulo_procurado, limite_reg, arq_base, arq_html)){
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo tp4.html\n\n"); 
+    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
   }
   else
     printf("O titulo nao foi encontrado.\n\n");
