@@ -273,7 +273,7 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 
   if(acha_pk(vetor_de_registros, titulo_procurado, limite_reg, arq_base, arq_html)){
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo tp3.html\n\n"); 
+    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
   }
   else
     printf("O titulo nao foi encontrado.\n\n");
