@@ -1,0 +1,49 @@
+	MC326 - Estrutura de Arquivos
+
+	Trabalho Pratico 2
+	Grupo 22
+
+
+* Descricao do Trabalho
+
+Implementamos, neste trabalho pratico, um sistema de consulta por chave primaria em uma base de dados.
+Alem disso, o programa tambem lista todos os registros da base de dados. Ambas funcionalidades geram 
+um arquivo em HTML (tp2.html) para visualizacao do resultado da consulta.
+A chave primaria utilizada foi o campo 'titulo' de cada registro.
+Como este trabalho eh a continuacao do trabalho pratico 1, tambem fizemos algumas mudancas e correcoes 
+nas funcoes de insercao de registros na base de dados.
+
+
+* Especificacoes do Programa
+
+Insercao no arquivo de chaves primarias:
+Para fazer a consulta por chave primaria foi necessario gerar um arquivo de chaves primarias (pk.dat)
+que contivesse os titulos de todos os registros da base de dados, e seus respectivos numeros relativos
+de registro. O arquivo deve ser mantido com as chaves ordenadas em ordem alfabetica, entao a insercao
+deve sempre regera-lo.
+Ao iniciar o programa, ha 3 possibilidades:
+1-) O base.dat e o pk.dat ja existem;
+2-) Apenas o base.dat existe (neste caso, sera criado um pk.dat com as informacoes da base);
+3-) Nao ha nem base.dat nem pk.dat.
+Papa a insercao no pk.dat, eh realizado o seguinte procedimento:
+- Abre o pk.dat somente para leitura, calcula o numero de registros, carrega todos os dados contidos 
+nele num vetor dinamico (vetor de registros). Fecha o pk.dat;
+- Abre em seguida o pk.dat como w (sobrescrevendo seu conteudo);
+- Gera o arquivo pk.dat a partir dos titulos lidos do arquivo base.dat.
+
+Listagem:
+A funcao de listagem gera um HTML contendo os titulos (em ordem alfabetica) de todos os registros contidos na base.
+Para isso, ela abre o arquivo de chaves primarias e insere cada titulo por vez no arquivo HTML.
+Utilizamos as funcoes fgetc para ler os caracteres do arquivo das chaves, fprintf para escrever no arquivo
+HTML e fseek para pular os espaços correspondentes ao NRR no arquivo pk.dat.
+
+Consulta:
+A funcao de consulta gera um HTML contendo as informacoes de determinada obra, assim como sua imagem.
+Para isso, fizemos uma funcao que:
+- Le da entrada padrao o titulo a ser procurado;
+- Utilizando o numero de registros, armazena as informacoes do arquivo das chaves num vetor de struct 
+{ titulo[200],NRR[5] } (o tipo foi definido na biblioteca defines.h);
+- A partir deste vetor, faz uma busca binaria usando a funcao bsearch;
+- Caso o titulo procurado seja encontrado, seu NRR eh transformado pra inteiro pela funcao atoi;
+- Com o NRR em maos, chama-se outra funcao (busca_registro) que busca os campos do registro na base de
+dados (direto no lugar certo) e insere-os num arquivo HTML.
