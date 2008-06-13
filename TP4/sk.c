@@ -550,6 +550,27 @@ void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, 
   return;
 }
 
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do 'campo' descritor
+ */
+void consulta_sk_dsc(tipo_dados_sk * descritor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_dsc_li, FILE *arq_base) {
+
+  char descritor_procurado;
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta de registro por descritor da imagem.\n");
+  printf("Digite um valor de classificacao de descritor (de 0 a 8).\n\n");
+
+  /* descritor_procurado eh lido */
+  /* // DAVID: descritor deve ser um numero, de 0 a 8 (chamar funcao que faz isso) */
+
+
+  return;
+}
 
 
 /*!

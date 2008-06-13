@@ -7,6 +7,7 @@
 #include "pk.h"
 #include "sk.h"
 #include "fopen.h"
+#include "libimg.h"
 
 /*!
  * \brief Programa de criação e manipulação de um banco de dados 
@@ -115,7 +116,8 @@ int main() {
     printf("5-) Procurar por um tipo de obra no catalogo.\n");
     printf("6-) Procurar por um autor no catalogo.\n");
     printf("7-) Procurar por um ano de obra no catalogo.\n");
-    printf("8-) Remover uma obra do catalogo.\n");
+    printf("8-) Procurar por descritor.\n");
+    printf("9-) Remover uma obra do catalogo.\n");
     printf("0-) Sair.\n");
 
     opcao=getchar();
@@ -123,11 +125,11 @@ int main() {
 
     /* Tratamento de caractere invalido ou caractere(s) a mais */
     if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA_PK)&&
-		      (opcao!=CONSULTA_SK_TIT)&& (opcao!=CONSULTA_SK_TIP)&& 
-		      (opcao!=CONSULTA_SK_AUT)&& (opcao!=CONSULTA_SK_ANO)&&
-		      (opcao!=REMOVER)&&(opcao!=SAIR)) ) {
+                      (opcao!=CONSULTA_SK_TIT)&&(opcao!=CONSULTA_SK_TIP)&&
+                      (opcao!=CONSULTA_SK_AUT)&&(opcao!=CONSULTA_SK_ANO)&&
+                      (opcao!=CONSULTA_SK_DSC)&&(opcao!=REMOVER)&&(opcao!=SAIR)) ) {
       while(c!='\n') {
-	c=getchar();
+        c=getchar();
       }
       printf("Caractere ou sequencia de caracteres invalido.\n\n\n");
       opcao=0;
