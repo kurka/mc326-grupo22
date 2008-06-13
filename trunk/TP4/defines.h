@@ -11,7 +11,8 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define CONSULTA_SK_TIP '5'
 #define CONSULTA_SK_AUT '6'
 #define CONSULTA_SK_ANO '7'
-#define REMOVER '8'
+#define CONSULTA_SK_DSC '8'
+#define REMOVER '9'
 #define SAIR '0'
 #define OK 0
 #define ERRO -1
@@ -42,10 +43,12 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define ARQSK_TIP "sk_tipos.dat"
 #define ARQSK_AUT "sk_autores.dat"
 #define ARQSK_ANO "sk_anos.dat"
+#define ARQSK_DSC "sk_descritores.dat"
 #define ARQLI_TIT "li_titulos.dat"
 #define ARQLI_TIP "li_tipos.dat"
 #define ARQLI_AUT "li_autores.dat"
 #define ARQLI_ANO "li_anos.dat"
+#define ARQLI_DSC "li_descritores.dat"
 #define ARQHTML "tp4.html"
 
 
@@ -86,7 +89,7 @@ typedef struct
   tipo_dados_sk *tipo; 
   tipo_dados_sk *autor; 
   tipo_dados_sk *ano; 
-  
+  tipo_dados_sk *descritor;
 	
 }tipo_vetores_sk;
 
@@ -98,6 +101,7 @@ typedef struct
   FILE * arq_sk_tip;
   FILE * arq_sk_aut;
   FILE * arq_sk_ano;
+  FILE * arq_sk_dsc;
 }tipo_arqs_sk;
 
 
@@ -110,4 +114,5 @@ typedef struct
   FILE * arq_tip_li;
   FILE * arq_aut_li;
   FILE * arq_ano_li;
+  FILE * arq_dsc_li;
 }tipo_arqs_li;
