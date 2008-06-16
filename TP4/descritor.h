@@ -1,0 +1,2 @@
+int verificaDescritores();
+void insereDescritor();
