@@ -25,8 +25,8 @@ int main() {
   char str_final[TAM_REGISTRO+1];
   int n_registros, pk, sk, cabeca_avail, nrr;
   FILE *arq_base,*arq_pk, *arq_avail;
-  ap_tipo_registro_pk vetor_registros;
-  int limite[2];
+  ap_tipo_registro_pk vetor_registros, vetor_pks_descritores;
+  int limite[2], limite_descritores[DSC8][2];
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
   tipo_arqs_sk * arqs_sk = (tipo_arqs_sk *) malloc(sizeof(tipo_arqs_sk));
   tipo_vetores_sk *vetores_sk; 
@@ -104,6 +104,12 @@ int main() {
     printf("\n>>>Numero de registros: %d\n\n\n",limite[0]);
 
 
+  /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir do vetor de chaves primarias */
+  if(verificaDescritores()==ERRO)
+    criaDescritores(vetor_registros, n_registros, vetor_pks_descritores);
+  /* Caso os arquivos existam, carrega-os para a memoria */
+  else
+    carregaDescritores(vetor_pks_descritores, limite_descritores);
   
   /* Interface*/
   do {

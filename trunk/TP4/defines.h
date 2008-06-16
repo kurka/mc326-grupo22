@@ -11,7 +11,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define CONSULTA_SK_TIP '5'
 #define CONSULTA_SK_AUT '6'
 #define CONSULTA_SK_ANO '7'
-#define CONSULTA_SK_DSC '8'
+#define CONSULTA_DSC '8'
 #define REMOVER '9'
 #define SAIR '0'
 #define OK 0
@@ -33,6 +33,15 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MEM_INIT 10
 #define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
+#define DSC0 0
+#define DSC1 1
+#define DSC2 2
+#define DSC3 3
+#define DSC4 4
+#define DSC5 5
+#define DSC6 6
+#define DSC7 7
+#define DSC8 8
 
 
 /*nomes dos arquivos criados pelo programa*/
@@ -43,14 +52,20 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define ARQSK_TIP "sk_tipos.dat"
 #define ARQSK_AUT "sk_autores.dat"
 #define ARQSK_ANO "sk_anos.dat"
-#define ARQSK_DSC "sk_descritores.dat"
 #define ARQLI_TIT "li_titulos.dat"
 #define ARQLI_TIP "li_tipos.dat"
 #define ARQLI_AUT "li_autores.dat"
 #define ARQLI_ANO "li_anos.dat"
-#define ARQLI_DSC "li_descritores.dat"
 #define ARQHTML "tp4.html"
-
+#define ARQDSC0 "pks_dsc0.dat"
+#define ARQDSC1 "pks_dsc1.dat"
+#define ARQDSC2 "pks_dsc2.dat"
+#define ARQDSC3 "pks_dsc3.dat"
+#define ARQDSC4 "pks_dsc4.dat"
+#define ARQDSC5 "pks_dsc5.dat"
+#define ARQDSC6 "pks_dsc6.dat"
+#define ARQDSC7 "pks_dsc7.dat"
+#define ARQDSC8 "pks_dsc8.dat"
 
 
 typedef struct {
@@ -89,7 +104,6 @@ typedef struct
   tipo_dados_sk *tipo; 
   tipo_dados_sk *autor; 
   tipo_dados_sk *ano; 
-  tipo_dados_sk *descritor;
 	
 }tipo_vetores_sk;
 
@@ -101,7 +115,6 @@ typedef struct
   FILE * arq_sk_tip;
   FILE * arq_sk_aut;
   FILE * arq_sk_ano;
-  FILE * arq_sk_dsc;
 }tipo_arqs_sk;
 
 
@@ -114,5 +127,5 @@ typedef struct
   FILE * arq_tip_li;
   FILE * arq_aut_li;
   FILE * arq_ano_li;
-  FILE * arq_dsc_li;
 }tipo_arqs_li;
+
