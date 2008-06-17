@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "pk.h"
 #include "descritor.h"
+#include "libimg.h"
 
 
 /* main para testes */
@@ -12,9 +13,6 @@ int main(){
 
   a = verificaDescritores();
   printf("Saida do verificaDescritores(): %d\n", a);
-
-  teste=fopen("teste.dat","a");
-  fclose(teste);
 
   return(0);
 }
@@ -116,7 +114,7 @@ void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
   int i;
   FILE *arq_dsc_generico;
 
-  /* Cria os arquivos vazios (como um "touch") e n faz nada caso eles existam */
+  /* Cria os arquivos vazios (como um "touch") */
   arq_dsc_generico=fopen(ARQDSC0,"a"); fclose(arq_dsc_generico);
   arq_dsc_generico=fopen(ARQDSC1,"a"); fclose(arq_dsc_generico);
   arq_dsc_generico=fopen(ARQDSC2,"a"); fclose(arq_dsc_generico);
@@ -126,9 +124,6 @@ void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
   arq_dsc_generico=fopen(ARQDSC6,"a"); fclose(arq_dsc_generico);
   arq_dsc_generico=fopen(ARQDSC7,"a"); fclose(arq_dsc_generico);
   arq_dsc_generico=fopen(ARQDSC8,"a"); fclose(arq_dsc_generico);
-
-  base=fopen(ARQBASE,"r"); 
-  fseek(base,0,SEEK_SET);
 
   /* Chama a funcao de insercao de descritores para cada uma das PKs ja inseridas na base */
   for(i=0 ; i<n_registros ; i++){
@@ -190,38 +185,134 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
 
 
 /* Insere uma PK fornecida no arquivo correspondente ao seu descritor */
-void insereDescritor(int descritor , char *titulo , int NRR){
+void insereDescritor(char *titulo , int NRR){
 
-  FILE *base;
-  char arquivo_img;
+  int i, descritor;
+  FILE *base, *arq_descritor;
+  char arquivo_img[TAM_IMG+1];
 
   /* Procura PK_inserida no vetor de PKs */
   /* Encontra o NRR do registro */
-  /* A partir da base, lê o identificador da obra */
+
+  /* A partir da base, le o identificador da obra */
   base=fopen(ARQBASE,"r");
   fseek(base , ((NRR-1)*TAM_REGISTRO)+MAX_VAL , SEEK_SET);
 
   /* Obtem o nome do arquivo da imagem */
+  for(i=0 ; i<(TAM_IMG-TAM_FORM) ; i++)
+    arquivo_img[i]=fgetc(base);
+  i++; arquivo_img[i]='.';
+  for(i+=1 ; i<(TAM_IMG+1) ; i++)
+    arquivo_img[i]=fgetc(base);
+  fclose(base);
+
   /* Calcula o descritor daquela img */
   /* Transforma o descritor de hexa para binario e encontra o numero de 1's */
+  /*descritor=hexaToInt(CalculaDescritor(arquivo_img));*/
+
   /* Abre o pks_dscX.dat correspondente */
   /* Insere a PK no arquivo daquele descritor */
   /* Fecha o arquivo */
+  switch(descritor){
+    
+  case DSC0:
+    arq_descritor=fopen(ARQDSC0,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC1:
+    arq_descritor=fopen(ARQDSC1,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC2:
+    arq_descritor=fopen(ARQDSC2,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC3:
+    arq_descritor=fopen(ARQDSC3,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC4:
+    arq_descritor=fopen(ARQDSC4,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC5:
+    arq_descritor=fopen(ARQDSC5,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC6:
+    arq_descritor=fopen(ARQDSC6,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC7:
+    arq_descritor=fopen(ARQDSC7,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+  case DSC8:
+    arq_descritor=fopen(ARQDSC8,"a");
+    for(i=0 ; i<TAM_TIT ; i++)
+      fputc(titulo[i],arq_descritor);
+    fclose(arq_descritor);
+    
+  }/*fim do switch*/
 
   return;
 }
 
 
-/* Recebe o descritor em hexadecimal e retorna o numero de 1's de seu correspondente binario */
-int hexaToInt(char *descritor_hexa){
+/* Recebe o descritor e retorna o numero de 1's de seu correspondente binario */
+int ContaUns(char descritor){
 
   char mask=0x01;
-  int i,resposta=0;
+  int i,uns=0;
   
-  for(i=0 ; i<TAM_HEXA ; i++){
-    resposta+=((mask & descritor_hexa)>0);
+  for(i=0 ; i<8 ; i++){
+    uns+=((mask & descritor)>0);
     mask=mask<<1;
   }
   
-  return(resposta);
+  return(uns);
+}
+
+
+
+void comparaSimilaridade(){
+  
+  char PK_procurada[TAM_TIT], arquivo_img[TAM_IMG+1];
+  int descritor, NRR, i;
+  FILE *base;
+
+  printf("Digite a obra que deseja comparar com outras obras por similaridade (max 200 caracteres).\n ");
+  /* le PK_procurada */
+  /* procura nrr da obra lida */
+  
+  /* A partir da base, le o identificador da obra */
+  base=fopen(ARQBASE,"r");
+  fseek(base , ((NRR-1)*TAM_REGISTRO)+MAX_VAL , SEEK_SET);
+
+  /* Obtem o nome do arquivo da imagem */
+  for(i=0 ; i<(TAM_IMG-TAM_FORM) ; i++)
+    arquivo_img[i]=fgetc(base);
+  i++; arquivo_img[i]='.';
+  for(i+=1 ; i<(TAM_IMG+1) ; i++)
+    arquivo_img[i]=fgetc(base);
+  fclose(base);
+  
+  /* Calcula o descritor daquela img */
+  /* Transforma o descritor de hexa para binario e encontra o numero de 1's */
+  /*descritor=hexaToInt(CalculaDescritor(arquivo_img));*/
+
+  /* Funcoes que procuram dentre as obras com descritor proximo do da obra procurada e gera um HTML de consulta */
+  /*procuraSimilares(descritor-1);
+  procuraSimilares(descritor);
+  procuraSimilares(descritor+1);*/
+
+  return;
 }
