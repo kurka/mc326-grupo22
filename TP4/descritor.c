@@ -139,52 +139,91 @@ void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
 }
 
 
-/* Carrega os descritores dos arquivos para um vetor de PKs */
-void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_descritores){
+/* Carrega as PKs dos arquivos de descritores para os vetores */
+void carregaDescritores(tipo_pks_descritores * vetores_descritores_pks, int *limite_descritores){
 
-  FILE *arq_dsc_generico;
-  int i,j,k, n_pks;
-  char *pk_lida;
+  ap_tipo_registro_pk vetor_pks;
+  FILE *arq_descritor;
+  int i,j;
+  char pk_lida[TAM_TIT];
 
-  /* Para cada descritor */
+  /* Para cada arquivo */
   for(i=DSC0 ; i<=DSC8 ; i++){
+    
+    /* Abre cada um dos arquivos */
+    n_pks=abreArqDsc(i, arq_descritor , vetores_descritores_pks , vetor_pks);
+    
+    fseek(arq_descritor,0,SEEK_SET);
 
-    switch(i){
-      
-    case DSC0:
-      arq_dsc_generico=fopen(ARQDSC0,"r");
-      fseek(arq_dsc_generico , 0 , SEEK_END);
-      n_pks=ftell(arq_dsc_generico);
-      for(j=0 ; j<n_pks ; j++) {
-	fseek(arq_dsc_generico , j*450 , SEEK_SET);
-	for(k=0 ; k<TAM_TIT ; k++)
-	  pk_lida[k]=fgetc(arq_dsc_generico);
-	/* insere pk_lida em vetor_pks_descritores[DSC0==0] */
-	
-	/*Orientacoes para uso da funcao:
-	  1)vc precisa ja ter inicializado vetor_pks_descritores
-	  2)pk_lida eh do tipo_registro_pk, ou seja, tem um campo 
-	  pra chave primaria e outro pra NRR...
-	  3)limite tem no campo limite[0] o numero de registros 
-	  presentes no vetor_pks_descritores e no limite[1] o 
-	  tamanho de memoria alocada para o vetor (se for estourar o tamanho, 
-	  a funcao realoca o vetor)
-	  
-	  essa funcao tb ordena as chaves primarias inseridas...
-	  vc tem q julgar se isso vai ser interesante ou nao pra sua aplicacao..
-	  
-	*/
-	/*insere_pk(vetor_pks_descritores, pk_lida, limite[2]);*/
-	
-      }
-      fclose(arq_dsc_generico);
-      
-      
-    }/* fim do switch */
+    /* Para cada PK no arquivo */
+    for(j=0 ; j<n_pks ; j++)
+      carregaPk(arq_descritor , vetores_descritores_pks , limite_descritores);
+    
+    fclose(arq_descritor);
+
   }/* fim do for */
+  
+  return;
+}
 
+
+void carregaPk(FILE * arq_descritor , tipo_pks_descritores * vetores_descritores_pks , int *limite_descritores){
+
+  char novaPK[MAX_TIT];
+  int i;
+
+  /* Observacao: a funcao deixa o cursor na posicao para a proxima PK (se houver) */
+  for(i=0 ; i<MAX_TIT ; i++)
+    novaPK[i]=fgetc(arq_descritor);
+
+  /* Inserir novaPK no vetor correspondente */
 
   return;
+}
+
+
+
+
+/* Abre o arquivo correto e retorna o numero de PKs nele contido. Alem disso, instancia o apontador 
+   para o vetor de PKs na estrutura dos descritores_PKs */
+int abreArqDsc(int descritor , FILE * arq_descritor){
+
+  switch(descritor){
+
+  case DSC0:
+    arq_descritor=fopen(ARQDSC0,"r");
+    break;
+  case DSC1:
+    arq_descritor=fopen(ARQDSC1,"r");
+    break;
+  case DSC2:
+    arq_descritor=fopen(ARQDSC2,"r");
+    break;
+  case DSC3:
+    arq_descritor=fopen(ARQDSC3,"r");
+    break;
+  case DSC4:
+    arq_descritor=fopen(ARQDSC4,"r");
+    break;
+  case DSC5:
+    arq_descritor=fopen(ARQDSC5,"r");
+    break;
+  case DSC6:
+    arq_descritor=fopen(ARQDSC6,"r");
+    break;
+  case DSC7:
+    arq_descritor=fopen(ARQDSC7,"r");
+    break;
+  case DSC8:
+    arq_descritor=fopen(ARQDSC8,"r");
+    break;
+    
+  }/*fim do switch*/
+  
+  fseek(arq_descritor,0,SEEK_END);
+  
+  return(ftell(arq_descritor)/TAM_TIT);
+
 }
 
 
