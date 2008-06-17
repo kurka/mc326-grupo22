@@ -192,9 +192,15 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
 /* Insere uma PK fornecida no arquivo correspondente ao seu descritor */
 void insereDescritor(int descritor , char *titulo , int NRR){
 
+  FILE *base;
+  char arquivo_img;
+
   /* Procura PK_inserida no vetor de PKs */
   /* Encontra o NRR do registro */
   /* A partir da base, lê o identificador da obra */
+  base=fopen(ARQBASE,"r");
+  fseek(base , ((NRR-1)*TAM_REGISTRO)+MAX_VAL , SEEK_SET);
+
   /* Obtem o nome do arquivo da imagem */
   /* Calcula o descritor daquela img */
   /* Transforma o descritor de hexa para binario e encontra o numero de 1's */
@@ -209,72 +215,13 @@ void insereDescritor(int descritor , char *titulo , int NRR){
 /* Recebe o descritor em hexadecimal e retorna o numero de 1's de seu correspondente binario */
 int hexaToInt(char *descritor_hexa){
 
-  int i, j=0, bin[TAM_BIN], resposta=0;
+  char mask=0x01;
+  int i,resposta=0;
   
-  /* Ao fim do for, o vetor bin[] contera os catacteres (0 ou 1) correspondentes a representacao binaria do descritor */
   for(i=0 ; i<TAM_HEXA ; i++){
-    switch(descritor_hexa[i]){
-    case '0':
-      bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; /* 0000 */
-      break;
-    case '1':
-      bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; /* 0001 */
-      break;
-    case '2':
-      bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; /* 0010 */
-      break;
-    case '3':
-      bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; /* 0011 */
-      break;
-    case '4':
-      bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; /* 0100 */
-      break;
-    case '5':
-      bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; /* 0101 */
-      break;
-    case '6':
-      bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; /* 0110 */
-      break;
-    case '7':
-      bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; /* 0111 */
-      break;
-    case '8':
-      bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; /* 1000 */
-      break;
-    case '9':
-      bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; /* 1001 */
-      break;
-    case 'a':
-    case 'A':
-      bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; /* 1010 */
-      break;
-    case 'b':
-    case 'B':
-      bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; /* 1011 */
-      break;
-    case 'c':
-    case 'C':
-      bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; /* 1100 */
-      break;
-    case 'd':
-    case 'D':
-      bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; /* 1101 */
-      break;
-    case 'e':
-    case 'E':
-      bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; /* 1110 */
-      break;
-    case 'f':
-    case 'F':
-      bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; /* 1111 */	
-      break;
-    }/* fim do switch */    
-  }/* fim do for */
-  
-  for(i=0 ; i<TAM_BIN ; i++){
-    if(bin[i]==1)
-      resposta++;
+    resposta+=((mask & descritor_hexa)>0);
+    mask=mask<<1;
   }
-
+  
   return(resposta);
 }
