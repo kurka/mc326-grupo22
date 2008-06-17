@@ -24,12 +24,14 @@ int main() {
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
   tipo_arqs_sk * arqs_sk = (tipo_arqs_sk *) malloc(sizeof(tipo_arqs_sk));
   tipo_vetores_sk *vetores_sk; 
-  tipo_pks_descritores * vetores_descritores_pks=(tipo_pks_descritores *)malloc(sizeof(tipo_pks_descritores));
+  estrutura_descritores_pks vetores_descritores_pks;
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
   limite[0] = 0;
   limite[1] = MEM_INIT;
+
+  inicia_limite_descritores(limite_descritores);
 
   /* Aloca memoria a ser usada durante a execucao (vetor de PKs + NRR) */
   vetor_registros =  realoca_memoria(vetor_registros, limite);
@@ -101,10 +103,10 @@ int main() {
 
   /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir do vetor de chaves primarias */
   if(verificaDescritores()==ERRO)
-    criaDescritores(vetor_registros, n_registros, vetores_descritores_pks);
+    criaDescritores(vetor_registros, n_registros, vetores_descritores_pks, limite_descritores);
   /* Caso os arquivos existam, carrega-os para a memoria */
   else
-    carregaDescritores(vetor_pks_descritores, limite_descritores);
+    carregaDescritores(vetores_descritores_pks, limite_descritores);
   
   /* Interface*/
   do {
@@ -117,7 +119,7 @@ int main() {
     printf("5-) Procurar por um tipo de obra no catalogo.\n");
     printf("6-) Procurar por um autor no catalogo.\n");
     printf("7-) Procurar por um ano de obra no catalogo.\n");
-    printf("8-) Procurar por descritor.\n");
+    printf("8-) Procurar por obras similares.\n");
     printf("9-) Remover uma obra do catalogo.\n");
     printf("0-) Sair.\n");
 
@@ -128,7 +130,7 @@ int main() {
     if( (c!='\n') || ((opcao!=INSERIR)&&(opcao!=LISTAR)&&(opcao!=CONSULTA_PK)&&
                       (opcao!=CONSULTA_SK_TIT)&&(opcao!=CONSULTA_SK_TIP)&&
                       (opcao!=CONSULTA_SK_AUT)&&(opcao!=CONSULTA_SK_ANO)&&
-                      (opcao!=CONSULTA_SK_DSC)&&(opcao!=REMOVER)&&(opcao!=SAIR)) ) {
+                      (opcao!=CONSULTA_DSC)&&(opcao!=REMOVER)&&(opcao!=SAIR)) ) {
       while(c!='\n') {
         c=getchar();
       }

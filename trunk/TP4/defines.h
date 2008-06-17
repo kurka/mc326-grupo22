@@ -146,4 +146,4 @@ typedef struct {
   ap_tipo_registro_pk vetor_pks_dsc6;
   ap_tipo_registro_pk vetor_pks_dsc7;
   ap_tipo_registro_pk vetor_pks_dsc8;
-} tipo_pks_descritores;
+} estrutura_descritores_pks;
