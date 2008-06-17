@@ -186,6 +186,10 @@ int main() {
       espera();      
       break;
 
+    case CONSULTA_DSC:
+      consultaSingulares();
+      break;
+
       /* Remove um registro do catalogo */
     case REMOVER:
       remove_registro(n_registros, vetor_registros, arq_base, arq_avail, &cabeca_avail);
