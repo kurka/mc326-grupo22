@@ -8,8 +8,13 @@
 int main(){
 
   int a;
+  FILE *teste;
+
   a = verificaDescritores();
   printf("Saida do verificaDescritores(): %d\n", a);
+
+  teste=fopen("teste.dat","a");
+  fclose(teste);
 
   return(0);
 }
@@ -32,6 +37,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC1:
       arq_dsc_generico=fopen(ARQDSC1,"r");
@@ -39,6 +45,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC2:
       arq_dsc_generico=fopen(ARQDSC2,"r");
@@ -46,6 +53,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC3:
       arq_dsc_generico=fopen(ARQDSC3,"r");
@@ -53,6 +61,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC4:
       arq_dsc_generico=fopen(ARQDSC4,"r");
@@ -60,6 +69,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC5:
       arq_dsc_generico=fopen(ARQDSC5,"r");
@@ -67,13 +77,15 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
-
+      break;
+      
     case DSC6:
       arq_dsc_generico=fopen(ARQDSC6,"r");
       if(arq_dsc_generico==NULL)
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC7:
       arq_dsc_generico=fopen(ARQDSC7,"r");
@@ -81,6 +93,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
 
     case DSC8:
       arq_dsc_generico=fopen(ARQDSC8,"r");
@@ -88,6 +101,7 @@ int verificaDescritores(){
 	return(ERRO);
       else
 	fclose(arq_dsc_generico);
+      break;
     } /* fim do switch */
   } /* fim do for */
 
@@ -96,14 +110,29 @@ int verificaDescritores(){
 }
 
 
-/* Chama a funcao de insercao de descritores para cada uma das PKs ja inseridas na base */
+/* Cria os arquivos dos descritores a partir dos registros ja existentes */
 void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
 
   int i;
+  FILE *arq_dsc_generico;
 
-  /* Para cada um dos registros,  */
+  /* Cria os arquivos vazios (como um "touch") e n faz nada caso eles existam */
+  arq_dsc_generico=fopen(ARQDSC0,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC1,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC2,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC3,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC4,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC5,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC6,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC7,"a"); fclose(arq_dsc_generico);
+  arq_dsc_generico=fopen(ARQDSC8,"a"); fclose(arq_dsc_generico);
+
+  base=fopen(ARQBASE,"r"); 
+  fseek(base,0,SEEK_SET);
+
+  /* Chama a funcao de insercao de descritores para cada uma das PKs ja inseridas na base */
   for(i=0 ; i<n_registros ; i++){
-
+    
 
   }
 
@@ -122,7 +151,7 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
   for(i=DSC0 ; i<=DSC8 ; i++){
 
     switch(i){
-
+      
     case DSC0:
       arq_dsc_generico=fopen(ARQDSC0,"r");
       fseek(arq_dsc_generico , 0 , SEEK_END);
@@ -141,17 +170,17 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
 	  presentes no vetor_pks_descritores e no limite[1] o 
 	  tamanho de memoria alocada para o vetor (se for estourar o tamanho, 
 	  a funcao realoca o vetor)
-
+	  
 	  essa funcao tb ordena as chaves primarias inseridas...
 	  vc tem q julgar se isso vai ser interesante ou nao pra sua aplicacao..
-
+	  
 	*/
-	insere_pk(vetor_pks_descritores, pk_lida, limite[2]);
-  
+	/*insere_pk(vetor_pks_descritores, pk_lida, limite[2]);*/
+	
       }
       fclose(arq_dsc_generico);
-
-
+      
+      
     }/* fim do switch */
   }/* fim do for */
 
@@ -159,7 +188,9 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
   return;
 }
 
-void insereDescritor(       ){
+
+/* Insere uma PK fornecida no arquivo correspondente ao seu descritor */
+void insereDescritor(int descritor , char *titulo , int NRR){
 
   /* Procura PK_inserida no vetor de PKs */
   /* Encontra o NRR do registro */
@@ -174,3 +205,76 @@ void insereDescritor(       ){
   return;
 }
 
+
+/* Recebe o descritor em hexadecimal e retorna o numero de 1's de seu correspondente binario */
+int hexaToInt(char *descritor_hexa){
+
+  int i, j=0, bin[TAM_BIN], resposta=0;
+  
+  /* Ao fim do for, o vetor bin[] contera os catacteres (0 ou 1) correspondentes a representacao binaria do descritor */
+  for(i=0 ; i<TAM_HEXA ; i++){
+    switch(descritor_hexa[i]){
+    case '0':
+      bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; /* 0000 */
+      break;
+    case '1':
+      bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; /* 0001 */
+      break;
+    case '2':
+      bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; /* 0010 */
+      break;
+    case '3':
+      bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; /* 0011 */
+      break;
+    case '4':
+      bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; /* 0100 */
+      break;
+    case '5':
+      bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; /* 0101 */
+      break;
+    case '6':
+      bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; /* 0110 */
+      break;
+    case '7':
+      bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; /* 0111 */
+      break;
+    case '8':
+      bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=0; j++; /* 1000 */
+      break;
+    case '9':
+      bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; bin[j]=1; j++; /* 1001 */
+      break;
+    case 'a':
+    case 'A':
+      bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=0; j++; /* 1010 */
+      break;
+    case 'b':
+    case 'B':
+      bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; bin[j]=1; j++; /* 1011 */
+      break;
+    case 'c':
+    case 'C':
+      bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=0; j++; /* 1100 */
+      break;
+    case 'd':
+    case 'D':
+      bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; bin[j]=1; j++; /* 1101 */
+      break;
+    case 'e':
+    case 'E':
+      bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=0; j++; /* 1110 */
+      break;
+    case 'f':
+    case 'F':
+      bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; bin[j]=1; j++; /* 1111 */	
+      break;
+    }/* fim do switch */    
+  }/* fim do for */
+  
+  for(i=0 ; i<TAM_BIN ; i++){
+    if(bin[i]==1)
+      resposta++;
+  }
+
+  return(resposta);
+}
