@@ -313,9 +313,9 @@ int ContaUns(char descritor){
 
 
 
-void comparaSimilaridade(){
+void consultaSingulares(){
   
-  char PK_procurada[TAM_TIT], arquivo_img[TAM_IMG+1];
+  char PK_procurada[TAM_TIT], arquivo_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
   int descritor, NRR, i;
   FILE *base;
 
@@ -330,19 +330,25 @@ void comparaSimilaridade(){
   /* Obtem o nome do arquivo da imagem */
   for(i=0 ; i<(TAM_IMG-TAM_FORM) ; i++)
     arquivo_img[i]=fgetc(base);
-  i++; arquivo_img[i]='.';
-  for(i+=1 ; i<(TAM_IMG+1) ; i++)
+  arquivo_img[i]='.'; i++;
+  for( ; i<(TAM_IMG+1) ; i++)
     arquivo_img[i]=fgetc(base);
   fclose(base);
   
+  sprintf(path,"%s%s",DIRIMG,arquivo_img);
+
   /* Calcula o descritor daquela img */
-  /* Transforma o descritor de hexa para binario e encontra o numero de 1's */
-  /*descritor=hexaToInt(CalculaDescritor(arquivo_img));*/
-
-  /* Funcoes que procuram dentre as obras com descritor proximo do da obra procurada e gera um HTML de consulta */
-  /*procuraSimilares(descritor-1);
-  procuraSimilares(descritor);
-  procuraSimilares(descritor+1);*/
-
+  descritor=ContaUns(CalculaDescritor(path));
+  
+  /* Funcoes que, para cada descritor proximo do procurado, gera um vetor com as PKs das obras mais similares */
+  verificaSimilares(descritor-1);
+  verificaSimilares(descritor);
+  verificaSimilares(descritor+1);
+ 
+  /* Gera um HTML com as obras similares */
+  listaSimilares();
+  
   return;
 }
+
+
