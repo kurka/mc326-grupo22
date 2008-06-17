@@ -113,26 +113,25 @@ int verificaDescritores(){
 
 
 /* Cria os arquivos dos descritores a partir dos registros ja existentes */
-void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
+void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros , estrutura_descritores_pks vetores_descritores_pks, int *limite_descritores){
 
   int i;
-  FILE *arq_dsc_generico;
+  FILE *arq_descritor;
 
   /* Cria os arquivos vazios (como um "touch") */
-  arq_dsc_generico=fopen(ARQDSC0,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC1,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC2,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC3,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC4,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC5,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC6,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC7,"a"); fclose(arq_dsc_generico);
-  arq_dsc_generico=fopen(ARQDSC8,"a"); fclose(arq_dsc_generico);
+  arq_descritor=fopen(ARQDSC0,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC1,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC2,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC3,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC4,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC5,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC6,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC7,"a"); fclose(arq_descritor);
+  arq_descritor=fopen(ARQDSC8,"a"); fclose(arq_descritor);
 
   /* Chama a funcao de insercao de descritores para cada uma das PKs ja inseridas na base */
   for(i=0 ; i<n_registros ; i++){
-    
-
+    insereDescritor(vetor_registros[i].titulo , vetor_registros[i].nrr , vetores_descritores_pks, limite_descritores);
   }
 
   return;
@@ -140,7 +139,7 @@ void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros){
 
 
 /* Carrega as PKs dos arquivos de descritores para os vetores */
-void carregaDescritores(tipo_pks_descritores * vetores_descritores_pks, int *limite_descritores){
+void carregaDescritores(estrutura_descritores_pks vetores_descritores_pks, int *limite_descritores){
 
   ap_tipo_registro_pk vetor_pks;
   FILE *arq_descritor;
@@ -167,7 +166,7 @@ void carregaDescritores(tipo_pks_descritores * vetores_descritores_pks, int *lim
 }
 
 
-void carregaPk(FILE * arq_descritor , tipo_pks_descritores * vetores_descritores_pks , int *limite_descritores){
+void carregaPk(FILE * arq_descritor , estrutura_descritores_pks vetores_descritores_pks , int *limite_descritores){
 
   char novaPK[MAX_TIT];
   int i;
@@ -228,14 +227,12 @@ int abreArqDsc(int descritor , FILE * arq_descritor){
 
 
 /* Insere a PK fornecida no arquivo e no vetor correspondentes ao seu descritor */
-void insereDescritor(char *titulo , int NRR , tipo_pks_descritores *vetores_descritores_pks){
+void insereDescritor(char *titulo , int NRR , estrutura_descritores_pks vetores_descritores_pks, int *limite_descritores){
 
-  int i, descritor;
+  int i, descritor, limite[2];
   FILE *base, *arq_descritor;
   char arquivo_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
-
-  /* Procura PK_inserida no vetor de PKs */
-  /* Encontra o NRR do registro */
+  ap_tipo_registro_pk vetor_pks;
 
   /* A partir do nrr, le o identificador da obra na base */
   base=fopen(ARQBASE,"r");
@@ -258,40 +255,67 @@ void insereDescritor(char *titulo , int NRR , tipo_pks_descritores *vetores_desc
     
   case DSC0:
     arq_descritor=fopen(ARQDSC0,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc0;
+    limite[0]=limite_descritores[DSC0][0];
+    limite[1]=limite_descritores[DSC0][1];
     break;
   case DSC1:
     arq_descritor=fopen(ARQDSC1,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc1;
+    limite[0]=limite_descritores[DSC1][0];
+    limite[1]=limite_descritores[DSC1][1];
     break;
   case DSC2:
     arq_descritor=fopen(ARQDSC2,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc2;
+    limite[0]=limite_descritores[DSC2][0];
+    limite[1]=limite_descritores[DSC2][1];
     break;
   case DSC3:
     arq_descritor=fopen(ARQDSC3,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc3;
+    limite[0]=limite_descritores[DSC3][0];
+    limite[1]=limite_descritores[DSC3][1];
     break;
   case DSC4:
     arq_descritor=fopen(ARQDSC4,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc4;
+    limite[0]=limite_descritores[DSC4][0];
+    limite[1]=limite_descritores[DSC4][1];
     break;
   case DSC5:
     arq_descritor=fopen(ARQDSC5,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc5;
+    limite[0]=limite_descritores[DSC5][0];
+    limite[1]=limite_descritores[DSC5][1];
     break;
   case DSC6:
     arq_descritor=fopen(ARQDSC6,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc6;
+    limite[0]=limite_descritores[DSC6][0];
+    limite[1]=limite_descritores[DSC6][1];
     break;
   case DSC7:
     arq_descritor=fopen(ARQDSC7,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc7;
+    limite[0]=limite_descritores[DSC7][0];
+    limite[1]=limite_descritores[DSC7][1];
     break;
   case DSC8:
     arq_descritor=fopen(ARQDSC8,"a");
+    vetor_pks = vetores_descritores_pks.vetor_pks_dsc8;
+    limite[0]=limite_descritores[DSC8][0];
+    limite[1]=limite_descritores[DSC8][1];
     break;
   }/*fim do switch*/
 
-  /* Insere o titulo no arquivo */
+  /* Insere o titulo no arquivo e fecha-o */
   for(i=0 ; i<TAM_TIT ; i++)
     fputc(titulo[i],arq_descritor);
   fclose(arq_descritor);
 
-  /* Insere o titulo no vetor */
-
+  /* Insere o titulo no vetor das PKs daquele descritor */
+  vetor_pks = novopk(titulo, vetor_pks, limite, NRR);
 
   return;
 }
@@ -313,7 +337,7 @@ int ContaUns(char descritor){
 
 
 
-void consultaSingulares(){
+void consultaSingulares(estrutura_descritores_pks vetores_descritores_pks){
   
   char PK_procurada[TAM_TIT], arquivo_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
   int descritor, NRR, i;
@@ -351,4 +375,14 @@ void consultaSingulares(){
   return;
 }
 
+void inicia_limite_descritores(int *limite_descritores){
 
+  int i;
+
+  for(i=0 ; i<DSC8 ; i++){
+    limite_descritores[i][0]=0;
+    limite_descritores[i][1]=MEM_INIT;
+  }
+
+  return;
+}
