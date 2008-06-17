@@ -42,6 +42,8 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define DSC6 6
 #define DSC7 7
 #define DSC8 8
+#define TAM_HEXA 2
+#define TAM_BIN 8
 
 
 /*nomes dos arquivos criados pelo programa*/
