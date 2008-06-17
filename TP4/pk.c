@@ -40,36 +40,6 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
 }
 
 
-/*!
- * \brief Le todos os dados do arquivo PK.dat e os adiciona em um vetor
- */
-ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int * limite, int n_registros){
-
-  int i, j;
-  tipo_registro_pk novo;
-
-  fseek(arqPK,0,SEEK_SET);
-  
-  for(i=0;i<n_registros;i++){
-    for(j=0; j<TAM_TIT; j++){
-      fscanf(arqPK, "%c", &(novo.titulo[j]));
-    }
-/*     /\*se a pk foi apagada, nao a coloca no vetor*\/ */
-/*     if(novo.titulo[0] == " "){ */
-/*       i--; */
-/*       continue; */
-/*     } */
-    
-    fscanf(arqPK, "%d", &(novo.nrr));
-    
-    limite[0]++;
-    
-    /* Insere cada elemento lido no arquivo pk.dat */
-    vetor = insere_pk(vetor, novo, limite); 
-  }
-  return vetor;
-}
-
 
 /*!
  * \brief Caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
@@ -93,7 +63,7 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * l
     novo.nrr = limite[0];
     
     
-    vetor = insere_pk(vetor, novo, limite);
+    insere_pk_arquivo(novo);
   } 
   return vetor;
 }
@@ -135,7 +105,7 @@ ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *
 /*! 
  * \brief Insere o ultimo titulo lido no vetor de chaves primarias
  */
-ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite, int nrr){
+void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr){
 
   int i;
   tipo_registro_pk novo;
@@ -151,37 +121,39 @@ ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * lim
   else
     novo.nrr = nrr;
   
-  vetor = insere_pk(vetor, novo, limite); 
+  insere_pk_arquivo(novo); 
   
-  return vetor;
 }
+
+
+/* /\*!  */
+/*  * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh  */
+/*  * ordenada e mantem a ordem alfabetica do vetor  */
+/*  *\/ */
+/* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){ */
+ 
+/*   /\* Verifica se ainda cabem dados no vetor (limite[0] contem  */
+/*      o numero de chaves primarias, e limite[1] o tamanho do vetor) *\/ */
+/*   if(limite[0] > limite[1]) */
+/*     vetor_pk = realoca_memoria(vetor_pk, limite); */
+  
+/*   vetor_pk[limite[0]-1] = novo;   */
+  
+/*   /\* Ordena o vetor em ordem alfabetica *\/ */
+/*   qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort);  */
+
+/*   return vetor_pk; */
+  
+/* } */
 
 
 /*! 
  * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh 
  * ordenada e mantem a ordem alfabetica do vetor 
  */
-ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){
+ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao){
  
-
-  /*
-  //calcula o hash
-  //abre o arquivo 
-
-  sera:? 
-  //pega as chaves do arquivo
-  //ordena - se ordenar facilita a busca. se nao ordenar, dificulta, mas economiza agora
-
-  //guarda a nova chave no arquivo
-
-  */
-
-  /* Verifica se ainda cabem dados no vetor (limite[0] contem 
-     o numero de chaves primarias, e limite[1] o tamanho do vetor) */
-  if(limite[0] > limite[1])
-    vetor_pk = realoca_memoria(vetor_pk, limite);
-  
-  vetor_pk[limite[0]-1] = novo;  
+  vetor_pk[posicao] = novo;  
   
   /* Ordena o vetor em ordem alfabetica */
   qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort); 
@@ -189,6 +161,58 @@ ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo
   return vetor_pk;
   
 }
+
+
+/*! 
+ * \brief Insere um novo registro no arquivo de PKs 
+ */
+void insere_pk_arquivo(tipo_registro_pk novo){
+ 
+  FILE* arq_teste;
+  int n_pk, i;
+  /*
+  //calcula o hash
+  //abre o arquivo 
+  */
+
+  arq_teste = fopen("teste.txt", "r+");
+   
+  /* Se o arquivo nao existe */
+  if(!arq_teste){
+    printf("arquivo nao existe\n");
+    arq_teste = fopen("teste.txt", "w+");
+
+    fseek(arq_teste,0,SEEK_SET);
+    fprintf(arq_teste, "%08d", 1);
+
+    fseek(arq_teste, 8, SEEK_SET);
+
+    for(i=0; i<TAM_TIT; i++)
+      fprintf(arq_teste, "%c", novo.titulo[i]);
+    
+    fprintf(arq_teste, "%08d", novo.nrr);      
+  }      
+  /*se o arquivo existe*/  
+  else
+    if(arq_teste){
+      printf("arquivo existe\n");
+      fseek(arq_teste,0,SEEK_SET);
+      fscanf(arq_teste, "%8d", &n_pk);
+      
+      fseek(arq_teste,0,SEEK_SET);
+      fprintf(arq_teste, "%08d", n_pk+1);
+      
+      fseek(arq_teste, TAM_PK*n_pk, SEEK_SET);
+      for(i=0; i<TAM_TIT; i++)
+	fprintf(arq_teste, "%c", novo.titulo[i]);
+      
+      fprintf(arq_teste, "%08d", novo.nrr);      
+      
+    }
+  
+  fclose(arq_teste);  
+}
+
 
 /*! 
  * \brief Remove a chave primaria que acabou de ser removida da base
@@ -212,23 +236,6 @@ ap_tipo_registro_pk remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int ca
   return vetor_pk;
 }
   
-/*! 
- * \brief Salva todos os registros do vetor de PKs no arquivo PK.dat
- */
-void salvarArquivoPK(tipo_registro_pk *vetor, FILE *arq_pk, int limite_reg)
-{
-  int i,j;
-  
-  fseek(arq_pk,0,SEEK_SET);
-  
-  for(i=0; i<limite_reg; i++){
-    for(j=0; j<TAM_TIT; j++)
-      fprintf(arq_pk, "%c", vetor[i].titulo[j]);
-    
-    fprintf(arq_pk, "%08d", vetor[i].nrr);     
-  }
-  
-}
 
 /*! 
  * \brief Funcao de listagem de registros. A partir do arquivo de chaves primarias,

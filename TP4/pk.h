@@ -4,8 +4,6 @@
   ele eh dobrado de tamanho (vetor dinamico dobravel) */
 ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
 
-/* Le todos os dados do arquivo pk.dat e os adiciona em um vetor, mantendo a ordem de registros, que eh alfabetica */
-ap_tipo_registro_pk lerArquivoPK(FILE *arq_pk, ap_tipo_registro_pk vetor, int * limite, int n_registros);
 
 /* Caso a lista em pk.dat nao estivesse criada, le os dados da base.dat 
   e cria os indices no arquivo */
@@ -15,11 +13,20 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, ap_tipo_registro_pk vetor, int *
    elementos de avail_list */
 ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail);
 
-/* Pega o ultimo titulo lido e registra ele como novo, para ser inserido no vetor de chaves primarias */
-ap_tipo_registro_pk novopk(char *str_final, ap_tipo_registro_pk vetor, int * limite, int nrr);
+/* Le todos os dados do arquivo pk.dat e os adiciona em um vetor, mantendo a ordem de registros, que eh alfabetica */
+ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, int * limite);
 
+/* Pega o ultimo titulo lido e registra ele como novo, para ser inserido no vetor de chaves primarias */
+void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr);
+  
 /* Insere um novo registro no vetor dinamico de PKs. Essa insercao eh ordenada e mantem a ordem alfabetica do vetor */
-ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite);
+ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao);
+
+/* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite); */
+
+
+/* Insere um novo registro no arquivo de PKs */
+void insere_pk_arquivo(tipo_registro_pk novo);
 
 /* Remove a chave primaria que acabou de ser removida da base22.dat */
 ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail);
