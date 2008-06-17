@@ -157,14 +157,15 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 /*! 
  * \brief Cria vetor sk e lista invertidas para diversos parametros
  */	
-tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE * arq_gen_li){
+void cria_vetor_generico(char *registro, char *pk, int *n_li_generica){
 
   int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
-  int n_sk = generico->n_sk;
-  int n_li = *n_li_generica;
-  int tam_vetor_sk = generico->tam_vetor; 
+  int n_li;
+
+
+  
   
   /* Rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
      já existe ou se deve ser inserida */
@@ -184,46 +185,60 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	/* Temos um nome simples (possivel SK) em temp_sk */
 	temp_sk[k]='\0';
 	
+
+	/*
+	//calcula hash
+	//abre arquivo sk.dat E li.dat
+	//carrega vetor generico
+	//verifica se ja existe
+	//le n_sk	
+	*/
+
 	/* novaSK (1 = true, 0 = false) */
 	novaSK = 1;
-	for(l=0; l<n_sk; l++){
+	for(l=0; l<generico->n_sk; l++){
 	  if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0)
 	    novaSK = 0;
 	}
 
 	/* Caso a nova SK for valida, entao eh inserida */
 	if(novaSK == 1){ 
-	  
-	  /* Verifica se precisa realocar o tamanho do vetor para inserir a nova SK */
-	  if(n_sk == tam_vetor_sk)
-	    generico->vetor_SK = realoca_memoria_sk(generico->vetor_SK, &tam_vetor_sk); 
-	  
-	  generico->vetor_SK[n_sk].chave = (char *)malloc(sizeof(char)*(k+1));
-	  
-	  strcpy(generico->vetor_SK[n_sk].chave, temp_sk);
-	  n_sk++;
+	  /*
+	  //fseek no lugar do vetor	  
+	  //fprintf sk no final do arquivo
+	  //frpintf n_sk++ no comeco do arquivo  
+
+
+
+	  /* Criacao da lista invertida */
+ 	  generico->vetor_SK[n_sk-1].endereco_li = n_li;
 	  
 
-	  /* Criacao da lista invertida */ 
-	  generico->vetor_SK[n_sk-1].endereco_li = n_li;
+	  //le tamanho n_li em li.dat 
+	  */
+	  
+
+
 	  prox = -1;
 	  
 	  fseek(arq_gen_li, (n_li)*(TAM_TIT+8),SEEK_SET);	  
 	  fprintf(arq_gen_li, "%s", pk); 
 	  fprintf(arq_gen_li, "%08d", prox);     	  
 	  
-	  n_li++;
+	  /*
+	  //n_li++; no arquivo
+	  */
 	  
 	}
 	/* Caso a SK já existe, entao adiciona a chave primaria correspondente na lista invertida */
 	else{
-	  for(l=0; l<n_sk; l++){  
+	  for(l=0; l<generico->n_sk; l++){  
 	    
 	    if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0){
 	      
 	      /* Encontramos a SK no vetor de SKs */
 	      endereco_li = generico->vetor_SK[l].endereco_li;
-
+	      
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_gen_li, "%08d", &prox);
 
@@ -241,7 +256,9 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
 	      fprintf(arq_gen_li, "%s", pk); 
 	      fprintf(arq_gen_li, "%08d", prox);     	  
 	      
-	      n_li++;
+	      /*
+	      //n_li++; no arquivo
+	       */
 	      
 	      break;
 	      
@@ -259,69 +276,33 @@ tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *gene
     }
   }
 
-  /* Atualizacao dos parametros */
-  generico->n_sk = n_sk;
-  *n_li_generica = n_li;
-  generico->tam_vetor = tam_vetor_sk;
-  
-/*   if(DEBUG){ */
-/*     printf(" NUMERO %d\n", n_sk); */
-/*     for(l=0; l< n_sk; l++) */
-/*       { */
-/* 	printf("%15s", generico->vetor_SK[l].chave); */
-/* 	printf("   %d\n", generico->vetor_SK[l].endereco_li); */
-/*       } */
-/*   } */
-  
-  return generico;
+
 }
 
 /*!
  * \brief Aloca memoria inicial das estruturas de chaves secundarias
  */
-tipo_vetores_sk *aloca_memoria_vetor(tipo_vetores_sk *vetores_sk){
+tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, FILE* arq_sk){
 
-  vetores_sk = (tipo_vetores_sk *)malloc(sizeof(tipo_vetores_sk));
+  int n_sk;
 
   /* Alocacao de memoria para cada tipo de chave secundaria */
   vetores_sk->titulo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
-  vetores_sk->tipo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
-  vetores_sk->autor = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
-  vetores_sk->ano = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
+
   
   /* Instanciacao dos atributos para cada tipo de SK */
-  
-  /* Numero de sks inicial*/
-  vetores_sk->titulo->n_sk = 0;
-  vetores_sk->tipo->n_sk = 0;
-  vetores_sk->autor->n_sk = 0;
-  vetores_sk->ano->n_sk = 0;
-  
 
-  /* Tamanho do vetor inicial*/
-  vetores_sk->titulo->tam_vetor = MEM_INIT;
-  vetores_sk->tipo->tam_vetor = MEM_INIT;
-  vetores_sk->autor->tam_vetor = MEM_INIT;
-  vetores_sk->ano->tam_vetor = MEM_INIT;
 
-  /* Limites de leitura dentro dos campos de registro (com TAM_REG caracteres), 
-     nos quais voce encontra os dados de cada registro de chave secundaria*/
-  vetores_sk->titulo->limite_inf = 0;
-  vetores_sk->titulo->limite_sup = MAX_TIT;
-  vetores_sk->tipo->limite_inf = MAX_TIT;
-  vetores_sk->tipo->limite_sup = MAX_TIP;
-  vetores_sk->autor->limite_inf = MAX_TIP;
-  vetores_sk->autor->limite_sup = MAX_AUT;
-  vetores_sk->ano->limite_inf = MAX_AUT;
-  vetores_sk->ano->limite_sup = MAX_ANO;
+  /*
+  //le o numero de sks
+  //remover tamanho vetor do struct
+  //remover funcao aloca 
+  //remover limites inf e sup do struct (?)
+  */
 
-  /* Aloca/realoca o vetor (dobravel) de SKs (um para cada tipo) */
-  vetores_sk->titulo->vetor_SK = realoca_memoria_sk(vetores_sk->titulo->vetor_SK, &vetores_sk->titulo->tam_vetor); 
-  vetores_sk->tipo->vetor_SK = realoca_memoria_sk(vetores_sk->tipo->vetor_SK, &vetores_sk->tipo->tam_vetor);   
-  vetores_sk->autor->vetor_SK = realoca_memoria_sk(vetores_sk->autor->vetor_SK, &vetores_sk->autor->tam_vetor); 
-  vetores_sk->ano->vetor_SK = realoca_memoria_sk(vetores_sk->ano->vetor_SK, &vetores_sk->ano->tam_vetor); 
-
-  return vetores_sk;
+  vetor_SK_generico = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(n_sk));
+ 
+  return generico;
 }
 
 
