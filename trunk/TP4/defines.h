@@ -44,6 +44,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define DSC8 8
 #define TAM_HEXA 2
 #define TAM_BIN 8
+#define TAM_DIR 6
 
 
 /*nomes dos arquivos criados pelo programa*/
@@ -68,6 +69,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define ARQDSC6 "pks_dsc6.dat"
 #define ARQDSC7 "pks_dsc7.dat"
 #define ARQDSC8 "pks_dsc8.dat"
+#define DIRIMG "./img/"
 
 
 typedef struct {
@@ -131,3 +133,17 @@ typedef struct
   FILE * arq_ano_li;
 }tipo_arqs_li;
 
+
+/* estrutura de armazenamento das Pks de cada um
+   dos descritores*/
+typedef struct {
+  ap_tipo_registro_pk vetor_pks_dsc0;
+  ap_tipo_registro_pk vetor_pks_dsc1;
+  ap_tipo_registro_pk vetor_pks_dsc2;
+  ap_tipo_registro_pk vetor_pks_dsc3;
+  ap_tipo_registro_pk vetor_pks_dsc4;
+  ap_tipo_registro_pk vetor_pks_dsc5;
+  ap_tipo_registro_pk vetor_pks_dsc6;
+  ap_tipo_registro_pk vetor_pks_dsc7;
+  ap_tipo_registro_pk vetor_pks_dsc8;
+} tipo_pks_descritores;

@@ -12,12 +12,6 @@
 /*!
  * \brief Programa de criação e manipulação de um banco de dados 
  * com informações sobre obras de arte
- * Funções disponiveis:
- * 1)Criacao/adicao do banco de dados;
- * 2)Listagem de obras presentes no banco de dados;
- * 3)Busca de obras no banco de dados por chave primária;
- * 4)Busca de obras no banco de dados por chave secundaria;
- * 5)Remoção de obras.
  */
 int main() {
 
@@ -25,11 +19,12 @@ int main() {
   char str_final[TAM_REGISTRO+1];
   int n_registros, pk, sk, cabeca_avail, nrr;
   FILE *arq_base,*arq_pk, *arq_avail;
-  ap_tipo_registro_pk vetor_registros, vetor_pks_descritores;
+  ap_tipo_registro_pk vetor_registros;
   int limite[2], limite_descritores[DSC8][2];
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
   tipo_arqs_sk * arqs_sk = (tipo_arqs_sk *) malloc(sizeof(tipo_arqs_sk));
   tipo_vetores_sk *vetores_sk; 
+  tipo_pks_descritores * vetores_descritores_pks=(tipo_pks_descritores *)malloc(sizeof(tipo_pks_descritores));
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
@@ -106,7 +101,7 @@ int main() {
 
   /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir do vetor de chaves primarias */
   if(verificaDescritores()==ERRO)
-    criaDescritores(vetor_registros, n_registros, vetor_pks_descritores);
+    criaDescritores(vetor_registros, n_registros, vetores_descritores_pks);
   /* Caso os arquivos existam, carrega-os para a memoria */
   else
     carregaDescritores(vetor_pks_descritores, limite_descritores);
