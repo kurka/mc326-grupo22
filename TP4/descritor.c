@@ -132,6 +132,22 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
 	for(k=0 ; k<TAM_TIT ; k++)
 	  pk_lida[k]=fgetc(arq_dsc_generico);
 	/* insere pk_lida em vetor_pks_descritores[DSC0==0] */
+	
+	/*Orientacoes para uso da funcao:
+	  1)vc precisa ja ter inicializado vetor_pks_descritores
+	  2)pk_lida eh do tipo_registro_pk, ou seja, tem um campo 
+	  pra chave primaria e outro pra NRR...
+	  3)limite tem no campo limite[0] o numero de registros 
+	  presentes no vetor_pks_descritores e no limite[1] o 
+	  tamanho de memoria alocada para o vetor (se for estourar o tamanho, 
+	  a funcao realoca o vetor)
+
+	  essa funcao tb ordena as chaves primarias inseridas...
+	  vc tem q julgar se isso vai ser interesante ou nao pra sua aplicacao..
+
+	*/
+	insere_pk(vetor_pks_descritores, pk_lida, limite[2]);
+  
       }
       fclose(arq_dsc_generico);
 
