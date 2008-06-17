@@ -8,11 +8,15 @@
 /* main para testes */
 int main(){
 
-  int a;
+  int i;
   FILE *teste;
+  char titulo[TAM_TIT];
 
-  a = verificaDescritores();
-  printf("Saida do verificaDescritores(): %d\n", a);
+  for(i=0 ; i<TAM_TIT ; i++)
+    titulo[i]='a';
+
+  insereDescritor(titulo , 1 , NULL);
+  
 
   return(0);
 }
@@ -184,84 +188,71 @@ void carregaDescritores(ap_tipo_registro_pk vetor_pks_descritores, int *limite_d
 }
 
 
-/* Insere uma PK fornecida no arquivo correspondente ao seu descritor */
-void insereDescritor(char *titulo , int NRR){
+/* Insere a PK fornecida no arquivo e no vetor correspondentes ao seu descritor */
+void insereDescritor(char *titulo , int NRR , tipo_pks_descritores *vetores_descritores_pks){
 
   int i, descritor;
   FILE *base, *arq_descritor;
-  char arquivo_img[TAM_IMG+1];
+  char arquivo_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
 
   /* Procura PK_inserida no vetor de PKs */
   /* Encontra o NRR do registro */
 
-  /* A partir da base, le o identificador da obra */
+  /* A partir do nrr, le o identificador da obra na base */
   base=fopen(ARQBASE,"r");
   fseek(base , ((NRR-1)*TAM_REGISTRO)+MAX_VAL , SEEK_SET);
 
   /* Obtem o nome do arquivo da imagem */
   for(i=0 ; i<(TAM_IMG-TAM_FORM) ; i++)
     arquivo_img[i]=fgetc(base);
-  i++; arquivo_img[i]='.';
-  for(i+=1 ; i<(TAM_IMG+1) ; i++)
+  arquivo_img[i]='.'; i++;
+  for( ; i<(TAM_IMG+1) ; i++)
     arquivo_img[i]=fgetc(base);
   fclose(base);
-
+  
   /* Calcula o descritor daquela img */
-  /* Transforma o descritor de hexa para binario e encontra o numero de 1's */
-  /*descritor=hexaToInt(CalculaDescritor(arquivo_img));*/
+  sprintf(path,"%s%s",DIRIMG,arquivo_img);
+  descritor=ContaUns(CalculaDescritor(path));
 
-  /* Abre o pks_dscX.dat correspondente */
-  /* Insere a PK no arquivo daquele descritor */
-  /* Fecha o arquivo */
+  /* Abre o arquivo correspondente aquele descritor */
   switch(descritor){
     
   case DSC0:
     arq_descritor=fopen(ARQDSC0,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC1:
     arq_descritor=fopen(ARQDSC1,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC2:
     arq_descritor=fopen(ARQDSC2,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC3:
     arq_descritor=fopen(ARQDSC3,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC4:
     arq_descritor=fopen(ARQDSC4,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC5:
     arq_descritor=fopen(ARQDSC5,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC6:
     arq_descritor=fopen(ARQDSC6,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC7:
     arq_descritor=fopen(ARQDSC7,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
+    break;
   case DSC8:
     arq_descritor=fopen(ARQDSC8,"a");
-    for(i=0 ; i<TAM_TIT ; i++)
-      fputc(titulo[i],arq_descritor);
-    fclose(arq_descritor);
-    
+    break;
   }/*fim do switch*/
+
+  /* Insere o titulo no arquivo */
+  for(i=0 ; i<TAM_TIT ; i++)
+    fputc(titulo[i],arq_descritor);
+  fclose(arq_descritor);
+
+  /* Insere o titulo no vetor */
+
 
   return;
 }
@@ -273,7 +264,7 @@ int ContaUns(char descritor){
   char mask=0x01;
   int i,uns=0;
   
-  for(i=0 ; i<8 ; i++){
+  for(i=0 ; i<TAM_BIN ; i++){
     uns+=((mask & descritor)>0);
     mask=mask<<1;
   }
