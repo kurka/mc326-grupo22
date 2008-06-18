@@ -24,7 +24,6 @@ int main() {
   tipo_arqs_li * arqs_li = (tipo_arqs_li *) malloc(sizeof(tipo_arqs_li));
   tipo_arqs_sk * arqs_sk = (tipo_arqs_sk *) malloc(sizeof(tipo_arqs_sk));
   tipo_vetores_sk *vetores_sk; 
-  estrutura_descritores_pks vetores_descritores_pks;
 
   /* limite[] possui no primeiro o numero de registros e no segundo a 
      quantidade de memoria alocada no vetor de registros */
@@ -101,12 +100,10 @@ int main() {
     printf("\n>>>Numero de registros: %d\n\n\n",limite[0]);
 
 
-  /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir do vetor de chaves primarias */
+  /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir da base */
   if(verificaDescritores()==ERRO)
-    criaDescritores(vetor_registros, n_registros, vetores_descritores_pks, limite_descritores);
-  /* Caso os arquivos existam, carrega-os para a memoria */
-  else
-    carregaDescritores(vetores_descritores_pks, limite_descritores);
+    criaDescritores(n_registros);
+
   
   /* Interface*/
   do {
