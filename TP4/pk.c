@@ -176,10 +176,9 @@ void insere_pk_arquivo(tipo_registro_pk novo){
   */
 
   arq_teste = fopen("teste.txt", "r+");
-   
+ 
   /* Se o arquivo nao existe */
   if(!arq_teste){
-    printf("arquivo nao existe\n");
     arq_teste = fopen("teste.txt", "w+");
 
     fseek(arq_teste,0,SEEK_SET);
@@ -195,7 +194,6 @@ void insere_pk_arquivo(tipo_registro_pk novo){
   /*se o arquivo existe*/  
   else
     if(arq_teste){
-      printf("arquivo existe\n");
       fseek(arq_teste,0,SEEK_SET);
       fscanf(arq_teste, "%8d", &n_pk);
       
