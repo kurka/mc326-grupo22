@@ -35,76 +35,47 @@ int verificaDescritores(){
       
     case DSC0:
       arq_dsc_generico=fopen(ARQDSC0,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC1:
       arq_dsc_generico=fopen(ARQDSC1,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC2:
       arq_dsc_generico=fopen(ARQDSC2,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC3:
       arq_dsc_generico=fopen(ARQDSC3,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC4:
       arq_dsc_generico=fopen(ARQDSC4,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC5:
       arq_dsc_generico=fopen(ARQDSC5,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
-      
+
     case DSC6:
       arq_dsc_generico=fopen(ARQDSC6,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC7:
       arq_dsc_generico=fopen(ARQDSC7,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
 
     case DSC8:
       arq_dsc_generico=fopen(ARQDSC8,"r");
-      if(arq_dsc_generico==NULL)
-	return(ERRO);
-      else
-	fclose(arq_dsc_generico);
       break;
+
     } /* fim do switch */
+
+    if(arq_dsc_generico==NULL)
+      return(ERRO);
+    else
+      fclose(arq_dsc_generico);
+    
   } /* fim do for */
 
   /* Caso a funcao nao retornou no for, entao todos os arquivos existem */
@@ -375,6 +346,8 @@ void consultaSingulares(estrutura_descritores_pks vetores_descritores_pks){
   return;
 }
 
+
+/* Funcao chamada logo no inicio da execucao do main */
 void inicia_limite_descritores(int *limite_descritores){
 
   int i;
