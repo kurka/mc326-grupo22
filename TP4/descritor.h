@@ -1,3 +1,3 @@
 int verificaDescritores();
-void criaDescritores(int n_registros);
+void criaDescritores();
 int ContaUns(char descritor);
