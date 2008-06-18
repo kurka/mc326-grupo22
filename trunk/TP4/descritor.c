@@ -112,22 +112,20 @@ void criaDescritores(ap_tipo_registro_pk vetor_registros , int n_registros , est
 /* Carrega as PKs dos arquivos de descritores para os vetores */
 void carregaDescritores(estrutura_descritores_pks vetores_descritores_pks, int *limite_descritores){
 
-  ap_tipo_registro_pk vetor_pks;
   FILE *arq_descritor;
   int i,j;
-  char pk_lida[TAM_TIT];
 
-  /* Para cada arquivo */
+  /* Para cada um dos arquivos */
   for(i=DSC0 ; i<=DSC8 ; i++){
     
-    /* Abre cada um dos arquivos */
-    n_pks=abreArqDsc(i, arq_descritor , vetores_descritores_pks , vetor_pks);
+    /* Abre o arquivo e conta o numero de PKs contidas nele */
+    n_pks=abreArqDsc(i, arq_descritor);
     
     fseek(arq_descritor,0,SEEK_SET);
 
     /* Para cada PK no arquivo */
     for(j=0 ; j<n_pks ; j++)
-      carregaPk(arq_descritor , vetores_descritores_pks , limite_descritores);
+      carregaPk(i, arq_descritor , vetores_descritores_pks , limite_descritores);
     
     fclose(arq_descritor);
 
@@ -137,20 +135,42 @@ void carregaDescritores(estrutura_descritores_pks vetores_descritores_pks, int *
 }
 
 
-void carregaPk(FILE * arq_descritor , estrutura_descritores_pks vetores_descritores_pks , int *limite_descritores){
+/* Le a PK do arquivo e carrega-o para o vetor correspondente */
+void carregaPk(int descritor, FILE * arq_descritor , estrutura_descritores_pks vetores_descritores_pks , int *limite_descritores){
 
-  char novaPK[MAX_TIT];
+  char PK_lida[MAX_TIT];
   int i;
 
   /* Observacao: a funcao deixa o cursor na posicao para a proxima PK (se houver) */
   for(i=0 ; i<MAX_TIT ; i++)
-    novaPK[i]=fgetc(arq_descritor);
+    PK_lida[i]=fgetc(arq_descritor);
+  
+  /* Inserir nova PK no vetor correspondente */
+  switch(descritor){
+    
+  case DSC0:
+    vetores_descritores_pks.vetor_pks_dsc0 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc0, limite_descritores[DSC0], /*NRR!!!*/);
+  case DSC1:
+    vetores_descritores_pks.vetor_pks_dsc1 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc1, limite_descritores[DSC1], /*NRR!!!*/);
+  case DSC2:
+    vetores_descritores_pks.vetor_pks_dsc2 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc2, limite_descritores[DSC2], /*NRR!!!*/);
+  case DSC3:
+    vetores_descritores_pks.vetor_pks_dsc3 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc3, limite_descritores[DSC3], /*NRR!!!*/);
+  case DSC4:
+    vetores_descritores_pks.vetor_pks_dsc4 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc4, limite_descritores[DSC4], /*NRR!!!*/);
+  case DSC5:
+    vetores_descritores_pks.vetor_pks_dsc5 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc5, limite_descritores[DSC5], /*NRR!!!*/);
+  case DSC6:
+    vetores_descritores_pks.vetor_pks_dsc6 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc6, limite_descritores[DSC6], /*NRR!!!*/);
+  case DSC7:
+    vetores_descritores_pks.vetor_pks_dsc7 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc7, limite_descritores[DSC7], /*NRR!!!*/);
+  case DSC8:
+    vetores_descritores_pks.vetor_pks_dsc8 = novopk(PK_lida, vetores_descritores_pks.vetor_pks_dsc8, limite_descritores[DSC8], /*NRR!!!*/);
 
-  /* Inserir novaPK no vetor correspondente */
-
+  }/*fim do switch*/    
+    
   return;
 }
-
 
 
 
