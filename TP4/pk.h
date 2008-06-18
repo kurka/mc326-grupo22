@@ -7,7 +7,7 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite);
 
 /* Caso a lista em pk.dat nao estivesse criada, le os dados da base.dat 
   e cria os indices no arquivo */
-ap_tipo_registro_pk inserePKBase(FILE *arqBase, ap_tipo_registro_pk vetor, int * limite, int n_registros);
+void inserePKBase(FILE *arqBase, int * limite, int n_registros);
 
 /* Remove chaves primarias no vetor_registros que na verdade sao 
    elementos de avail_list */

@@ -45,11 +45,13 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
  * \brief Caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
  * e cria os indices no arquivo.
  */
-ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * limite, int n_registros){
+void inserePKBase(FILE *arqBase, int * limite, int n_registros){
   
   int i, j;
   tipo_registro_pk novo;
   
+
+
   for(i=0;i<n_registros;i++){
     /* Encontra a posicao onde o titulo esta registrado */
     fseek(arqBase,i*TAM_REGISTRO,SEEK_SET);
@@ -65,7 +67,6 @@ ap_tipo_registro_pk inserePKBase(FILE *arqBase, tipo_registro_pk *vetor ,int * l
     
     insere_pk_arquivo(novo);
   } 
-  return vetor;
 }
 
 
@@ -102,28 +103,28 @@ ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *
 }
 
 
-/*! 
- * \brief Insere o ultimo titulo lido no vetor de chaves primarias
- */
-void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr){
+/* /\*!  */
+/*  * \brief Insere o ultimo titulo lido no vetor de chaves primarias */
+/*  *\/ */
+/* void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr){ */
 
-  int i;
-  tipo_registro_pk novo;
+/*   int i; */
+/*   tipo_registro_pk novo; */
  
-  /* Copia o ultimo titulo inserido */
-  for(i=0;i<TAM_TIT;i++)
-    novo.titulo[i]=str_final[i];
+/*   /\* Copia o ultimo titulo inserido *\/ */
+/*   for(i=0;i<TAM_TIT;i++) */
+/*     novo.titulo[i]=str_final[i]; */
 
-  limite[0]++;
-  /* Guarda no campo nrr o numero do seu registro */
-  if(nrr==-1)
-    novo.nrr = limite[0];
-  else
-    novo.nrr = nrr;
+/*   limite[0]++; */
+/*   /\* Guarda no campo nrr o numero do seu registro *\/ */
+/*   if(nrr==-1) */
+/*     novo.nrr = limite[0]; */
+/*   else */
+/*     novo.nrr = nrr; */
   
-  insere_pk_arquivo(novo); 
+/*   insere_pk_arquivo(novo);  */
   
-}
+/* } */
 
 
 /* /\*!  */
@@ -147,20 +148,20 @@ void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr){
 /* } */
 
 
-/*! 
- * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh 
- * ordenada e mantem a ordem alfabetica do vetor 
- */
-ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao){
+/*! */ 
+/*  * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh  */
+/*  * ordenada e mantem a ordem alfabetica do vetor  */
+/*  *\/ */
+/* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao){ */
  
-  vetor_pk[posicao] = novo;  
+/*   vetor_pk[posicao] = novo;   */
   
-  /* Ordena o vetor em ordem alfabetica */
-  qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort); 
+/*   /\* Ordena o vetor em ordem alfabetica *\/ */
+/*   qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort);  */
 
-  return vetor_pk;
+/*   return vetor_pk; */
   
-}
+/* } */
 
 
 /*! 

@@ -1,24 +1,24 @@
 /* Definicao das funcoes de manipulacao das chaves secundarias */
 
-/* Cria vetores de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas */
-tipo_vetores_sk *criarVetorSK(int n_registros, tipo_arqs_li *arqs_li, FILE *arqBase);
+/* Cria os registros de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas */
+void criaRegistrosSK(int n_registros, FILE *arqBase);
 
 
 /* Cria vetores de SKs, a partir de um arquivo ja existente com as chaves criadas*/
 tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk *arqs_sk);
   
-/* Faz a leitura de cada arquivo, copiando as chaves secundarias para o vetor*/
-tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE *arq_generico);
+/* Faz a leitura de cada arquivo, copiando as chaves secundarias para um vetor*/
+tipo_dados_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
 
 /* Insere um novo vetor de SKs, um para cada chave secundaria do novo registro, assim como as suas 
    respectivas listas invertidas*/
 tipo_vetores_sk *insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li *arqs_li );
 
 /* Cria vetor sk e lista invertida*/	
-tipo_dados_sk *cria_vetor_generico(char *registro, char *pk, tipo_dados_sk *generico, int *n_li_generica, FILE *arq_gen_li);
+void cria_vetor_generico(char *registro, char *pk, int limite[2]);
 
 /* Aloca memoria inicial das estruturas de chaves secundarias */
-tipo_vetores_sk *aloca_memoria_vetor(tipo_vetores_sk *vetores_sk);
+tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, int tam);
 
 /* Funcao de alocacao do vetor (dobravel) de SKs */
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite); 
