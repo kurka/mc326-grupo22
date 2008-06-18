@@ -7,6 +7,7 @@
 #include "base.h"
 #include "pk.h"
 #include "sk.h"
+#include "fopen.h"
 
 
 /*! 
@@ -85,21 +86,19 @@ tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk){
 /*! 
  * \brief Faz a leitura de cada arquivo, copiando as chaves secundarias para o vetor
  */
-tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE * arq_generico){
+tipo_dados_sk *le_chaves_sk(FILE * arq_generico, int *n_sks){
 
   int i, n_sk;
   char temp[TAM_TIT];
-  fseek(arq_generico,0,SEEK_SET);
-  
+  tipo_dados_sk *generico;
 
+  fseek(arq_generico,0,SEEK_SET);
   /*le primeiro o numero de chaves secundarias presentes no arquivo*/
   fscanf(arq_generico, "%8d", &n_sk);
 
+  generico = aloca_memoria_vetor(generico, n_sk);
+
   for(i=0; i<n_sk; i++){
-    /* Verifica se precisa realocar o tamanho do vetor para inserir a nova SK */
-    if(generico->n_sk == generico->tam_vetor)
-      generico->vetor_SK = realoca_memoria_sk(generico->vetor_SK, &generico->tam_vetor); 
-    
     
     /*le as chaves secundarias e seus apontadores*/
     fscanf(arq_generico, "%s", temp);   
@@ -108,7 +107,7 @@ tipo_dados_sk *le_chaves_sk(tipo_dados_sk *generico, FILE * arq_generico){
     fscanf(arq_generico, "%8d", &generico->vetor_SK[i].endereco_li);
     generico->n_sk++;
  }
-  
+  *n_sks = n_sk
   return generico;
 }
 
@@ -157,20 +156,20 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 /*! 
  * \brief Cria vetor sk e lista invertidas para diversos parametros
  */	
-void cria_vetor_generico(char *registro, char *pk, int *n_li_generica){
+void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info_sk tipo){
 
   int j, k, l, prox;   
   char temp_sk[TAM_TIT];
   int novaSK, endereco_li;
-  int n_li;
-
-
+  int n_li, n_sk;
+  FILE *arq_sk, *arq_li;
+  tipo_dados_sk vetor_sk;
   
   
   /* Rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
      já existe ou se deve ser inserida */
   k=0;
-  for(j=generico->limite_inf; j<generico->limite_sup; j++){
+  for(j=tipo->limite_inf; j<tipo->limite_sup; j++){
     if(registro[j] == ' ' || j==generico->limite_sup-1){
       
       /* Se k==0 significa que estao sendo lidos os espacos no final do titulo*/
@@ -189,14 +188,16 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica){
 	/*
 	//calcula hash
 	//abre arquivo sk.dat E li.dat
-	//carrega vetor generico
-	//verifica se ja existe
+	//(verifica se ja existe antes)
 	//le n_sk	
 	*/
+	arq_sk = fopen("teste_sk.dat", )
+	  vetor_sk = le_chaves_sk(arq_sk, &n_sk);
+
 
 	/* novaSK (1 = true, 0 = false) */
 	novaSK = 1;
-	for(l=0; l<generico->n_sk; l++){
+	for(l=0; l<n_sk; l++){
 	  if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0)
 	    novaSK = 0;
 	}
@@ -232,7 +233,7 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica){
 	}
 	/* Caso a SK já existe, entao adiciona a chave primaria correspondente na lista invertida */
 	else{
-	  for(l=0; l<generico->n_sk; l++){  
+	  for(l=0; l<n_sk; l++){  
 	    
 	    if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0){
 	      
@@ -280,11 +281,15 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica){
 }
 
 /*!
+ *
+ *\brief Abre ou cria arquivo que sera usado 
+ */
+
+
+/*!
  * \brief Aloca memoria inicial das estruturas de chaves secundarias
  */
-tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, FILE* arq_sk){
-
-  int n_sk;
+tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, int tam){
 
   /* Alocacao de memoria para cada tipo de chave secundaria */
   vetores_sk->titulo = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
@@ -294,13 +299,12 @@ tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, FILE* arq_sk){
 
 
   /*
-  //le o numero de sks
   //remover tamanho vetor do struct
   //remover funcao aloca 
   //remover limites inf e sup do struct (?)
   */
 
-  vetor_SK_generico = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(n_sk));
+  vetor_SK_generico = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(tam));
  
   return generico;
 }
