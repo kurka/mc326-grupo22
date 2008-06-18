@@ -156,7 +156,7 @@ tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tip
 /*! 
  * \brief Cria vetor sk e lista invertidas para diversos parametros
  */	
-void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info_sk tipo){
+void cria_vetor_generico(char *registro, char *pk, tipo_sk tipo){
 
   int j, k, l, prox;   
   char temp_sk[TAM_TIT];
@@ -170,7 +170,7 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info
      já existe ou se deve ser inserida */
   k=0;
   for(j=tipo->limite_inf; j<tipo->limite_sup; j++){
-    if(registro[j] == ' ' || j==generico->limite_sup-1){
+    if(registro[j] == ' ' || j==tipo->limite_sup-1){
       
       /* Se k==0 significa que estao sendo lidos os espacos no final do titulo*/
       if(k!=0){ 
@@ -189,35 +189,39 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info
 	//calcula hash
 	//abre arquivo sk.dat E li.dat
 	//(verifica se ja existe antes)
-	//le n_sk	
 	*/
-	arq_sk = fopen("teste_sk.dat", )
-	  vetor_sk = le_chaves_sk(arq_sk, &n_sk);
+	arq_sk = fopen("teste_sk.dat", "r+");
+	if(!arq_sk)
+	  arq_sk = fopen("teste_sk.dat", "w+");
 
+	/*carrega os vetores dinamicamente*/	
+	vetor_sk = le_chaves_sk(arq_sk, &n_sk);
+
+
+	arq_li = fopen("teste_li.dat", "r+");
+	if(!arq_li)
+	  arq_li = fopen("teste_li.dat", "w+");
+	
+	/*calcula o numero de chaves no arquivo*/
+	n_li = ftell(arq_li)/(TAM_TIT+8);
 
 	/* novaSK (1 = true, 0 = false) */
 	novaSK = 1;
 	for(l=0; l<n_sk; l++){
-	  if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0)
+	  if(strcmpinsensitive(vetor_SK[l].chave, temp_sk) == 0)
 	    novaSK = 0;
 	}
 
 	/* Caso a nova SK for valida, entao eh inserida */
 	if(novaSK == 1){ 
-	  /*
-	  //fseek no lugar do vetor	  
-	  //fprintf sk no final do arquivo
-	  //frpintf n_sk++ no comeco do arquivo  
 
+	  fseek(arq_sk, (n_sk)*(TAM_TIT+8)+8,SEEK_SET);
+	  fprintf(arq_sk, "%s ", temp_sk);
+	  fprintf(arq_sk, "%08", n_li);
+	    
+	  fseek(arq_sk, 0,SEEK_SET);
+	  fprintf(arq_sk, "%08d", n_sk+1);
 
-
-	  /* Criacao da lista invertida */
- 	  generico->vetor_SK[n_sk-1].endereco_li = n_li;
-	  
-
-	  //le tamanho n_li em li.dat 
-	  */
-	  
 
 
 	  prox = -1;
@@ -226,19 +230,15 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info
 	  fprintf(arq_gen_li, "%s", pk); 
 	  fprintf(arq_gen_li, "%08d", prox);     	  
 	  
-	  /*
-	  //n_li++; no arquivo
-	  */
-	  
 	}
 	/* Caso a SK já existe, entao adiciona a chave primaria correspondente na lista invertida */
 	else{
 	  for(l=0; l<n_sk; l++){  
 	    
-	    if(strcmpinsensitive(generico->vetor_SK[l].chave, temp_sk) == 0){
+	    if(strcmpinsensitive(vetor_SK[l].chave, temp_sk) == 0){
 	      
 	      /* Encontramos a SK no vetor de SKs */
-	      endereco_li = generico->vetor_SK[l].endereco_li;
+	      endereco_li = vetor_SK[l].endereco_li;
 	      
 	      fseek(arq_gen_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_gen_li, "%08d", &prox);
@@ -256,10 +256,6 @@ void cria_vetor_generico(char *registro, char *pk, int *n_li_generica, tipo_info
 	      fseek(arq_gen_li, ((n_li)*(TAM_TIT+8)), SEEK_SET);
 	      fprintf(arq_gen_li, "%s", pk); 
 	      fprintf(arq_gen_li, "%08d", prox);     	  
-	      
-	      /*
-	      //n_li++; no arquivo
-	       */
 	      
 	      break;
 	      
