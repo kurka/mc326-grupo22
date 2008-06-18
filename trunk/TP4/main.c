@@ -102,7 +102,7 @@ int main() {
 
   /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir da base */
   if(verificaDescritores()==ERRO)
-    criaDescritores(n_registros);
+    criaDescritores();
 
   
   /* Interface*/

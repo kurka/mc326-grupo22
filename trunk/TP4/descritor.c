@@ -13,8 +13,8 @@ int main(){
   char titulo[TAM_TIT];
 
   printf("verificaDescritores: %d\n\n", verificaDescritores());
-  printf("Chamando funcao criaDescritores para 2 registros...\n\nDar um ls pks_dsc*\n");
-  criaDescritores(2);
+  printf("Chamando funcao criaDescritores para a base toda...\n\nDar um ls pks_dsc*\n");
+  criaDescritores();
 
   return(0);
 }
@@ -74,10 +74,10 @@ int verificaDescritores(){
 
 
 /* Cria os arquivos dos descritores a partir dos registros ja existentes */
-void criaDescritores(int n_registros){
+void criaDescritores(){
 
   FILE *arq_descritor, *base;
-  int i, j, descritor;
+  int i, j, descritor, n_registros;
   char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
 
   /* Cria os arquivos vazios (como um "touch") */
@@ -92,14 +92,18 @@ void criaDescritores(int n_registros){
   arq_descritor=fopen(ARQDSC8,"a"); fclose(arq_descritor);
 
   base=fopen(ARQBASE,"r");
+  fseek(base,0,SEEK_END);
+  n_registros=(ftell(base))/TAM_REGISTRO;
+  fseek(base,0,SEEK_SET);
 
   /* Para cada registro contido na base, verifica se ele ja foi removido. Se sim, pula para o proximo. 
      Caso contrario, calcula seu descritor e insere-o no arquivo correspondente */
   for(i=0 ; i<n_registros ; i++){
 
-    /* Le a PK (1: Numero de elementos lidos!) */
+    /* Le a PK da base */
     fseek(base , i*TAM_REGISTRO , SEEK_SET);
-    fread(PK_lida , TAM_TIT , 1 , base);
+    for(j=0 ; j<TAM_TIT ; j++)
+      PK_lida[j]=fgetc(base);
     /* Leva o cursor para o nome do arquivo da imagem */
     fseek(base , (i*TAM_REGISTRO)+MAX_VAL , SEEK_SET);
     /* Le o nome do arquivo da imagem */
