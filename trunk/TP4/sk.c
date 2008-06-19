@@ -274,11 +274,6 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 
 }
 
-/*!
- *
- *\brief Abre ou cria arquivo que sera usado 
- */
-
 
 /*!
  * \brief Aloca memoria inicial das estruturas de chaves secundarias
@@ -448,19 +443,26 @@ void abre_arqs_busca(char * palavra_procurada, char * pre_li, char * pre_sk, FIL
   
   /*abre arquivo de pks e carrega as suas chaves primarias*/
   arquivo = calculaHash(palavra_procurada, ARQPK);   
-  arq_pk = fopen(arquivo, "a+");
+  arq_pk = fopen(arquivo, "r+");
   
-  fseek(arq_pk, 0, SEEK_END);
-  tam_pks = ftell(arq_pk)/TAM_PK;
+  if(arq_pk){
+    fseek(arq_pk, 0, SEEK_END);
+    tam_pks = ftell(arq_pk)/TAM_PK;
+    
+    pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam_pks);
+    pks = lerArquivoPK(arq_pk, pks, tam_pks);
+    
+    acha_sk(palavra_procurada, tam_pks, n_sk, arq_base, arq_li, sks, pks);
+    
+    free(sks);
+    free(pks);
   
-  pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam_pks);
-  pks = lerArquivoPK(arq_pk, pks, tam_pks);
+  } 
+  else
+    printf("Nenhuma obra possui os termos procurados.\n\n");
+   
 
-  acha_sk(palavra_procurada, tam_pks, n_sk, arq_base, arq_li, sks, pks);
-
-  free(sks);
-  free(pks);
-  return;  
+  return; 
 }
 
 
