@@ -123,7 +123,7 @@ int abre_sk(){
 */
 char *calculaHash(char *chave, char *prefixo){
   int i=0;
-  int hash;
+  int hash = 0;
   char arquivo[TAM_NOME_ARQ];
   char * retorno;
   

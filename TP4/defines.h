@@ -47,7 +47,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_BIN 8
 #define TAM_DIR 6
 #define N_MAX_REG 5
-#define NUM_HASH 1
+#define NUM_HASH 4
 #define TAM_NOME_ARQ 200
 #define MIN_OBRAS 1
 
