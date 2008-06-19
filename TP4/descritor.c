@@ -372,10 +372,7 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
     for(j=0 ; j<TAM_TIT ; j++)
       obra_lida.titulo[j] = fgetc(arq_descritor);
     if(DEBUG) printf(">>>obra_lida.titulo: %s\n",obra_lida.titulo);
-    for(j=0 ; j<(TAM_IMG-TAM_FORM) ; j++)
-      nome_arq_img[j] = fgetc(arq_descritor);
-    nome_arq_img[j]='.'; j++;
-    for( ; j<(TAM_IMG+1) ; j++)
+    for(j=0 ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j] = fgetc(arq_descritor);
     if(DEBUG) printf(">>>nome_arq_img: %s\n",nome_arq_img);
     sprintf(obra_lida.path,"%s%s",DIRIMG,nome_arq_img);
