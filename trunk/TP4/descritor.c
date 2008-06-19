@@ -111,7 +111,7 @@ void criaDescritores(){
 void listaObrasSimilares(){
 
   estrutura_pk_imagem entrada;
-  int n_obras_a_listar, descritor_entrada, n_obras_similares, *n;
+  int n_obras_a_listar, descritor_entrada, n_obras_similares, n;
   estrutura_pk_imagem_similaridade *obras_similares;
   
   printf("Pesquisa por similaridade de obras:\n");
@@ -144,10 +144,10 @@ void listaObrasSimilares(){
   /* Carrega TODAS as obras similares para o vetor obras_similares (vetor ordenado por similaridade) */
   obras_similares=(estrutura_pk_imagem_similaridade *)malloc(n_obras_similares*(sizeof(estrutura_pk_imagem_similaridade)));
 
-  *n=0; /*contador das obras inseridas no vetor*/
-  carregaObrasSimilares(descritor_entrada -1 , obras_similares, entrada.path, n);
-  carregaObrasSimilares(descritor_entrada , obras_similares, entrada.path, n);
-  carregaObrasSimilares(descritor_entrada +1 , obras_similares, entrada.path, n);
+  n=0; /*contador das obras inseridas no vetor*/
+  carregaObrasSimilares(descritor_entrada -1 , obras_similares, entrada.path, &n);
+  carregaObrasSimilares(descritor_entrada , obras_similares, entrada.path, &n);
+  carregaObrasSimilares(descritor_entrada +1 , obras_similares, entrada.path, &n);
   if(DEBUG) printf("Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
   qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
   
@@ -195,7 +195,6 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
   for(i=DSC0 ; i<=DSC8 ; i++){
 
     /* Abre o arquivo no modo "r" e calcula o n de pks nele contidas */
-    if(DEBUG) printf(">>> Abrindo arquivo pks_dsc%d.dat...\n", i);
     arq_descritor = (FILE *)abreArquivoDescritor(i,MODOR);
     fseek(arq_descritor,0,SEEK_END);
     n_pks_descritor=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
@@ -203,7 +202,6 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
     /* Para cada PK dentro do arquivo... */
     for(j=0 ; j<n_pks_descritor ; j++){
 
-      if(DEBUG) printf(">>> Lendo obra %d do arquivo pks_dsc%d.dat\n",j,i);
       /* Le PK... */
       fseek(arq_descritor , j*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
       for(z=0 ; z<TAM_TIT ; z++)
@@ -214,8 +212,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       if(strncmpinsensitive(PK_lida , entrada.titulo, TAM_TIT)==0){
 	if(DEBUG) printf(">>> Encontrou a PK igual...(entrou no if)\n");
 	(*descritor_entrada)=i;
-	if(DEBUG) printf(">>> Passado valor do descritor por referencia...\n");
-      
+	      
 	/* Le o nome do arquivo da imagem */
 	for(z=0 ; z<(TAM_IMG+1) ; z++)
 	  img_lida[z]=fgetc(arq_descritor);
@@ -227,7 +224,6 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       
     }/*fim do for (pks internas)*/
     
-    if(DEBUG) printf(">>> Fechando arquivo pks_dsc%d.dat...\n", i);
     fclose(arq_descritor);
     
   }/*fim do for (arquivos)*/
@@ -370,16 +366,22 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
   /* Para cada PK dentro do arquivo pks_dscX.dat */
   for(i=0 ; i<n_pks_dsc ; i++){
 
+    if(DEBUG) printf(">>> Lendo PK e nome do arquivo do registro %d do descritor.\n",i);
     /* Le PK e nome do arquivo e preenche a estrutura com PK, nome do arquivo e similaridade */
     fseek(arq_descritor , i*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
     for(j=0 ; j<TAM_TIT ; j++)
       obra_lida.titulo[j] = fgetc(arq_descritor);
+    if(DEBUG) printf(">>>obra_lida.titulo: %s\n",obra_lida.titulo);
     for(j=0 ; j<(TAM_IMG-TAM_FORM) ; j++)
       nome_arq_img[j] = fgetc(arq_descritor);
     nome_arq_img[j]='.'; j++;
     for( ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j] = fgetc(arq_descritor);
+    if(DEBUG) printf(">>>nome_arq_img: %s\n",nome_arq_img);
     sprintf(obra_lida.path,"%s%s",DIRIMG,nome_arq_img);
+    if(DEBUG) printf(">>>obra_lida.path: %s\n",obra_lida.path);
+    if(DEBUG) printf(">>>path_obra_lida: %s\n",path_obra_procurada);
+    if(DEBUG) printf(">>> Chamada da ComputaSimilaridade...\n");
     obra_lida.similaridade=ComputaSimilaridade(obra_lida.path , path_obra_procurada);
 
     /* Insere a estrutura obra_lida no vetor de estruturas obras_similares[] */
