@@ -186,7 +186,7 @@ int main() {
 
   /* Fecha os arquivos */
   fclose(arq_base);
-  /* fclose(arq_avail); */
+  fclose(arq_avail); 
 
   /* Libera memoria */
 /*   liberamemoria(vetor_registros, arqs_sk, arqs_li, vetores_sk); */

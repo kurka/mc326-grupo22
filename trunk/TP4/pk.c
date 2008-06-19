@@ -14,6 +14,7 @@
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
+#include "fopen.h"
 
 
 
@@ -107,42 +108,50 @@ void novopk(char *str_final, int nrr){
  */
 void insere_pk_arquivo(tipo_registro_pk novo){
  
-  FILE* arq_teste;
+  FILE* arq_pk;
   int n_pk, i;
-  /*
-  //calcula o hash
-  //abre o arquivo 
-  */
+  char *arquivo;
+  char titulo[TAM_TIT+1];
+ 
+  for(i=0; i<TAM_TIT; i++)
+    titulo[i] =  novo.titulo[i];
+  titulo[TAM_TIT] = '\0';
+  
+  /*calcula o hash e abre o arquivo correspondente */
+  arquivo = calculaHash(titulo, ARQPK);
 
-  arq_teste = fopen("teste.txt", "r+");
+
+  arq_pk = fopen(arquivo, "r+");
  
   /* Se o arquivo nao existe */
-  if(!arq_teste){
-    arq_teste = fopen("teste.txt", "w+");
+  if(!arq_pk){
+    if(DEBUG)
+      printf(">>criando arquivo %s\n", arquivo);
+    arq_pk = fopen(arquivo, "w+");
 
-    fseek(arq_teste, 0, SEEK_SET);
+    fseek(arq_pk, 0, SEEK_SET);
 
-    for(i=0; i<TAM_TIT; i++)
-      fprintf(arq_teste, "%c", novo.titulo[i]);
-    
-    fprintf(arq_teste, "%08d", novo.nrr);      
+   /*  for(i=0; i<TAM_TIT; i++) */
+    /*       fprintf(arq_pk, "%c", novo.titulo[i]); */
+    fprintf(arq_pk, "%s", titulo);
+    fprintf(arq_pk, "%08d", novo.nrr);      
   }      
   /*se o arquivo existe*/  
   else
-    if(arq_teste){
-      fseek(arq_teste, 0, SEEK_END);
-      n_pk = ftell(arq_teste)/TAM_PK;
+    if(arq_pk){
+      fseek(arq_pk, 0, SEEK_END);
+      n_pk = ftell(arq_pk)/TAM_PK;
       
             
-      fseek(arq_teste, TAM_PK*n_pk, SEEK_SET);
-      for(i=0; i<TAM_TIT; i++)
-	fprintf(arq_teste, "%c", novo.titulo[i]);
-      
-      fprintf(arq_teste, "%08d", novo.nrr);      
+      fseek(arq_pk, TAM_PK*n_pk, SEEK_SET);
+/*       for(i=0; i<TAM_TIT; i++) */
+/* 	fprintf(arq_pk, "%c", novo.titulo[i]); */
+      fprintf(arq_pk, "%s", titulo);   
+      fprintf(arq_pk, "%08d", novo.nrr);      
       
     }
   
-  fclose(arq_teste);  
+  fclose(arq_pk);  
 }
 
 

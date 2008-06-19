@@ -4,6 +4,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 
 #define TAM_REGISTRO 450
 #define TAM_PK 208
+#define TAM_LI 208
 #define INSERIR '1'
 #define LISTAR '2'
 #define CONSULTA_PK '3'
@@ -31,7 +32,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MAX_IMG 450
 #define TAM_FORM 3
 #define MEM_INIT 10
-#define DEBUG 1/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
+#define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
 #define DSC0 0
 #define DSC1 1
@@ -47,19 +48,20 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_DIR 6
 #define N_MAX_REG 5
 
-
+#define NUM_HASH 1
 /*nomes dos arquivos criados pelo programa*/
+#define TAM_NOME_ARQ 200
 #define ARQBASE "base22.dat"
-#define ARQPK "pk.dat"
+#define ARQPK "pk"
 #define ARQAVAIL "avail_head.dat"
-#define ARQSK_TIT "sk_titulos.dat"
-#define ARQSK_TIP "sk_tipos.dat"
-#define ARQSK_AUT "sk_autores.dat"
-#define ARQSK_ANO "sk_anos.dat"
-#define ARQLI_TIT "li_titulos.dat"
-#define ARQLI_TIP "li_tipos.dat"
-#define ARQLI_AUT "li_autores.dat"
-#define ARQLI_ANO "li_anos.dat"
+#define ARQSK_TIT "sk_titulos"
+#define ARQSK_TIP "sk_tipos"
+#define ARQSK_AUT "sk_autores"
+#define ARQSK_ANO "sk_anos"
+#define ARQLI_TIT "li_titulos"
+#define ARQLI_TIP "li_tipos"
+#define ARQLI_AUT "li_autores"
+#define ARQLI_ANO "li_anos"
 #define ARQHTML "tp4.html"
 #define ARQDSC0 "pks_dsc0.dat"
 #define ARQDSC1 "pks_dsc1.dat"
