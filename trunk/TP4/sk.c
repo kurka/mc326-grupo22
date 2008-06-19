@@ -225,7 +225,6 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 	  fseek(arq_sk,0,SEEK_END);
 	  pos = ftell(arq_sk);	  
 
-	  printf("pos = %d", pos);
 	  fseek(arq_sk, pos, SEEK_SET);
 	  fprintf(arq_sk, "%s ", temp_sk);
 	  fprintf(arq_sk, "%08d", n_li);
