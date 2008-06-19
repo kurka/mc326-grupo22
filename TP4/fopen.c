@@ -29,32 +29,6 @@ FILE * abre_base22(FILE *arq_base, int *n_registros){
   return arq_base;
 }
 
-/*!
- * \brief Confere se existe e abre ou cria arquivo pk.dat
- */
-FILE * abre_pk(FILE *arq_pk, int *pk){
-  /* temp (depois pk) indica se o arquivo pk.dat possui 
-     conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
-  int temp=1;
-  arq_pk=fopen(ARQPK,"r");
-  
-  if(!arq_pk){
-    temp=0;
-  }
-  if(arq_pk){
-    fseek(arq_pk,0,SEEK_END);
-    /* Se pk possui tamanho 0, as chaves primarias serao
-      coletadas a partir do arquivo base.dat */ 
-    temp = ftell(arq_pk)/TAM_PK;
-  }
-
-  if(temp==0){
-    arq_pk=fopen(ARQPK,"w");
-  }
-  
-  *pk = temp;
-  return arq_pk;
-}
 
 
 /*!
@@ -91,52 +65,56 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base){
 
 
 /*! 
- * \brief Abre ou cria arquivos de chaves secundarias 
+ * \brief Confere se existem arquivos de chaves primarias 
  */
+int abre_pk(){
 
-void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
-
-  /* temp (depois sk) indica se o arquivo sk.dat possui 
+  /* temp (depois sk) indica se *algum* arquivo sk.dat possui 
      conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
-  int temp=1;
+  int temp=0;
+  int i;
+  char arquivo[TAM_NOME_ARQ];
+  FILE * teste;
+  /*abre cada um dos arquivos de chaves secundarias de titulos (amostra) para ver se algum existe*/
 
-  /*abre um dos arquivos de chaves secundarias para ver se ele existe*/
-  arqs_sk->arq_sk_ano = fopen(ARQSK_ANO,"r");
+  for(i=0; i<NUM_HASH; i++){
+      sprintf(arquivo, "%s%d.dat", ARQPK, i);
   
-  if(!arqs_sk->arq_sk_ano){
-    temp=0;
-  }
-  if(arqs_sk->arq_sk_ano){
-    fseek(arqs_sk->arq_sk_ano,0,SEEK_END);
-    /* Se pk possui tamanho 0, as chaves secundarias serao
-      coletadas a partir do arquivo base.dat */ 
-    temp = ftell(arqs_sk->arq_sk_ano);
-  }
-  
-  if(temp==0){
-    arqs_sk->arq_sk_tit = fopen(ARQSK_TIT, "w");
-    arqs_sk->arq_sk_tip = fopen(ARQSK_TIP, "w");
-    arqs_sk->arq_sk_aut = fopen(ARQSK_AUT, "w");
-    arqs_sk->arq_sk_ano = fopen(ARQSK_ANO, "w");
+      teste = fopen(arquivo,"r");
+      if(teste){
+	fseek(teste,0,SEEK_END);
+	temp = ftell(teste);
+      }
+    }
 
-    arqs_li->arq_tit_li = fopen(ARQLI_TIT, "w+");
-    arqs_li->arq_tip_li = fopen(ARQLI_TIP, "w+");  
-    arqs_li->arq_aut_li = fopen(ARQLI_AUT, "w+");  
-    arqs_li->arq_ano_li = fopen(ARQLI_ANO, "w+");  
+  return temp;
+}
+
+
+/*! 
+ * \brief Confere se existem arquivos de chaves secundarias 
+ */
+int abre_sk(){
+
+  /* temp (depois sk) indica se *algum* arquivo sk.dat possui 
+     conteudo (1 sim, 0 nao) para ser gerado ou nao a partir da base */
+  int temp=0;
+  int i;
+  char arquivo[TAM_NOME_ARQ];
+  FILE * teste;
+  /*abre cada um dos arquivos de chaves secundarias de titulos (amostra) para ver se algum existe*/
+
+  for(i=0; i<NUM_HASH; i++){
+      sprintf(arquivo, "%s%d.dat", ARQSK_TIT, i);
+  
+      teste = fopen(arquivo,"r");
+      if(teste){
+	fseek(teste,0,SEEK_END);
+	temp = ftell(teste);
+      }
   }
   
-  else{
-    arqs_sk->arq_sk_tit = fopen(ARQSK_TIT, "r");
-    arqs_sk->arq_sk_tip = fopen(ARQSK_TIP, "r");
-    arqs_sk->arq_sk_aut = fopen(ARQSK_AUT, "r");
-    
-    arqs_li->arq_tit_li = fopen(ARQLI_TIT, "r+");
-    arqs_li->arq_tip_li = fopen(ARQLI_TIP, "r+");  
-    arqs_li->arq_aut_li = fopen(ARQLI_AUT, "r+");  
-    arqs_li->arq_ano_li = fopen(ARQLI_ANO, "r+");  
-  }
-  
-  *sk = temp;
+  return temp;
 }
 
 /*! 

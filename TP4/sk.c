@@ -54,23 +54,6 @@ void criaRegistrosSK(int n_registros, FILE *arqBase){
   
 }
 
-/* /\*! */
-/*  * \brief Cria vetores de SKs, a partir de um arquivo ja existente com as chaves criadas */
-/*  *\/ */
-/* tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk, int tam){ */
-  
-/*   tipo_registro_sk *vetor_sk; */
-
-/*   /\* Inicializa vetores_sk com memoria e valores iniciais*\/ */
-/*   vetores_sk = aloca_memoria_vetor(vetores_sk); */
-
-/*   /\*faz a leitura das chaves de cada arquivo e guarda em seus respectivos campo*\/ */
-/*   vetor_sk = le_chaves_sk(vetor_sk, arqs_sk->arq_sk_tit); */
- 
-
-/*   return vetor; */
-/* } */
-
 
 /*! 
  * \brief Faz a leitura de um arquivo de chaves secundarias, copiando as chaves secundarias para um vetor

@@ -31,14 +31,23 @@ int main() {
   /* Consulta ou cria arquivos .dat */
   arq_base = abre_base22(arq_base, &n_registros);
   arq_avail = abre_avail(arq_avail, &cabeca_avail); 
-  /*  abre_sk(arqs_sk, arqs_li, &sk); */
 
-  /* Pega as chaves primarias da base (se existirem) e as guarda em arquivos de chaves primarias.*/
+  /*verifica a necessidade de se extrair as chaves primarias da base*/
+  if(!abre_pk()){
+    if(DEBUG)
+      printf("\n>>>Criando arquivos de chaves primarias...\n");   
+    /* Pega as chaves primarias da base (se existirem) e as guarda em arquivos de chaves primarias.*/ 
+    inserePKBase(arq_base, &limite, n_registros);
+  }
+  else
+    limite = ftell(arq_base)/TAM_REGISTRO;
   
-  if(DEBUG)
-    printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n");   
-  
-  inserePKBase(arq_base, &limite, n_registros);
+  /*verifica se precisa extrair da base as chaves secundarias*/
+  if(!abre_sk()){
+    if(DEBUG)
+      printf("\n>>>Criando arquivos de chaves secundarias...\n");
+    criaRegistrosSK(n_registros, arq_base); 
+  }  
   
     /* Se existir uma avail list, apaga os registros apontados por ela */
 /*     if(cabeca_avail != -1){ */
@@ -48,25 +57,7 @@ int main() {
 /*     } */
 /*   } */
 
-  /* Criacao de estrutura de chaves secundarias*/
-  /* Se o arquivo sk.dat existir, carrega as estruturas de chaves secundarias do arquivo*/
-/*   if(sk!=0){ */
-/*     if(DEBUG) */
-/*       printf("\n>>>lendo vetores sk do arquivo\n"); */
-    
-/*     vetores_sk = ler_arquivo_sk(arqs_sk);  */
-    
-
-/*   } */
-  /* Criacao das chaves secundarias */
-  /* Caso nao exista, cria as estruturas de chaves secundarias a partir do arquivo base.dat*/
-  /* if(sk==0){ */
-/*     if(DEBUG) */
-/*       printf("\n>>>criando vetores sk a partir da base\n"); */
-/*   criaRegistrosSK(n_registros, arq_base);   */
-/*   } */
-   
-  criaRegistrosSK(n_registros, arq_base);   
+ 
 
 
   if(DEBUG)
