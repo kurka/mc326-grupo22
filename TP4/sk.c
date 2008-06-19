@@ -562,37 +562,6 @@ void consulta_sk_dsc(tipo_dados_sk * descritor, tipo_registro_pk *vetor_pk, int 
 }
 
 
-/*!
- * \brief Salva em arquivo a lista com as chaves secundarias e seus apontadores para o arquivo de  lista invertida
- */
-void salvar_arquivo_sk(tipo_vetores_sk *vetores_sk, tipo_arqs_sk *arqs_sk){ 
-  
-  salva_vetor_sk(vetores_sk->titulo, arqs_sk->arq_sk_tit);
-  salva_vetor_sk(vetores_sk->tipo, arqs_sk->arq_sk_tip);
-  salva_vetor_sk(vetores_sk->autor, arqs_sk->arq_sk_aut);
-  salva_vetor_sk(vetores_sk->ano, arqs_sk->arq_sk_ano);
-} 
-  
-
-/*!
- * \brief Salva um  vetor de chaves secundarias de um determinado tipo 
- */
-void salva_vetor_sk(tipo_dados_sk *generico, FILE * arq_generico){
-  int i;
-
-  fseek(arq_generico,0,SEEK_SET);
-  /*primeiro, imprime o numero de chaves secundarias no arquivo*/
-  fprintf(arq_generico, "%08d", generico->n_sk);
-  
-  
-  /*depois, imprime as chaves e seus apontadores, com um espaco entre els, para facilitar a leitura*/
-  for(i=0;i<generico->n_sk;i++){
-    fprintf(arq_generico, "%s", generico->vetor_SK[i].chave);
-    fprintf(arq_generico, " ");
-    fprintf(arq_generico, "%08d", generico->vetor_SK[i].endereco_li);
-  }
-  
-}
 
 
 /**************************************/

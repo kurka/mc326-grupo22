@@ -35,13 +35,6 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 /* Funcao que le da entrada padrao e trata excecoes de entrada de busca */
 int le_sk(char* palavra_procurada, int max);
 
-/* Salva em arquivo a lista com as chaves secundarias e seus apontadores para o arquivo de  lista invertida*/
-void salvar_arquivo_sk(tipo_vetores_sk *vetores_sk, tipo_arqs_sk *arqs_sk);
-
-/* Salva um  vetor de chaves secundarias de um determinado tipo */
-void salva_vetor_sk(tipo_dados_sk *generico, FILE * arq_generico);
-
-
 
 /* Funcoes Auxiliares */
 

@@ -17,30 +17,6 @@
 
 
 
-/*!
- * \brief Sempre que o vetor que armazena as chaves primarias estiver cheio,
- * ele eh dobrado de tamanho (vetor dinamico dobravel)
- */
-ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
-  
-  ap_tipo_registro_pk temp;
-
-  limite[1] = 2*(limite[1]);
-  if(DEBUG)
-    printf(">>>vetor [re]alocado com %d posicoes\n", (limite[1]) );
-  
-  if(limite[1]==2*MEM_INIT){
-    temp = (ap_tipo_registro_pk)malloc(sizeof(tipo_registro_pk)*(limite[1]));
-  }
-
-  else{
-    temp = realloc(vetor_pk, sizeof(tipo_registro_pk)*(limite[1]));
-  }
-
-  return temp;
-}
-
-
 
 /*!
  * \brief Caso a lista em PK.dat nao estivesse criada, le os dados da base.dat
@@ -124,42 +100,6 @@ void novopk(char *str_final, int nrr){
   
 }
 
-
-/* /\*!  */
-/*  * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh  */
-/*  * ordenada e mantem a ordem alfabetica do vetor  */
-/*  *\/ */
-/* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int * limite){ */
- 
-/*   /\* Verifica se ainda cabem dados no vetor (limite[0] contem  */
-/*      o numero de chaves primarias, e limite[1] o tamanho do vetor) *\/ */
-/*   if(limite[0] > limite[1]) */
-/*     vetor_pk = realoca_memoria(vetor_pk, limite); */
-  
-/*   vetor_pk[limite[0]-1] = novo;   */
-  
-/*   /\* Ordena o vetor em ordem alfabetica *\/ */
-/*   qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort);  */
-
-/*   return vetor_pk; */
-  
-/* } */
-
-
-/*! */ 
-/*  * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh  */
-/*  * ordenada e mantem a ordem alfabetica do vetor  */
-/*  *\/ */
-/* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao){ */
- 
-/*   vetor_pk[posicao] = novo;   */
-  
-/*   /\* Ordena o vetor em ordem alfabetica *\/ */
-/*   qsort(vetor_pk, limite[0], sizeof(tipo_registro_pk), compara_qsort);  */
-
-/*   return vetor_pk; */
-  
-/* } */
 
 
 /*! 
@@ -322,7 +262,7 @@ int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TI
   int NRR;
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
-  
+tet  
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     return 0;
