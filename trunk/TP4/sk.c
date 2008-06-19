@@ -9,7 +9,7 @@
 #include "sk.h"
 #include "fopen.h"
 
-
+/*commit 200!!!*/
 /*! 
  * \brief Cria os registros de SKs, a partir da base, um para cada chave secundaria, 
  * assim como as suas respectivas listas invertidas
