@@ -46,11 +46,10 @@ void criaRegistrosSK(int n_registros, FILE *arqBase){
 
 
       /* Cria as chaves secundarias e listas invertidas, para cada campo */
-      cria_vetor_generico(registro, pk, limites_tit);   
-/*       cria_vetor_generico(registro, pk, limites_tip);    */
-/*       cria_vetor_generico(registro, pk, limites_aut);    */
-/*       cria_vetor_generico(registro, pk, limites_ano);  */  
-      
+      cria_vetor_generico(registro, pk, limites_tit, ARQSK_TIT, ARQLI_TIT);   
+      cria_vetor_generico(registro, pk, limites_tip, ARQSK_TIP, ARQLI_TIP);  
+      cria_vetor_generico(registro, pk, limites_aut, ARQSK_AUT, ARQLI_AUT);  
+      cria_vetor_generico(registro, pk, limites_ano, ARQSK_ANO, ARQLI_ANO);   
     }
   
 }
@@ -145,20 +144,21 @@ void insereVetorSK(char *registro)
 
       
   /* Adiciona as chaves secundarias e listas invertidas, para cada campo */
-  cria_vetor_generico(registro, pk, limites_tit);   
-  /*       cria_vetor_generico(registro, pk, limites_tip);    */
-  /*       cria_vetor_generico(registro, pk, limites_aut);    */
-  /*       cria_vetor_generico(registro, pk, limites_ano);  */   
+  cria_vetor_generico(registro, pk, limites_tit, ARQSK_TIT, ARQLI_TIT);   
+  cria_vetor_generico(registro, pk, limites_tip, ARQSK_TIP, ARQLI_TIP);  
+  cria_vetor_generico(registro, pk, limites_aut, ARQSK_AUT, ARQLI_AUT);  
+  cria_vetor_generico(registro, pk, limites_ano, ARQSK_ANO, ARQLI_ANO);     
  } 
 
 
 /*! 
  * \brief Cria vetor sk e lista invertidas para diversos parametros
  */	
-void cria_vetor_generico(char *registro, char *pk, int limite[2]){
+void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_sk, char *prefixo_li){
 
   int j, k, l, prox;   
   char temp_sk[TAM_TIT];
+  char *arquivo;
   int novaSK, endereco_li;
   int n_li, n_sk, pos;
   FILE *arq_sk, *arq_li;
@@ -184,22 +184,24 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 	temp_sk[k]='\0';
 	
 
-	/*
-	//calcula hash
-	//abre arquivo sk.dat E li.dat
-	//(verifica se ja existe antes)
-	*/
-	arq_sk = fopen("teste_sk.dat", "r+");
+	/*calcula o hash e abre o arquivo correspondente */
+	arquivo = calculaHash(temp_sk, prefixo_sk);
+	arq_sk = fopen(arquivo, "r+");
 	if(!arq_sk)
-	  arq_sk = fopen("teste_sk.dat", "w+");
+	  if(DEBUG)
+	    printf(">>>Criando arquivo %s\n", arquivo);
+	  arq_sk = fopen(arquivo, "w+");
 
 	/*carrega os vetores dinamicamente*/	
 	vetor_sk = le_chaves_sk(arq_sk, &n_sk);
 
-
-	arq_li = fopen("teste_li.dat", "r+");
+	/*abre arquivo correspondente de lista invertida*/
+	arquivo = calculaHash(temp_sk, prefixo_li);
+	arq_li = fopen(arquivo, "r+");
 	if(!arq_li)
-	  arq_li = fopen("teste_li.dat", "w+");
+	  if(DEBUG)
+	    printf(">>>Criando arquivo %s\n", arquivo);
+	  arq_li = fopen(arquivo, "w+");
 	
 	/*calcula o numero de chaves no arquivo*/
 	fseek(arq_li,0,SEEK_END);

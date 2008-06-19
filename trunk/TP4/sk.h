@@ -15,7 +15,7 @@ tipo_registro_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
 void insereVetorSK(char *registro);
 
 /* Cria vetor sk e lista invertida*/	
-void cria_vetor_generico(char *registro, char *pk, int limite[2]);
+void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_sk, char *prefixo_li);
 
 /* Aloca memoria inicial das estruturas de chaves secundarias */
 tipo_registro_sk *aloca_memoria_vetor(tipo_registro_sk *vetor_sk, int tam);
