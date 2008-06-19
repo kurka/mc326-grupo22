@@ -14,13 +14,13 @@ void inserePKBase(FILE *arqBase, int * limite, int n_registros);
 ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *limite,int cabeca_avail);
 
 /* Le todos os dados do arquivo pk.dat e os adiciona em um vetor, mantendo a ordem de registros, que eh alfabetica */
-ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, int * limite);
+ap_tipo_registro_pk lerArquivoPK(FILE *arqPK,  ap_tipo_registro_pk vetor, int n_registros);
 
 /* Pega o ultimo titulo lido e registra ele como novo, para ser inserido no vetor de chaves primarias */
 void novopk(char *str_final, int nrr);
   
 /* Insere um novo registro no vetor dinamico de PKs. Essa insercao eh ordenada e mantem a ordem alfabetica do vetor */
-ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao);
+ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int posicao);
 
 /* ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk, tipo_registro_pk novo, int * limite); */
 
@@ -35,7 +35,7 @@ ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int c
 void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
 
 /* Faz a leitura de uma chave primaria que sera buscada na base */
-void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arqBase);
+void consulta_pk(int limite_reg, FILE *arqBase);
 
 /* Busca no arquivo da base a chave primaria procurada */
 int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html);

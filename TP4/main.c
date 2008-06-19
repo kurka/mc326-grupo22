@@ -133,11 +133,11 @@ int main() {
 /*       espera(); */
 /*       break; */
       
-/*       /\* Procurar por registro via chave primaria *\/ */
-/*     case CONSULTA_PK: */
-/*       consulta_pk(limite[0],vetor_registros, arq_base); */
-/*       espera(); */
-/*       break; */
+      /* Procurar por registro via chave primaria */
+    case CONSULTA_PK:
+      consulta_pk(limite, arq_base);
+      espera();
+      break;
 
 /*       /\* Procurar por registros via chave secundaria *\/ */
 /*     case CONSULTA_SK_TIT: */
