@@ -17,12 +17,10 @@ int main() {
 
   char c,opcao;
   char str_final[TAM_REGISTRO+1];
-  int n_registros, pk, sk, cabeca_avail, nrr;
-  FILE *arq_base,*arq_pk, *arq_avail;
-  ap_tipo_registro_pk vetor_registros;
-  int limite, limite_descritores[DSC8][2];
-  tipo_vetores_sk *vetores_sk; 
-
+  int n_registros, cabeca_avail, nrr;
+  FILE *arq_base, *arq_avail;
+   int limite, limite_descritores[DSC8][2];
+ 
 
   /* Atribui o caractere '\0' ao final da string 
      para imprimir corretamente o string no arquivo */  
@@ -118,11 +116,11 @@ int main() {
       break;
 
 
-/*       /\* Listar os registros do catalogo *\/ */
-/*     case LISTAR: */
-/*       lista_registros(limite[0],vetor_registros); */
-/*       espera(); */
-/*       break; */
+      /* Listar os registros do catalogo */
+    case LISTAR:
+      lista_registros(limite);
+      espera();
+      break;
       
       /* Procurar por registro via chave primaria */
     case CONSULTA_PK:
@@ -168,19 +166,10 @@ int main() {
 
   
 
-/*   /\* Guarda o indice de chaves primarias e secundarias no arquivo *\/ */
-/*   if(DEBUG) */
-/*     printf("\n>>>Salvando arquivos e liberando memoria\n");   */
-  
-/*   salvar_arquivo_sk(vetores_sk, arqs_sk); */
-  
-
   /* Fecha os arquivos */
   fclose(arq_base);
   fclose(arq_avail); 
 
-  /* Libera memoria */
-/*   liberamemoria(vetor_registros, arqs_sk, arqs_li, vetores_sk); */
  
   if(DEBUG)
     printf(">>>Fim da execucao!\n");

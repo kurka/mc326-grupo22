@@ -39,8 +39,7 @@ void consulta_pk(int limite_reg, FILE *arqBase);
 int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html);
 
 /* Lista todas as chaves primarias presentes */
-void lista_registros( int limite_reg,  ap_tipo_registro_pk vetor_de_registros);
-
+void lista_registros(int limite_reg);
 
 /*** Funcoes Auxiliares ***/
 

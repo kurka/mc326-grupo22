@@ -179,47 +179,54 @@ ap_tipo_registro_pk remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int ca
   
 
 /*! 
- * \brief Funcao de listagem de registros. A partir do arquivo de chaves primarias,
- * gera um arquivo em html com todos os titulos das obras. 
- */
-/* void lista_registros(int limite_reg) { */
+ *\brief Funcao de listagem de registros. A partir do arquivo de chaves primarias,
+gera um arquivo em html com todos os titulos das obras. 
+*/
+void lista_registros(int limite_reg){
 
-/*   FILE *arq_html; */
-/*   int i,j,k; */
-/*   char arquivo[TAM_NOME_ARQ]; */
-/*   FILE * teste; */
-/*   /\* Caso nao haja registros, retorna a funcao. *\/ */
-/*   if(limite_reg==0) { */
-/*     printf("Nao ha obras cadastradas.\n\n"); */
-/*   } */
-/*   /\* Caso haja, gera o arquivo de consulta em HTML *\/ */
-/*   else { */
-/*     arq_html=fopen(ARQHTML,"w"); */
-/*     /\* Cabecalho do arquivo *\/ */
-/*     fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n"); */
-/*     fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>"); */
-/*     /\* Para cada registro, insere o titulo caractere por caractere *\/ */
-/*     for(i=0;i<limite_reg;i++) { */
-/*       fprintf(arq_html,"<br>"); */
-/*       for(k=0; i<NUM_HASH; i++){ */
-/* 	sprintf(arquivo, "%s%d.dat", ARQPK, i); */
-  
-/* 	teste = fopen(arquivo,"r"); */
-/* 	if(teste) */
+  FILE *arq_html;
+  int i,j,k, tam;
+  char arquivo[TAM_NOME_ARQ];
+  FILE * teste;
+  tipo_registro_pk * pks;
 
-/* 	for(j=0;j<TAM_TIT;j++) { */
-/* 	  fprintf(arq_html,"%c",vetor_de_registros[i].titulo[j]); */
-/* 	} */
-/*       } */
-/*     } */
-/*     fprintf(arq_html,"<br></div></body></html>"); */
-/*     fclose(arq_html); */
-/*     printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n"); */
-/*     printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); */
-/*   } */
+  /* Caso nao haja registros, retorna a funcao. */
+  if(limite_reg==0) {
+    printf("Nao ha obras cadastradas.\n\n");
+  }
+  /* Caso haja, gera o arquivo de consulta em HTML */
+  else {
+    arq_html=fopen(ARQHTML,"w");
+    /* Cabecalho do arquivo */
+    fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
+    fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>");
+    /* Para cada registro, insere o titulo caractere por caractere */
+    fprintf(arq_html,"<br>");
+    for(k=0; k<NUM_HASH; k++){
+      sprintf(arquivo, "%s%d.dat", ARQPK, k);
+      teste = fopen(arquivo,"r");
+      if(teste){
+	fseek(teste, 0, SEEK_END);
+	tam = ftell(teste)/TAM_PK;
+	/*cria lista ligada das pks do arquivo*/
+	pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam); 
+	pks = lerArquivoPK(teste, pks, tam);
+	for(i=0; i<tam; i++){
+	  fprintf(arq_html,"<br>");
+	  for(j=0;j<TAM_TIT;j++) {
+	    fprintf(arq_html,"%c",pks[i].titulo[j]);
+	  }
+	}
+      }
+    }
+    fprintf(arq_html,"<br></div></body></html>");        
+    fclose(arq_html);
+    printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n");
+    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML);
+  }
 
-/*   return; */
-/* } */
+  return;
+}
 
 /*!
  * \brief Funcao para leitura de chave primaria a ser procurada na base
