@@ -47,9 +47,9 @@ ap_tipo_registro_pk realoca_memoria(ap_tipo_registro_pk vetor_pk, int * limite){
  */
 void inserePKBase(FILE *arqBase, int * limite, int n_registros){
   
-  int i, j;
+  int i, j, tamanho;
   tipo_registro_pk novo;
-  
+  tamanho = *limite;
 
 
   for(i=0;i<n_registros;i++){
@@ -59,14 +59,15 @@ void inserePKBase(FILE *arqBase, int * limite, int n_registros){
     for(j=0; j<TAM_TIT; j++)
       fscanf(arqBase, "%c", &(novo.titulo[j]));
     
-    limite[0]++;
+    tamanho++;
     
     /* Guarda o numero do registro */
-    novo.nrr = limite[0];
+    novo.nrr = tamanho;
     
     
     insere_pk_arquivo(novo);
   } 
+  *limite = tamanho;
 }
 
 
@@ -103,28 +104,24 @@ ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *
 }
 
 
-/* /\*!  */
-/*  * \brief Insere o ultimo titulo lido no vetor de chaves primarias */
-/*  *\/ */
-/* void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr){ */
-
-/*   int i; */
-/*   tipo_registro_pk novo; */
+/*!
+ * \brief Insere o ultimo titulo lido no vetor de chaves primarias
+ */
+void novopk(char *str_final, int nrr){
+  
+  int i;
+  tipo_registro_pk novo;
  
-/*   /\* Copia o ultimo titulo inserido *\/ */
-/*   for(i=0;i<TAM_TIT;i++) */
-/*     novo.titulo[i]=str_final[i]; */
+  /* Copia o ultimo titulo inserido */
+  for(i=0;i<TAM_TIT;i++)
+    novo.titulo[i]=str_final[i];
 
-/*   limite[0]++; */
-/*   /\* Guarda no campo nrr o numero do seu registro *\/ */
-/*   if(nrr==-1) */
-/*     novo.nrr = limite[0]; */
-/*   else */
-/*     novo.nrr = nrr; */
+  /* Guarda no campo nrr o numero do seu registro */
+  novo.nrr = nrr;
   
-/*   insere_pk_arquivo(novo);  */
+  insere_pk_arquivo(novo);
   
-/* } */
+}
 
 
 /* /\*!  */
@@ -288,7 +285,7 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
 
   printf("Consulta pelo titulo no catalogo:\n");
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
-  Insere_titulo(titulo_procurado, vetor_de_registros, 0);
+  Insere_titulo(titulo_procurado);
 
   /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
   arq_html=fopen(ARQHTML,"w");
