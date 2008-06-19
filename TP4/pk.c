@@ -251,7 +251,7 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   Insere_titulo(titulo_procurado);
 
 
-  titulo_procurado[TAM_TIT] = '\0';
+  titulo_procurado[MAX_TIT] = '\0';
   
   /*calcula o hash e abre o arquivo correspondente */
   arquivo = calculaHash(titulo_procurado, ARQPK);
@@ -270,7 +270,7 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
     /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
     arq_html=fopen(ARQHTML,"w");
     
-    if(acha_pk(pks, titulo_procurado, limite_reg, arq_base, arq_html)){
+    if(acha_pk(pks, titulo_procurado, tam, arq_base, arq_html)){
       printf("Obra encontrada. Para visualizar suas informações consulte\n");
       printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
     }
@@ -292,7 +292,7 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
  * \brief Verifica chave primaria a ser procurada na base
  * (retorna 1 caso encontre e 0 caso nao encontre)
  */
-int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT], int limite_reg, FILE * arq_base, FILE *arq_html){
+int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TIT+1], int limite_reg, FILE * arq_base, FILE *arq_html){
   ap_tipo_registro_pk elto_encontrado;
   int NRR;
   /* Busca o titulo procurado no vetor de structs. */
