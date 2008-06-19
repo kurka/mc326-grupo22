@@ -117,7 +117,7 @@ int main() {
       nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
       novopk(str_final, nrr);
       /* Insere as novas sks */
- /*      vetores_sk = insereVetorSK(str_final, vetores_sk, arqs_li); */
+      insereVetorSK(str_final); 
 
       limite++;
       if(DEBUG)

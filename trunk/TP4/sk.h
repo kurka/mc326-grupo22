@@ -12,7 +12,7 @@ tipo_dados_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
 
 /* Insere um novo vetor de SKs, um para cada chave secundaria do novo registro, assim como as suas 
    respectivas listas invertidas*/
-tipo_vetores_sk *insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li *arqs_li );
+void insereVetorSK(char *registro);
 
 /* Cria vetor sk e lista invertida*/	
 void cria_vetor_generico(char *registro, char *pk, int limite[2]);
