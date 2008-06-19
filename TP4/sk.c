@@ -441,6 +441,7 @@ int le_sk(char* palavra_procurada, int max){
 void consulta_sk_tit(int n_pk, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
+  char * arquivo;
   int n_sk, tam_pks;
   FILE *arq_li, *arq_sk, *arq_pk;
   tipo_registro_pk * pks;
@@ -459,23 +460,28 @@ void consulta_sk_tit(int n_pk, FILE *arq_base) {
   /* Le o tipo a ser buscado */
   if(le_sk(titulo_procurado, TAM_TIT)){
     
-    /*
-    //calcula hash sk, li, titulo
-    */
-    /*abre arquivo li*/
-    arq_li = fopen("teste_li.dat", "r+");
+    
+
+    /*calcula hash e abre arquivo li*/
+    arquivo = calculaHash(titulo_procurado, ARQLI_TIT);   
+    arq_li = fopen(arquivo, "r+");
 
     /*abre arquivo de sks e carrega suas chaves em vetor dinamico*/
-    arq_sk = fopen("teste_sk.dat", "r+");
+    arquivo = calculaHash(titulo_procurado, ARQSK_TIT);   
+    if(DEBUG)
+      printf(">>>Buscando chave no arquivo %s\n", arquivo);
+    
+    arq_sk = fopen(arquivo, "r+");
     if(!arq_sk)
-      arq_sk = fopen("teste_sk.dat", "w+");
+      arq_sk = fopen(arquivo, "w+");
 
     sks = le_chaves_sk(arq_sk, &n_sk);
     /*ordena vetor, para fazer bsearch*/
     qsort(sks, n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
 
     /*abre arquivo de pks e carrega as suas chaves primarias*/
-    arq_pk = fopen("teste.txt", "a+");
+    arquivo = calculaHash(titulo_procurado, ARQPK);   
+    arq_pk = fopen(arquivo, "a+");
  
     fseek(arq_pk, 0, SEEK_END);
     tam_pks = ftell(arq_pk)/TAM_PK;
