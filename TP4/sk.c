@@ -118,41 +118,40 @@ tipo_dados_sk *le_chaves_sk(FILE * arq_generico, int *n_sks){
 }
 
 
-/* /\*! */
-/*  * \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro,  */
-/*  * assim como as suas respectivas listas invertidas */
-/*  *\/ */
-/* tipo_vetores_sk * insereVetorSK(char *registro, tipo_vetores_sk *vetores_sk, tipo_arqs_li * arqs_li) */
-/* { */
-/*   int j; */
-/*   char pk[TAM_TIT+1]; */
-/*   int n_titulos_li, n_autores_li, n_anos_li, n_tipos_li; */
-  
+/*!
+ * \brief Insere um novo vetor de SKs, um para cada chave secundaria nova do registro,
+ * assim como as suas respectivas listas invertidas
+ */
+void insereVetorSK(char *registro)
+{
+  int j;
+  char pk[TAM_TIT+1];
+  int limites_tit[2],limites_tip[2],limites_aut[2], limites_ano[2];
 
-/*   n_titulos_li = ftell(arqs_li->arq_tit_li)/(TAM_TIT+8); */
-/*   n_tipos_li = ftell(arqs_li->arq_tip_li)/(TAM_TIT+8); */
-/*   n_autores_li = ftell(arqs_li->arq_aut_li)/(TAM_TIT+8); */
-/*   n_anos_li = ftell(arqs_li->arq_ano_li)/(TAM_TIT+8); */
+
+  limites_tit[0]= 0;
+  limites_tit[1]= MAX_TIT;
+  limites_tip[0]= MAX_TIT;
+  limites_tip[1]= MAX_TIP;
+  limites_aut[0]= MAX_TIP;
+  limites_aut[1]= MAX_AUT;
+  limites_ano[0]= MAX_AUT;
+  limites_ano[1]= MAX_ANO;
  
 
-/*   /\* Guarda a chave primaria (titulo) *\/ */
-/*   for(j=0; j<TAM_TIT; j++) */
-/*     pk[j] = registro[j]; */
+  /* Guarda a chave primaria (titulo) */
+  for(j=0; j<TAM_TIT; j++)
+    pk[j] = registro[j];
   
-/*   pk[TAM_TIT]='\0'; */
+  pk[TAM_TIT]='\0';
 
       
-/*   /\* Adiciona as chaves secundarias e listas invertidas, para cada campo *\/ */
-/*   vetores_sk->titulo = cria_vetor_generico(registro, pk, vetores_sk->titulo, &n_titulos_li, arqs_li->arq_tit_li);       */
-/*   vetores_sk->tipo = cria_vetor_generico(registro, pk, vetores_sk->tipo, &n_tipos_li, arqs_li->arq_tip_li);       */
-/*   vetores_sk->autor = cria_vetor_generico(registro, pk, vetores_sk->autor, &n_autores_li, arqs_li->arq_aut_li);       */
-/*   vetores_sk->ano = cria_vetor_generico(registro, pk, vetores_sk->ano, &n_anos_li, arqs_li->arq_ano_li); */
-  
-
- 
-  
-/*   return vetores_sk; */
-/* } */
+  /* Adiciona as chaves secundarias e listas invertidas, para cada campo */
+  cria_vetor_generico(registro, pk, limites_tit);   
+  /*       cria_vetor_generico(registro, pk, limites_tip);    */
+  /*       cria_vetor_generico(registro, pk, limites_aut);    */
+  /*       cria_vetor_generico(registro, pk, limites_ano);  */   
+ } 
 
 
 /*! 
