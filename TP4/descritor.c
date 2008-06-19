@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "defines.h"
 #include "base.h"
-#include "sk.h"
+#include "pk.h"
 #include "descritor.h"
 #include "libimg.h"
 
@@ -211,9 +211,9 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
-      if(strcmpinsensitive(PK_lida , entrada.titulo)==0){
+      if(strncmpinsensitive(PK_lida , entrada.titulo, TAM_TIT)==0){
 	(*descritor_entrada)=i;
-	
+      
 	/* Le o nome do arquivo da imagem */
 	for(z=0 ; z<(TAM_IMG+1) ; z++)
 	  img_lida[z]=fgetc(arq_descritor);
