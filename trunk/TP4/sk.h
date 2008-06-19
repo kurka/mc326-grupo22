@@ -3,10 +3,6 @@
 /* Cria os registros de SKs, um para cada chave secundaria, assim como as suas respectivas listas invertidas */
 void criaRegistrosSK(int n_registros, FILE *arqBase);
 
-
-/* Cria vetores de SKs, a partir de um arquivo ja existente com as chaves criadas*/
-tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk *arqs_sk);
-  
 /* Faz a leitura de cada arquivo, copiando as chaves secundarias para um vetor*/
 tipo_registro_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
 
