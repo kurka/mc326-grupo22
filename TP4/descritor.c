@@ -111,7 +111,7 @@ void criaDescritores(){
 void listaObrasSimilares(){
 
   estrutura_pk_imagem entrada;
-  int n_obras_a_listar, *descritor_entrada, n_obras_similares, *n;
+  int n_obras_a_listar, descritor_entrada, n_obras_similares, *n;
   estrutura_pk_imagem_similaridade *obras_similares;
   
   printf("Pesquisa por similaridade de obras:\n");
@@ -122,16 +122,16 @@ void listaObrasSimilares(){
   if(DEBUG) printf(">>> Chamando funcao verificaPKDescritores...\n");
   
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
-  if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
+  if(verificaPKDescritores(entrada, &descritor_entrada)==ERRO){
     printf("A chave procurada nao consta nos registros.\n\n");
     return;
   }
   
-  if(DEBUG) printf(">>> A chave foi encontrada! Descritor da obra: %d\n",(*descritor_entrada));
+  if(DEBUG) printf(">>> A chave foi encontrada! Descritor da obra: %d\n",descritor_entrada);
   
   
   /* Conta quantas obras similares existem para d-1, d e d+1 */
-  n_obras_similares=contaObrasSimilares((*descritor_entrada) - 1) + contaObrasSimilares((*descritor_entrada)) + contaObrasSimilares((*descritor_entrada) + 1);
+  n_obras_similares=contaObrasSimilares(descritor_entrada - 1) + contaObrasSimilares(descritor_entrada) + contaObrasSimilares(descritor_entrada + 1);
   
   printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
   scanf("%d",&n_obras_a_listar);
@@ -145,9 +145,9 @@ void listaObrasSimilares(){
   obras_similares=(estrutura_pk_imagem_similaridade *)malloc(n_obras_similares*(sizeof(estrutura_pk_imagem_similaridade)));
 
   *n=0; /*contador das obras inseridas no vetor*/
-  carregaObrasSimilares(*descritor_entrada -1 , obras_similares, entrada.path, n);
-  carregaObrasSimilares(*descritor_entrada , obras_similares, entrada.path, n);
-  carregaObrasSimilares(*descritor_entrada +1 , obras_similares, entrada.path, n);
+  carregaObrasSimilares(descritor_entrada -1 , obras_similares, entrada.path, n);
+  carregaObrasSimilares(descritor_entrada , obras_similares, entrada.path, n);
+  carregaObrasSimilares(descritor_entrada +1 , obras_similares, entrada.path, n);
   if(DEBUG) printf("Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
   qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
   
@@ -212,7 +212,9 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
       if(strncmpinsensitive(PK_lida , entrada.titulo, TAM_TIT)==0){
+	if(DEBUG) printf(">>> Encontrou a PK igual...(entrou no if)\n");
 	(*descritor_entrada)=i;
+	if(DEBUG) printf(">>> Passado valor do descritor por referencia...\n");
       
 	/* Le o nome do arquivo da imagem */
 	for(z=0 ; z<(TAM_IMG+1) ; z++)
