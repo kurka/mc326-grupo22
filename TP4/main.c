@@ -62,13 +62,13 @@ int main() {
     printf("\n>>>Numero de registros: %d\n\n\n",limite);
 
 
-/*   /\* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir da base *\/ */
-/*   if(verificaDescritores()==ERRO) */
-/*     criaDescritores(); */
+  /* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir da base */
+  if(verificaDescritores()==ERRO)
+    criaDescritores();
   
   /* Interface*/
   do {
-
+    
     printf("Escolha uma das opcoes abaixo e tecle Enter.\n");
     printf("1-) Adicionar uma obra ao catalogo.\n");
     printf("2-) Listar obras do catalogo.\n");
@@ -146,9 +146,10 @@ int main() {
       espera();
       break;
 
-/*     case CONSULTA_DSC: */
-/*       consultaSingulares(); */
-/*       break; */
+     case CONSULTA_DSC:
+       listaObrasSimilares();
+       espera();
+       break; 
 
 /*       /\* Remove um registro do catalogo *\/ */
 /*     case REMOVER: */

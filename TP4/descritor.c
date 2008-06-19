@@ -1,25 +1,12 @@
+/* Definicao da biblioteca das funcoes de manipulacao dos descritores */
+
 #include <stdio.h>
 #include "defines.h"
 #include "sk.h"
+#include "pk.h"
 #include "descritor.h"
 #include "libimg.h"
 
-
-/* main para testes */
-int main(){
-
-  int i;
-  FILE *teste;
-  char titulo[TAM_TIT];
-
-  printf("Testando criacao dos descritores...\n\n");
-
-  printf("verificaDescritores: %d\n\n", verificaDescritores());
-  printf("Chamando funcao criaDescritores para a base toda... (carrega PKs apenas em DSC0!\n\n");
-  criaDescritores();
-
-  return(0);
-}
 
 /* Verifica se ja existem arquivos com os descritores. */
 /* Retorna OK(0) ou ERRO(-1) */
@@ -96,8 +83,7 @@ void criaDescritores(){
       sprintf(path,"%s%s",DIRIMG,nome_arq_img);
       
       /* Calcula descritor da obra */
-      /*descritor=ContaUns(CalculaDescritor(path));*/
-      descritor=0; /* TESTE!! */
+      descritor=ContaUns(CalculaDescritor(path));
 
       /* Abre o arquivo correspondente aquele descritor no modo "a" */
       arq_descritor = (FILE *)abreArquivoDescritor(descritor,MODOA);
@@ -124,33 +110,32 @@ void listaObrasSimilares(){
 
   printf("chamada funcao listaObrasSimilares\n\n");
 
-  /*estrutura_pk_imagem entrada;
+  estrutura_pk_imagem entrada;
   int n_obras_a_listar, *descritor_entrada, n_obras_similares, *n;
   estrutura_pk_imagem_similaridade *obras_similares;
   
   printf("Pesquisa por similaridade de obras:\n");*/
 
   /* Le o nome da obra e grava em entrada.titulo[] */
-  /*leTitulo(entrada.titulo);*/
-
+  leTitulo(entrada.titulo);
+  
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
-  /*if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
+  if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
     printf("A chave procurada nao consta nos registros.\n\n");
     return;
-    }*/
-
+  }
+  
   /* Conta quantas obras similares existem para d-1, d e d+1 */
-  /*n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
-
+  n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
+  
   printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
   scanf("%d",&n_obras_a_listar);
-
+  
   if((n_obras_a_listar > n_obras_similares) || (n_obras_a_listar < MIN_OBRAS)){
     printf("Entrada invalida.\n\n");
     return;
-  }*/
-
-
+  }
+    
   /* Carrega TODAS as obras similares para o vetor obras_similares (vetor ordenado por similaridade) */
   obras_similares=(estrutura_pk_imagem_similaridade *)malloc(n_obras_similares*(sizeof(estrutura_pk_imagem_similaridade)));
 
@@ -158,7 +143,7 @@ void listaObrasSimilares(){
   carregaObrasSimilares(*descritor_entrada -1 , obras_similares, entrada.path, n);
   carregaObrasSimilares(*descritor_entrada , obras_similares, entrada.path, n);
   carregaObrasSimilares(*descritor_entrada +1 , obras_similares, entrada.path, n);
-  if(DEBUG) printf("Chamando o qsort para ordenar o vetor...\n");
+  if(DEBUG) printf("Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
   qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
   
   geraHtmlSimilares(obras_similares, n_obras_a_listar);
@@ -245,6 +230,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
 /* Retorna o numero de obras no arquivo de descritores */
 int contaObrasSimilares(int descritor){
 
+  int n;
   FILE *arq_descritor;
 
   /* Caso a funcao seja chamada para os limites inferior ou superior, retorna ZERO  */
@@ -253,8 +239,10 @@ int contaObrasSimilares(int descritor){
 
   arq_descritor = (FILE *)abreArquivoDescritor(descritor,MODOR);
   fseek(arq_descritor,0,SEEK_END);
+  n=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
+  fclose(arq_descritor);
 
-  return(ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1));
+  return(n);
 }
 
 
@@ -312,7 +300,7 @@ void leTitulo(char *titulo) {
     c=getchar();
     
     /* Eliminacao de espacos antes dos caracteres */
-    /*c = come_espaco(c);*/
+    c = come_espaco(c);
     
     /* Caso o primeiro caractere seja um 'Enter' */
     if(c=='\n') resposta=ERRO;
@@ -324,13 +312,13 @@ void leTitulo(char *titulo) {
       titulo[i]=c;
       i++;
       /* Remove os espacos entre palavras */
-      if(c==' ') /*c=come_espaco(c);*/ i=i;
+      if(c==' ') c=come_espaco(c);
       else c=getchar();
 
       /* CASO DE ERRO */
       /* Caso a entrada seja maior que o tamanho limite */
       if((i>=TAM_TIT) && (c!='\n')) {
-	/*resposta = come_excesso(c);*/
+	resposta = come_excesso(c);
 	
 	if(resposta==ERRO) printf("ERRO: Tamanho de titulo excedido!\n");
 	break;	
@@ -397,7 +385,7 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
 
 /* Funcao auxiliar para a ordenacao usando o qsort */
 int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
-  return((int)((estrutura_pk_imagem_similaridade *)obra1->similaridade - (estrutura_pk_imagem_similaridade *)obra2->similaridade));
+  return((int)(1000*((estrutura_pk_imagem_similaridade *)obra1->similaridade - (estrutura_pk_imagem_similaridade *)obra2->similaridade)));
 }
 
 
@@ -423,3 +411,4 @@ void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_
   fclose(arq_html);
   return;
 }
+
