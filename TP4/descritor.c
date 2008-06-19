@@ -1,9 +1,9 @@
 /* Definicao da biblioteca das funcoes de manipulacao dos descritores */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "defines.h"
-#include "sk.h"
-#include "pk.h"
+#include "base.h"
 #include "descritor.h"
 #include "libimg.h"
 
@@ -72,10 +72,6 @@ void criaDescritores(){
     for( ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j]=fgetc(base);
 
-    printf("nome_arq_img[0]: %c",nome_arq_img[0]);
-    FILE *arq_teste=fopen("teste.dat","a");
-    fputc(nome_arq_img[0],arq_teste);
-
     /* Identificador de obra apagada: '*' no PRIMEIRO CAMPO da imagem */
     if(nome_arq_img[0]!='*'){
       
@@ -108,13 +104,11 @@ void criaDescritores(){
 /* Funcao chamada pelo main para pesquisa por similaridade */
 void listaObrasSimilares(){
 
-  printf("chamada funcao listaObrasSimilares\n\n");
-
   estrutura_pk_imagem entrada;
   int n_obras_a_listar, *descritor_entrada, n_obras_similares, *n;
   estrutura_pk_imagem_similaridade *obras_similares;
   
-  printf("Pesquisa por similaridade de obras:\n");*/
+  printf("Pesquisa por similaridade de obras:\n");
 
   /* Le o nome da obra e grava em entrada.titulo[] */
   leTitulo(entrada.titulo);
@@ -146,7 +140,7 @@ void listaObrasSimilares(){
   if(DEBUG) printf("Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
   qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
   
-  geraHtmlSimilares(obras_similares, n_obras_a_listar);
+  geraHTMLSimilares(obras_similares, n_obras_a_listar);
 
   printf("Consulta realizada com sucesso!\n Verifique o arquivo %s para visualizar o resultado da pesquisa.\n\n",ARQHTML);
 
@@ -373,8 +367,8 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
     obra_lida.similaridade=ComputaSimilaridade(obra_lida.path , path_obra_procurada);
 
     /* Insere a estrutura obra_lida no vetor de estruturas obras_similares[] */
-    obras_similares[*n]=obra_lida;
-    *n++;
+    obras_similares[(*n)]=obra_lida;
+    (*n)++;
 
   }/*fim do for*/
 
@@ -385,7 +379,7 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
 
 /* Funcao auxiliar para a ordenacao usando o qsort */
 int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
-  return((int)(1000*((estrutura_pk_imagem_similaridade *)obra1->similaridade - (estrutura_pk_imagem_similaridade *)obra2->similaridade)));
+  return((int)(1000* (((estrutura_pk_imagem_similaridade *)obra1)->similaridade - ((estrutura_pk_imagem_similaridade *)obra2)->similaridade) ));
 }
 
 
