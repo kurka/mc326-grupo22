@@ -187,10 +187,11 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	/*calcula o hash e abre o arquivo correspondente */
 	arquivo = calculaHash(temp_sk, prefixo_sk);
 	arq_sk = fopen(arquivo, "r+");
-	if(!arq_sk)
+	if(!arq_sk){
 	  if(DEBUG)
 	    printf(">>>Criando arquivo %s\n", arquivo);
 	  arq_sk = fopen(arquivo, "w+");
+	}
 
 	/*carrega os vetores dinamicamente*/	
 	vetor_sk = le_chaves_sk(arq_sk, &n_sk);
@@ -198,11 +199,12 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	/*abre arquivo correspondente de lista invertida*/
 	arquivo = calculaHash(temp_sk, prefixo_li);
 	arq_li = fopen(arquivo, "r+");
-	if(!arq_li)
+	if(!arq_li){
 	  if(DEBUG)
 	    printf(">>>Criando arquivo %s\n", arquivo);
 	  arq_li = fopen(arquivo, "w+");
-	
+	}
+
 	/*calcula o numero de chaves no arquivo*/
 	fseek(arq_li,0,SEEK_END);
 	n_li = ftell(arq_li)/(TAM_LI);
