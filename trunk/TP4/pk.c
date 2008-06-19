@@ -242,7 +242,7 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   arquivo = calculaHash(titulo_procurado, ARQPK);
 
   if(DEBUG)
-    printf(">>>Buscando no arquivo %s\n", arquivo);
+    printf(">>>Buscando chave primaria no arquivo %s\n", arquivo);
 
   arq_pk = fopen(arquivo, "a+");
   fseek(arq_pk, 0, SEEK_END);
@@ -298,8 +298,8 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int n_r
 
   int i, j;
   tipo_registro_pk novo;
-  fseek(arqPK,0,SEEK_SET);
-  
+
+  fseek(arqPK,i*TAM_PK,SEEK_SET);
   for(i=0;i<n_registros;i++){
     for(j=0; j<TAM_TIT; j++){
       fscanf(arqPK, "%c", &(novo.titulo[j]));
@@ -322,10 +322,7 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int n_r
  */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int limite){
  
-  /* Verifica se ainda cabem dados no vetor (limite[0] contem 
-     o numero de chaves primarias, e limite[1] o tamanho do vetor) */
-  
-  vetor_pk[limite-1] = novo;  
+  vetor_pk[limite] = novo;  
   
   /* Ordena o vetor em ordem alfabetica */
   qsort(vetor_pk, limite, sizeof(tipo_registro_pk), compara_qsort); 
