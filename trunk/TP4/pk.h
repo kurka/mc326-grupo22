@@ -31,8 +31,6 @@ void insere_pk_arquivo(tipo_registro_pk novo);
 /* Remove a chave primaria que acabou de ser removida da base22.dat */
 ap_tipo_registro_pk  remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int cabeca_avail);
 
-/* Salva todos os registros do nosso vetor de PKs no arquivo PK.dat */
-void salvarArquivoPK(ap_tipo_registro_pk vetor, FILE *arq_pk, int limite_reg);
 
 /* Faz a leitura de uma chave primaria que sera buscada na base */
 void consulta_pk(int limite_reg, FILE *arqBase);
