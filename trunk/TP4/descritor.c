@@ -39,6 +39,8 @@ void criaDescritores(){
   int i, j, descritor, n_registros;
   char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
 
+  if(DEBUG) printf(">>> Criando arquivos pks_dscX.dat a partir da base...\n");
+
   /* Cria os arquivos vazios (como um "touch") */
   arq_descritor=fopen(ARQDSC0,"a"); fclose(arq_descritor);
   arq_descritor=fopen(ARQDSC1,"a"); fclose(arq_descritor);
@@ -50,14 +52,17 @@ void criaDescritores(){
   arq_descritor=fopen(ARQDSC7,"a"); fclose(arq_descritor);
   arq_descritor=fopen(ARQDSC8,"a"); fclose(arq_descritor);
 
+  if(DEBUG) printf(">>> Criados arquivos pks_dscX.dat vazios!\n");
+
   base=fopen(ARQBASE,"r");
   fseek(base,0,SEEK_END);
   n_registros=(ftell(base))/TAM_REGISTRO;
-  fseek(base,0,SEEK_SET);
 
   /* Para cada registro contido na base, verifica se ele ja foi removido. Se sim, pula para o proximo. 
      Caso contrario, calcula seu descritor e insere-o no arquivo correspondente */
   for(i=0 ; i<n_registros ; i++){
+
+    if(DEBUG) printf(">>> Lendo registro %d e inserindo-o em pks_dscX.dat...\n",i);
 
     /* Le a PK da base */
     fseek(base , i*TAM_REGISTRO , SEEK_SET);
