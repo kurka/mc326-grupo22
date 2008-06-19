@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "defines.h"
 #include "base.h"
+#include "sk.h"
 #include "descritor.h"
 #include "libimg.h"
 
@@ -117,6 +118,8 @@ void listaObrasSimilares(){
 
   /* Le o nome da obra e grava em entrada.titulo[] */
   leTitulo(entrada.titulo);
+
+  if(DEBUG) printf(">>> Chamando funcao verificaPKDescritores...\n");
   
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
   if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
@@ -124,8 +127,11 @@ void listaObrasSimilares(){
     return;
   }
   
+  if(DEBUG) printf(">>> A chave foi encontrada! Descritor da obra: %d\n",(*descritor_entrada));
+  
+  
   /* Conta quantas obras similares existem para d-1, d e d+1 */
-  n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
+  n_obras_similares=contaObrasSimilares((*descritor_entrada) - 1) + contaObrasSimilares((*descritor_entrada)) + contaObrasSimilares((*descritor_entrada) + 1);
   
   printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
   scanf("%d",&n_obras_a_listar);
@@ -189,6 +195,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
   for(i=DSC0 ; i<=DSC8 ; i++){
 
     /* Abre o arquivo no modo "r" e calcula o n de pks nele contidas */
+    if(DEBUG) printf(">>> Abrindo arquivo pks_dsc%d.dat...\n", i);
     arq_descritor = (FILE *)abreArquivoDescritor(i,MODOR);
     fseek(arq_descritor,0,SEEK_END);
     n_pks_descritor=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
@@ -196,6 +203,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
     /* Para cada PK dentro do arquivo... */
     for(j=0 ; j<n_pks_descritor ; j++){
 
+      if(DEBUG) printf(">>> Lendo obra %d do arquivo pks_dsc%d.dat\n",j,i);
       /* Le PK... */
       fseek(arq_descritor , j*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
       for(z=0 ; z<TAM_TIT ; z++)
@@ -203,8 +211,8 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
-      if(1/*strcmpinsensitive(PK_lida , entrada.titulo)==0*/){
-	*descritor_entrada=i;
+      if(strcmpinsensitive(PK_lida , entrada.titulo)==0){
+	(*descritor_entrada)=i;
 	
 	/* Le o nome do arquivo da imagem */
 	for(z=0 ; z<(TAM_IMG+1) ; z++)
@@ -216,7 +224,8 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       }
       
     }/*fim do for (pks internas)*/
-
+    
+    if(DEBUG) printf(">>> Fechando arquivo pks_dsc%d.dat...\n", i);
     fclose(arq_descritor);
     
   }/*fim do for (arquivos)*/
@@ -332,9 +341,9 @@ void leTitulo(char *titulo) {
 
   } while(resposta==ERRO);
   
-
+  
   if(DEBUG) printf("Titulo lido.\n");
-
+  
   return;
   
 }
