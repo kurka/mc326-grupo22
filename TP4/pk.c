@@ -126,7 +126,7 @@ void insere_pk_arquivo(tipo_registro_pk novo){
   /* Se o arquivo nao existe */
   if(!arq_pk){
     if(DEBUG)
-      printf(">>criando arquivo %s\n", arquivo);
+      printf(">>>Criando arquivo %s\n", arquivo);
     arq_pk = fopen(arquivo, "w+");
 
     fseek(arq_pk, 0, SEEK_SET);
@@ -218,7 +218,8 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
  */
 void consulta_pk(int limite_reg, FILE *arq_base) {
 
-  char titulo_procurado[MAX_TIT];
+  char titulo_procurado[MAX_TIT+1];
+  char * arquivo;
   FILE *arq_html, *arq_pk;
   int tam;
   tipo_registro_pk * pks;
@@ -234,10 +235,16 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado);
 
-  /*
-  //calcula hash
-  */
-  arq_pk = fopen("teste.txt", "a+");
+
+  titulo_procurado[TAM_TIT] = '\0';
+  
+  /*calcula o hash e abre o arquivo correspondente */
+  arquivo = calculaHash(titulo_procurado, ARQPK);
+
+  if(DEBUG)
+    printf(">>>Buscando no arquivo %s\n", arquivo);
+
+  arq_pk = fopen(arquivo, "a+");
   fseek(arq_pk, 0, SEEK_END);
   tam = ftell(arq_pk)/TAM_PK;
 
