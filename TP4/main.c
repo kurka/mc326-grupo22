@@ -144,18 +144,18 @@ int main() {
       consulta_sk_tit(limite,arq_base);
       espera();
       break;
-/*     case CONSULTA_SK_TIP: */
-/*       consulta_sk_tip(vetores_sk->tipo, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base); */
-/*       espera(); */
-/*       break; */
-/*     case CONSULTA_SK_AUT: */
-/*       consulta_sk_aut(vetores_sk->autor, vetor_registros, limite[0], arqs_li->arq_aut_li, arq_base); */
-/*       espera(); */
-/*       break; */
-/*     case CONSULTA_SK_ANO: */
-/*       consulta_sk_ano(vetores_sk->ano, vetor_registros, limite[0], arqs_li->arq_ano_li, arq_base); */
-/*       espera(); */
-/*       break; */
+    case CONSULTA_SK_TIP:
+      consulta_sk_tip(limite, arq_base);
+      espera();
+      break;
+    case CONSULTA_SK_AUT:
+      consulta_sk_aut(limite, arq_base);
+      espera();
+      break;
+    case CONSULTA_SK_ANO:
+      consulta_sk_ano(limite, arq_base);
+      espera();
+      break;
 
 /*     case CONSULTA_DSC: */
 /*       consultaSingulares(); */

@@ -9,7 +9,7 @@
 #include "sk.h"
 #include "fopen.h"
 
-/*commit 200!!!*/
+
 /*! 
  * \brief Cria os registros de SKs, a partir da base, um para cada chave secundaria, 
  * assim como as suas respectivas listas invertidas
@@ -436,18 +436,58 @@ int le_sk(char* palavra_procurada, int max){
 }
 
 /*!
+ * \brief Realiza a busca por chaves secundarias
+ */
+void abre_arqs_busca(char * palavra_procurada, char * pre_li, char * pre_sk, FILE * arq_base){
+
+  char * arquivo;
+  FILE *arq_li, *arq_sk, *arq_pk;
+  int n_sk, tam_pks;
+  tipo_registro_pk * pks;
+  tipo_registro_sk * sks;
+  
+  /*calcula hash e abre arquivo li*/
+  arquivo = calculaHash(palavra_procurada, pre_li);   
+  arq_li = fopen(arquivo, "r+");
+  
+  /*abre arquivo de sks e carrega suas chaves em vetor dinamico*/
+  arquivo = calculaHash(palavra_procurada, pre_sk);   
+  if(DEBUG)
+    printf(">>>Buscando chave no arquivo %s\n", arquivo);
+  
+  arq_sk = fopen(arquivo, "r+");
+  if(!arq_sk)
+    arq_sk = fopen(arquivo, "w+");
+  
+  sks = le_chaves_sk(arq_sk, &n_sk);
+  /*ordena vetor, para fazer bsearch*/
+  qsort(sks, n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+  
+  /*abre arquivo de pks e carrega as suas chaves primarias*/
+  arquivo = calculaHash(palavra_procurada, ARQPK);   
+  arq_pk = fopen(arquivo, "a+");
+  
+  fseek(arq_pk, 0, SEEK_END);
+  tam_pks = ftell(arq_pk)/TAM_PK;
+  
+  pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam_pks);
+  pks = lerArquivoPK(arq_pk, pks, tam_pks);
+
+  acha_sk(palavra_procurada, tam_pks, n_sk, arq_base, arq_li, sks, pks);
+
+  free(sks);
+  free(pks);
+  return;  
+}
+
+
+/*!
  * \brief Instancia a estrutura do tipo_dados_sk do campo titulo
  */
 void consulta_sk_tit(int n_pk, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
-  char * arquivo;
-  int n_sk, tam_pks;
-  FILE *arq_li, *arq_sk, *arq_pk;
-  tipo_registro_pk * pks;
-  tipo_registro_sk * sks;
-
-
+ 
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
     return;
@@ -458,121 +498,89 @@ void consulta_sk_tit(int n_pk, FILE *arq_base) {
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 200 letras)\n\n");
   
   /* Le o tipo a ser buscado */
-  if(le_sk(titulo_procurado, TAM_TIT)){
-    
-    
-
-    /*calcula hash e abre arquivo li*/
-    arquivo = calculaHash(titulo_procurado, ARQLI_TIT);   
-    arq_li = fopen(arquivo, "r+");
-
-    /*abre arquivo de sks e carrega suas chaves em vetor dinamico*/
-    arquivo = calculaHash(titulo_procurado, ARQSK_TIT);   
-    if(DEBUG)
-      printf(">>>Buscando chave no arquivo %s\n", arquivo);
-    
-    arq_sk = fopen(arquivo, "r+");
-    if(!arq_sk)
-      arq_sk = fopen(arquivo, "w+");
-
-    sks = le_chaves_sk(arq_sk, &n_sk);
-    /*ordena vetor, para fazer bsearch*/
-    qsort(sks, n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
-
-    /*abre arquivo de pks e carrega as suas chaves primarias*/
-    arquivo = calculaHash(titulo_procurado, ARQPK);   
-    arq_pk = fopen(arquivo, "a+");
- 
-    fseek(arq_pk, 0, SEEK_END);
-    tam_pks = ftell(arq_pk)/TAM_PK;
-    
-    pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam_pks);
-    pks = lerArquivoPK(arq_pk, pks, tam_pks);
-
-
-    /* Procura se existe chave secundaria com o termo requisitado */
-    acha_sk(titulo_procurado, tam_pks, n_sk, arq_base, arq_li, sks, pks);
+  if(le_sk(titulo_procurado, TAM_TIT)){ 
+    /*faz a busca*/
+    abre_arqs_busca(titulo_procurado, ARQLI_TIT, ARQSK_TIT, arq_base);
   }
-
-    free(sks);
-    free(pks);
   return;
 }
 
-/* /\*! */
-/*  * \brief Instancia a estrutura do tipo_dados_sk do campo tipo */
-/*  *\/ */
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo tipo
+ */
 
-/* void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) { */
+void consulta_sk_tip(int n_pk, FILE *arq_base) {
 
-/*   char tipo_procurado[TAM_TIP+1]; */
+  char tipo_procurado[TAM_TIP+1];
 
-/*   if(n_pk == 0) { */
-/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
-/*     return; */
-/*   } */
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
 
-/*   printf("Consulta de tipo catalogo:\n"); */
-/*   /\* tipo_procurado eh lido *\/ */
-/*   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n"); */
+  printf("Consulta de tipo catalogo:\n");
+  /* tipo_procurado eh lido */
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n");
 
-/*   /\* Le o tipo a ser buscado *\/ */
-/*   if(le_sk(tipo_procurado, TAM_TIP)) */
-/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
-/*     acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, tipo, vetor_pk); */
-
-/*   return; */
-/* } */
+  /* Le o tipo a ser buscado */
+  if(le_sk(tipo_procurado, TAM_TIP))
+    /* Procura se existe chave secundaria com o termo requisitado */
+    abre_arqs_busca(tipo_procurado, ARQLI_TIP, ARQSK_TIP, arq_base);
 
 
-/* /\*! */
-/*  * \brief Instancia a estrutura do tipo_dados_sk do campo autor */
-/*  *\/ */
-/* void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) { */
+  return;
+}
 
-/*   char autor_procurado[TAM_AUT+1]; */
 
-/*   if(n_pk == 0) { */
-/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
-/*     return; */
-/*   } */
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo autor
+ */
+void consulta_sk_aut(int n_pk, FILE *arq_base) {
 
-/*   printf("Consulta de autor no catalogo:\n"); */
-/*   /\* autor_procurado eh lido*\/ */
-/*   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n"); */
+  char autor_procurado[TAM_AUT+1];
+
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
+
+  printf("Consulta de autor no catalogo:\n");
+  /* autor_procurado eh lido*/
+  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n");
   
-/*   /\* Le o autor a ser buscado *\/ */
-/*   if(le_sk(autor_procurado, TAM_AUT)) */
-/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
-/*     acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, autor, vetor_pk); */
+  /* Le o autor a ser buscado */
+  if(le_sk(autor_procurado, TAM_AUT))
+    /* Procura se existe chave secundaria com o termo requisitado */
+    abre_arqs_busca(autor_procurado, ARQLI_AUT, ARQSK_AUT, arq_base);
+   
 
-/*   return; */
-/* } */
+  return;
+}
 
 
-/* /\*! */
-/*  * \brief Instancia a estrutura do tipo_dados_sk do campo ano */
-/*  *\/ */
-/* void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) { */
+/*!
+ * \brief Instancia a estrutura do tipo_dados_sk do campo ano
+ */
+void consulta_sk_ano(int n_pk, FILE *arq_base) {
 
-/*   char ano_procurado[TAM_ANO+1]; */
+  char ano_procurado[TAM_ANO+1];
 
-/*   if(n_pk == 0) { */
-/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
-/*     return; */
-/*   } */
+  if(n_pk == 0) {
+    printf("Nao ha obras registradas no catalogo.\n\n");
+    return;
+  }
 
-/*   printf("Consulta de ano no catalogo:\n"); */
-/*   /\* ano_procurado eh lido *\/ */
-/*   printf("Digite um ano a ser pesquisado (max 4 letras)\n\n"); */
+  printf("Consulta de ano no catalogo:\n");
+  /* ano_procurado eh lido */
+  printf("Digite um ano a ser pesquisado (max 4 letras)\n\n");
 
-/*   /\* Le o ano a ser buscado *\/ */
-/*   if(le_sk(ano_procurado, TAM_ANO)) */
-/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
-/*     acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, ano, vetor_pk); */
+  /* Le o ano a ser buscado */
+  if(le_sk(ano_procurado, TAM_ANO))
+    /* Procura se existe chave secundaria com o termo requisitado */
+    abre_arqs_busca(ano_procurado, ARQLI_ANO, ARQSK_ANO, arq_base);
   
-/*   return; */
-/* } */
+  return;
+}
 
 /*!
  * \brief Instancia a estrutura do tipo_dados_sk do 'campo' descritor
