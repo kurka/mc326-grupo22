@@ -182,36 +182,44 @@ ap_tipo_registro_pk remove_pk(ap_tipo_registro_pk vetor_pk, int * limite, int ca
  * \brief Funcao de listagem de registros. A partir do arquivo de chaves primarias,
  * gera um arquivo em html com todos os titulos das obras. 
  */
-void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
+/* void lista_registros(int limite_reg) { */
 
-  FILE *arq_html;
-  int i,j;
+/*   FILE *arq_html; */
+/*   int i,j,k; */
+/*   char arquivo[TAM_NOME_ARQ]; */
+/*   FILE * teste; */
+/*   /\* Caso nao haja registros, retorna a funcao. *\/ */
+/*   if(limite_reg==0) { */
+/*     printf("Nao ha obras cadastradas.\n\n"); */
+/*   } */
+/*   /\* Caso haja, gera o arquivo de consulta em HTML *\/ */
+/*   else { */
+/*     arq_html=fopen(ARQHTML,"w"); */
+/*     /\* Cabecalho do arquivo *\/ */
+/*     fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n"); */
+/*     fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>"); */
+/*     /\* Para cada registro, insere o titulo caractere por caractere *\/ */
+/*     for(i=0;i<limite_reg;i++) { */
+/*       fprintf(arq_html,"<br>"); */
+/*       for(k=0; i<NUM_HASH; i++){ */
+/* 	sprintf(arquivo, "%s%d.dat", ARQPK, i); */
+  
+/* 	teste = fopen(arquivo,"r"); */
+/* 	if(teste) */
 
-  /* Caso nao haja registros, retorna a funcao. */
-  if(limite_reg==0) {
-    printf("Nao ha obras cadastradas.\n\n");
-  }
-  /* Caso haja, gera o arquivo de consulta em HTML */
-  else {
-    arq_html=fopen(ARQHTML,"w");
-    /* Cabecalho do arquivo */
-    fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
-    fprintf(arq_html,"<br><b>Lista de obras cadastradas</b><br>");
-    /* Para cada registro, insere o titulo caractere por caractere */
-    for(i=0;i<limite_reg;i++) {
-      fprintf(arq_html,"<br>");
-      for(j=0;j<TAM_TIT;j++) {
-	fprintf(arq_html,"%c",vetor_de_registros[i].titulo[j]);
-      }
-    }
-    fprintf(arq_html,"<br></div></body></html>");
-    fclose(arq_html);
-    printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n");
-    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML);
-  }
+/* 	for(j=0;j<TAM_TIT;j++) { */
+/* 	  fprintf(arq_html,"%c",vetor_de_registros[i].titulo[j]); */
+/* 	} */
+/*       } */
+/*     } */
+/*     fprintf(arq_html,"<br></div></body></html>"); */
+/*     fclose(arq_html); */
+/*     printf("Listagem efetuada com sucesso. Para visualiza-la, consulte\n"); */
+/*     printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); */
+/*   } */
 
-  return;
-}
+/*   return; */
+/* } */
 
 /*!
  * \brief Funcao para leitura de chave primaria a ser procurada na base
@@ -244,27 +252,32 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   if(DEBUG)
     printf(">>>Buscando chave primaria no arquivo %s\n", arquivo);
 
-  arq_pk = fopen(arquivo, "a+");
-  fseek(arq_pk, 0, SEEK_END);
-  tam = ftell(arq_pk)/TAM_PK;
-
-  pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam);
-  pks = lerArquivoPK(arq_pk, pks, tam);
-
-
-  /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
-  arq_html=fopen(ARQHTML,"w");
-
-  if(acha_pk(pks, titulo_procurado, limite_reg, arq_base, arq_html)){
-    printf("Obra encontrada. Para visualizar suas informações consulte\n");
-    printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
-  }
-  else
-    printf("O titulo nao foi encontrado.\n\n");
+  arq_pk = fopen(arquivo, "r");
+  if(arq_pk){
+    fseek(arq_pk, 0, SEEK_END);
+    tam = ftell(arq_pk)/TAM_PK;
+    pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam); 
+    pks = lerArquivoPK(arq_pk, pks, tam);
     
-  free(pks);
-
-  fclose(arq_html);
+    
+    /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
+    arq_html=fopen(ARQHTML,"w");
+    
+    if(acha_pk(pks, titulo_procurado, limite_reg, arq_base, arq_html)){
+      printf("Obra encontrada. Para visualizar suas informações consulte\n");
+      printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
+    }
+    else
+      printf("O titulo nao foi encontrado.\n\n");
+    
+    free(pks);
+    
+    fclose(arq_html);
+  }
+  else{
+    printf("O titulo nao foi encontrado.\n\n");
+  }
+ 
 }
 
 
