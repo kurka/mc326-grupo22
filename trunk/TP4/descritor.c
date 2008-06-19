@@ -12,8 +12,10 @@ int main(){
   FILE *teste;
   char titulo[TAM_TIT];
 
+  printf("Testando criacao dos descritores...\n\n");
+
   printf("verificaDescritores: %d\n\n", verificaDescritores());
-  printf("Chamando funcao criaDescritores para a base toda...\n\nDar um ls pks_dsc*\n");
+  printf("Chamando funcao criaDescritores para a base toda...\n\n");
   criaDescritores();
 
   return(0);
@@ -29,7 +31,7 @@ int verificaDescritores(){
   /* Testa a abertura de cada um dos arquivos. Caso um deles nao exista, a funcao retorna ERRO */
   for(i=DSC0 ; i<=DSC8 ; i++) {
     
-    arq_dsc_generico = abreArquivoDescritor(i,MODOR);
+    arq_dsc_generico = (FILE *)abreArquivoDescritor(i,MODOR);
 
     if(arq_dsc_generico==NULL)
       return(ERRO);
@@ -94,7 +96,7 @@ void criaDescritores(){
       descritor=0; /* TESTE!! */
 
       /* Abre o arquivo correspondente aquele descritor no modo "a" */
-      arq_descritor = abreArquivoDescritor(descritor,MODOA);
+      arq_descritor = (FILE *)abreArquivoDescritor(descritor,MODOA);
 
       /* Escreve PK no arquivo pks_dscX.dat */
       for(j=0 ; j<TAM_TIT ; j++)
@@ -133,10 +135,13 @@ void listaObrasSimilares(){
   /* Conta quantas obras similares existem para d-1, d e d+1 */
   n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
 
-  printf("Digite quantas das obras mais similares voce deseja visualizar:");
-  n_obras_a_listar = leInt();
+  printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
+  scanf("%d",&n_obras_a_listar);
 
-  
+  if((n_obras_a_listar > n_obras_similares) || (n_obras_a_listar < MIN_OBRAS)){
+    printf("Entrada invalida.\n\n");
+    return;
+  }
 
 
   return;
@@ -177,12 +182,12 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
   for(i=DSC0 ; i<=DSC8 ; i++){
 
     /* Abre o arquivo no modo "r" e calcula o n de pks nele contidas */
-    arq_descritor = abreArquivoDescritor(i,MODOR);
+    arq_descritor = (FILE *)abreArquivoDescritor(i,MODOR);
     fseek(arq_descritor,0,SEEK_END);
     n_pks_descritor=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
 
     /* Para cada PK dentro do arquivo... */
-    for(j=0 , j<n_pks_descritor , j++){
+    for(j=0 ; j<n_pks_descritor ; j++){
 
       /* Le PK... */
       fseek(arq_descritor , j*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
@@ -223,7 +228,7 @@ int ContaObrasSimilares(int descritor){
   if((descritor<DSC0) || (descritor>DSC8))
     return(0);
 
-  arq_descritor = abreArquivoDescritor(descritor,MODOR);
+  arq_descritor = (FILE *)abreArquivoDescritor(descritor,MODOR);
   fseek(arq_descritor,0,SEEK_END);
 
   return(ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1));
@@ -238,22 +243,31 @@ FILE *abreArquivoDescritor(int descritor, char *modo){
   switch(descritor){
   case DSC0:
     arq_descritor=fopen(ARQDSC0,modo);
+    break;
   case DSC1:
     arq_descritor=fopen(ARQDSC1,modo);
+    break;
   case DSC2:
     arq_descritor=fopen(ARQDSC2,modo);
+    break;
   case DSC3:
     arq_descritor=fopen(ARQDSC3,modo);
+    break;
   case DSC4:
     arq_descritor=fopen(ARQDSC4,modo);
+    break;
   case DSC5:
     arq_descritor=fopen(ARQDSC5,modo);
+    break;
   case DSC6:
     arq_descritor=fopen(ARQDSC6,modo);
+    break;
   case DSC7:
     arq_descritor=fopen(ARQDSC7,modo);
+    break;
   case DSC8:
     arq_descritor=fopen(ARQDSC8,modo);
+    break;
   }/*fim do switch*/
 
   return(arq_descritor);
@@ -278,7 +292,7 @@ void leTitulo(char *titulo) {
     c = come_espaco(c);
     
     /* Caso o primeiro caractere seja um 'Enter' */
-    if(c=='\n') resposta=ERRO
+    if(c=='\n') resposta=ERRO;
     
     i=0;
     
