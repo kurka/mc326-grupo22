@@ -29,37 +29,7 @@ int verificaDescritores(){
   /* Testa a abertura de cada um dos arquivos. Caso um deles nao exista, a funcao retorna ERRO */
   for(i=DSC0 ; i<=DSC8 ; i++) {
     
-    switch(i){
-      
-    case DSC0:
-      arq_dsc_generico=fopen(ARQDSC0,"r");
-      break;
-    case DSC1:
-      arq_dsc_generico=fopen(ARQDSC1,"r");
-      break;
-    case DSC2:
-      arq_dsc_generico=fopen(ARQDSC2,"r");
-      break;
-    case DSC3:
-      arq_dsc_generico=fopen(ARQDSC3,"r");
-      break;
-    case DSC4:
-      arq_dsc_generico=fopen(ARQDSC4,"r");
-      break;
-    case DSC5:
-      arq_dsc_generico=fopen(ARQDSC5,"r");
-      break;
-    case DSC6:
-      arq_dsc_generico=fopen(ARQDSC6,"r");
-      break;
-    case DSC7:
-      arq_dsc_generico=fopen(ARQDSC7,"r");
-      break;
-    case DSC8:
-      arq_dsc_generico=fopen(ARQDSC8,"r");
-      break;
-
-    } /* fim do switch */
+    arq_dsc_generico = abreArquivoDescritor(i,MODOR);
 
     if(arq_dsc_generico==NULL)
       return(ERRO);
@@ -123,37 +93,8 @@ void criaDescritores(){
       /*descritor=ContaUns(CalculaDescritor(path));*/
       descritor=0; /* TESTE!! */
 
-      /* Abre o arquivo correspondente aquele descritor */
-      switch(descritor){
-
-      case DSC0:
-	arq_descritor=fopen(ARQDSC0,"a");
-	break;
-      case DSC1:
-	arq_descritor=fopen(ARQDSC1,"a");
-	break;
-      case DSC2:
-	arq_descritor=fopen(ARQDSC2,"a");
-	break;
-      case DSC3:
-	arq_descritor=fopen(ARQDSC3,"a");
-	break;
-      case DSC4:
-	arq_descritor=fopen(ARQDSC4,"a");
-	break;
-      case DSC5:
-	arq_descritor=fopen(ARQDSC5,"a");
-	break;
-      case DSC6:
-	arq_descritor=fopen(ARQDSC6,"a");
-	break;
-      case DSC7:
-	arq_descritor=fopen(ARQDSC7,"a");
-	break;
-      case DSC8:
-	arq_descritor=fopen(ARQDSC8,"a");
-	break;
-      }/*fim do switch*/
+      /* Abre o arquivo correspondente aquele descritor no modo "a" */
+      arq_descritor = abreArquivoDescritor(descritor,MODOA);
 
       /* Escreve PK no arquivo pks_dscX.dat */
       for(j=0 ; j<TAM_TIT ; j++)
@@ -168,6 +109,35 @@ void criaDescritores(){
   }/*fim do for*/
 
   fclose(base);
+
+  return;
+}
+
+/* Funcao chamada pelo main para pesquisa por similaridade */
+void listaObrasSimilares(){
+
+  estrutura_pk_imagem entrada;
+  int n_obras_a_listar, *descritor_entrada, n_obras_similares;
+
+  printf("Pesquisa por similaridade de obras:\n");
+
+  /* Le o nome da obra e grava em entrada.titulo[] */
+  leTitulo(entrada.titulo);
+
+  /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
+  if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
+    printf("A chave procurada nao consta nos registros.\n\n");
+    return;
+  }
+
+  /* Conta quantas obras similares existem para d-1, d e d+1 */
+  n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
+
+  printf("Digite quantas das obras mais similares voce deseja visualizar:");
+  n_obras_a_listar = leInt();
+
+  
+
 
   return;
 }
@@ -192,3 +162,171 @@ int ContaUns(char descritor){
   return(uns);
 }
 
+/* Esta funcao verifica se uma dada PK existe dentre os arquivos descritores. 
+   Seu valor de retorno eh um inteiro OK(se existe) ou ERRO(se nao).
+   Alem disso, ela modifica os valores de entrada.path e descritor_entrada, inserindo
+   o nome do arquivo da PK procurada e seu descritor.
+*/
+int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
+
+  int i, j, z, n_pks_descritor;
+  FILE *arq_descritor;
+  char PK_lida[TAM_TIT], img_lida[TAM_IMG+1];
+
+  /* Para cada arquivo de descritores... */
+  for(i=DSC0 ; i<=DSC8 ; i++){
+
+    /* Abre o arquivo no modo "r" e calcula o n de pks nele contidas */
+    arq_descritor = abreArquivoDescritor(i,MODOR);
+    fseek(arq_descritor,0,SEEK_END);
+    n_pks_descritor=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
+
+    /* Para cada PK dentro do arquivo... */
+    for(j=0 , j<n_pks_descritor , j++){
+
+      /* Le PK... */
+      fseek(arq_descritor , j*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
+      for(z=0 ; z<TAM_TIT ; z++)
+	PK_lida[z]=fgetc(arq_descritor);
+      
+      /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
+	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
+      if(strcmpinsensitive(PK_lida , entrada.titulo)==0){
+	*descritor_entrada=i;
+	
+	/* Le o nome do arquivo da imagem */
+	for(z=0 ; z<(TAM_IMG+1) ; z++)
+	  img_lida[z]=fgetc(arq_descritor);
+	/* Passagem por referencia do arquivo... entrada.path = dir + arq */
+	sprintf(entrada.path , "%s%s" , DIRIMG , img_lida);
+
+	return(OK);
+      }
+      
+    }/*fim do for (pks internas)*/
+
+    fclose(arq_descritor);
+    
+  }/*fim do for (arquivos)*/
+
+  /* Se a execucao chegar aqui, entao a PK nao foi encontrada dentre os registros */
+  return(ERRO);
+}
+
+
+/* Retorna o numero de obras no arquivo de descritores */
+int ContaObrasSimilares(int descritor){
+
+  FILE *arq_descritor;
+
+  /* Caso a funcao seja chamada para os limites inferior ou superior, retorna ZERO  */
+  if((descritor<DSC0) || (descritor>DSC8))
+    return(0);
+
+  arq_descritor = abreArquivoDescritor(descritor,MODOR);
+  fseek(arq_descritor,0,SEEK_END);
+
+  return(ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1));
+}
+
+
+/* Abre o arquivo de descritor correspondente ao valor de entrada e o modo de abertura ("a","r","a+",etc) */
+FILE *abreArquivoDescritor(int descritor, char *modo){
+
+  FILE *arq_descritor;
+
+  switch(descritor){
+  case DSC0:
+    arq_descritor=fopen(ARQDSC0,modo);
+  case DSC1:
+    arq_descritor=fopen(ARQDSC1,modo);
+  case DSC2:
+    arq_descritor=fopen(ARQDSC2,modo);
+  case DSC3:
+    arq_descritor=fopen(ARQDSC3,modo);
+  case DSC4:
+    arq_descritor=fopen(ARQDSC4,modo);
+  case DSC5:
+    arq_descritor=fopen(ARQDSC5,modo);
+  case DSC6:
+    arq_descritor=fopen(ARQDSC6,modo);
+  case DSC7:
+    arq_descritor=fopen(ARQDSC7,modo);
+  case DSC8:
+    arq_descritor=fopen(ARQDSC8,modo);
+  }/*fim do switch*/
+
+  return(arq_descritor);
+
+}
+
+
+/* Funcao que le o titulo da entrada padrao */
+void leTitulo(char *titulo) {
+  
+  int i,resposta;
+  char c;
+  
+  do {
+    
+    resposta=OK;
+    
+    printf("Digite o titulo da obra (no maximo 200 caracteres).\n");
+    c=getchar();
+    
+    /* Eliminacao de espacos antes dos caracteres */
+    c = come_espaco(c);
+    
+    /* Caso o primeiro caractere seja um 'Enter' */
+    if(c=='\n') resposta=ERRO
+    
+    i=0;
+    
+    /* Caracteres a serem inseridos */
+    while(c!='\n' && resposta == OK) {
+      titulo[i]=c;
+      i++;
+      /* Remove os espacos entre palavras */
+      if(c==' ') c=come_espaco(c);
+      else c=getchar();
+
+      /* CASO DE ERRO */
+      /* Caso a entrada seja maior que o tamanho limite */
+      if((i>=TAM_TIT) && (c!='\n')) {
+	resposta = come_excesso(c);
+	
+	if(resposta==ERRO) printf("ERRO: Tamanho de titulo excedido!\n");
+	break;	
+      }
+    }
+    
+    if(resposta==OK){
+      /* Preenche o resto do vetor com espacos */
+      for(;i<TAM_TIT;i++)
+	titulo[i]=' ';
+    }
+
+  } while(resposta==ERRO);
+  
+
+  if(DEBUG) printf("Titulo lido.\n");
+
+  return;
+  
+}
+
+
+/* Funcao que verifica se a entrada eh um inteiro */
+int leInt(){
+
+  int i, resposta;
+  char c, str[N_MAX_REG];
+  
+  for(i=0 ; i<N_MAX_REG ; i++){
+    
+    
+
+  }/*fim do for*/
+
+
+}

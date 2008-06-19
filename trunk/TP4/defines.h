@@ -45,6 +45,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_HEXA 2
 #define TAM_BIN 8
 #define TAM_DIR 6
+#define N_MAX_REG 5
 
 
 /*nomes dos arquivos criados pelo programa*/
@@ -70,6 +71,8 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define ARQDSC7 "pks_dsc7.dat"
 #define ARQDSC8 "pks_dsc8.dat"
 #define DIRIMG "./img/"
+#define MODOA "a"
+#define MODOR "r"
 
 
 typedef struct {
@@ -147,3 +150,9 @@ typedef struct {
   ap_tipo_registro_pk vetor_pks_dsc7;
   ap_tipo_registro_pk vetor_pks_dsc8;
 } estrutura_descritores_pks;
+
+
+typedef struct {
+  char titulo[TAM_TIT];
+  char path[TAM_DIR+TAM_IMG+1];
+} estrutura_pk_imagem;

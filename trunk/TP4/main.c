@@ -116,7 +116,7 @@ int main() {
     printf("5-) Procurar por um tipo de obra no catalogo.\n");
     printf("6-) Procurar por um autor no catalogo.\n");
     printf("7-) Procurar por um ano de obra no catalogo.\n");
-    printf("8-) Procurar por obras similares.\n");
+    printf("8-) Pesquisa por similaridade.\n");
     printf("9-) Remover uma obra do catalogo.\n");
     printf("0-) Sair.\n");
 
@@ -186,7 +186,8 @@ int main() {
       break;
 
     case CONSULTA_DSC:
-      consultaSingulares();
+      listaObrasSimilares();
+      espera();
       break;
 
       /* Remove um registro do catalogo */
