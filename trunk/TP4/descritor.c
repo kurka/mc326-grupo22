@@ -126,7 +126,8 @@ void listaObrasSimilares(){
 
   /*estrutura_pk_imagem entrada;
   int n_obras_a_listar, *descritor_entrada, n_obras_similares;
-
+  estrutura_pk_imagem_similaridade *obras_similares;
+  
   printf("Pesquisa por similaridade de obras:\n");*/
 
   /* Le o nome da obra e grava em entrada.titulo[] */
@@ -147,9 +148,20 @@ void listaObrasSimilares(){
   if((n_obras_a_listar > n_obras_similares) || (n_obras_a_listar < MIN_OBRAS)){
     printf("Entrada invalida.\n\n");
     return;
-    }*/
-  
+  }*/
 
+
+  /* Carrega TODAS as obras similares para o vetor obras_similares (vetor ordenado por similaridade) */
+  obras_similares=(estrutura_pk_imagem_similaridade *)malloc(n_obras_similares*(sizeof(estrutura_pk_imagem_similaridade)));
+  carregaObrasSimilares(*descritor_entrada, obras_similares);
+  /* !!! Implementar: !!! */void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obras_similares);
+
+  /*  */
+  geraHtmlSimilares(obras_similares, n_obras_a_listar);
+  /* !!! Implementar: !!! */void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_obras_a_listar);
+
+  printf("Consulta realizada com sucesso!\n Verifique o arquivo ./tp4.html para visualizar o resultado da pesquisa.\n\n");
+  
   return;
 }
 

@@ -145,3 +145,9 @@ typedef struct {
   char titulo[TAM_TIT];
   char path[TAM_DIR+TAM_IMG+1];
 } estrutura_pk_imagem;
+
+typedef struct {
+  char titulo[TAM_TIT];
+  char path[TAM_DIR+TAM_IMG+1];
+  float similaridade;
+} estrutura_pk_imagem_similaridade;
