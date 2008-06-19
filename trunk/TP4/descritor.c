@@ -148,9 +148,9 @@ void listaObrasSimilares(){
   carregaObrasSimilares(descritor_entrada -1 , obras_similares, entrada.path, &n);
   carregaObrasSimilares(descritor_entrada , obras_similares, entrada.path, &n);
   carregaObrasSimilares(descritor_entrada +1 , obras_similares, entrada.path, &n);
-  if(DEBUG) printf("Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
+  if(DEBUG) printf(">>> Chamando o qsort para ordenar o vetor em funcao da similaridade...\n");
   qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
-  
+  if(DEBUG) printf(">>> Chamando o geraHTML... \n");
   geraHTMLSimilares(obras_similares, n_obras_a_listar);
 
   printf("Consulta realizada com sucesso!\n Verifique o arquivo %s para visualizar o resultado da pesquisa.\n\n",ARQHTML);
