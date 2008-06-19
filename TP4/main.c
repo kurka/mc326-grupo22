@@ -20,7 +20,7 @@ int main() {
   int n_registros, pk, sk, cabeca_avail, nrr;
   FILE *arq_base,*arq_pk, *arq_avail;
   ap_tipo_registro_pk vetor_registros;
-  int limite[2], limite_descritores[DSC8][2];
+  int limite, limite_descritores[DSC8][2];
   tipo_vetores_sk *vetores_sk; 
 
 
@@ -30,7 +30,7 @@ int main() {
  
   /* Consulta ou cria arquivos .dat */
   arq_base = abre_base22(arq_base, &n_registros);
-  /*  arq_avail = abre_avail(arq_avail, &cabeca_avail); */
+  arq_avail = abre_avail(arq_avail, &cabeca_avail); 
   /*  abre_sk(arqs_sk, arqs_li, &sk); */
 
   /* Pega as chaves primarias da base (se existirem) e as guarda em arquivos de chaves primarias.*/
@@ -38,7 +38,7 @@ int main() {
   if(DEBUG)
     printf("\n>>>Criando arquivo de chaves primarias (pk.dat)...\n");   
   
-  inserePKBase(arq_base,limite, n_registros);
+  inserePKBase(arq_base, &limite, n_registros);
   
     /* Se existir uma avail list, apaga os registros apontados por ela */
 /*     if(cabeca_avail != -1){ */
@@ -56,10 +56,7 @@ int main() {
     
 /*     vetores_sk = ler_arquivo_sk(arqs_sk);  */
     
-/*     fclose(arqs_sk->arq_sk_tit); */
-/*     fclose(arqs_sk->arq_sk_tip); */
-/*     fclose(arqs_sk->arq_sk_aut); */
-/*     fclose(arqs_sk->arq_sk_ano); */
+
 /*   } */
   /* Criacao das chaves secundarias */
   /* Caso nao exista, cria as estruturas de chaves secundarias a partir do arquivo base.dat*/
@@ -73,7 +70,7 @@ int main() {
 
 
   if(DEBUG)
-    printf("\n>>>Numero de registros: %d\n\n\n",limite[0]);
+    printf("\n>>>Numero de registros: %d\n\n\n",limite);
 
 
 /*   /\* Verifica se os arquivos de descritores existem. Caso nao, cria-os a partir da base *\/ */
@@ -112,21 +109,22 @@ int main() {
     
     switch(opcao) {
       
-/*       /\* Insercao no catalogo *\/ */
-/*     case INSERIR: */
-/*       /\* Le da entrada padrao os dados da obra *\/ */
-/*       Insere_base(arq_base, str_final, vetor_registros, limite[0]); */
-/*       /\* Pega o ultimo titulo lido e insere no vetor de registros *\/ */
-/*       nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail); */
-/*       vetor_registros = novopk(str_final, vetor_registros, limite, nrr); */
-/*       /\* Insere as novas sks *\/ */
-/*       vetores_sk = insereVetorSK(str_final, vetores_sk, arqs_li); */
+      /* Insercao no catalogo */
+    case INSERIR:
+      /* Le da entrada padrao os dados da obra */
+      Insere_base(arq_base, str_final);
+      /* Pega o ultimo titulo lido e insere no vetor de registros */
+      nrr = escreve_base(arq_base, arq_avail, str_final, &cabeca_avail);
+      novopk(str_final, nrr);
+      /* Insere as novas sks */
+ /*      vetores_sk = insereVetorSK(str_final, vetores_sk, arqs_li); */
+
+      limite++;
+      if(DEBUG)
+	printf(">>>Numero de registros: %d\n\n",limite);
  
-/*       if(DEBUG) */
-/* 	printf(">>>Numero de registros: %d\n\n",limite[0]); */
- 
-/*       espera(); */
-/*       break; */
+      espera();
+      break;
 
 
 /*       /\* Listar os registros do catalogo *\/ */

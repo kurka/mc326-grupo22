@@ -17,7 +17,7 @@ ap_tipo_registro_pk limpa_pk(FILE *arq_base, ap_tipo_registro_pk vetor_pk, int *
 ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, int * limite);
 
 /* Pega o ultimo titulo lido e registra ele como novo, para ser inserido no vetor de chaves primarias */
-void novopk(char *str_final, ap_tipo_registro_pk vetor, int nrr);
+void novopk(char *str_final, int nrr);
   
 /* Insere um novo registro no vetor dinamico de PKs. Essa insercao eh ordenada e mantem a ordem alfabetica do vetor */
 ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int posicao);

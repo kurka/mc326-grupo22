@@ -12,10 +12,10 @@
 /*! 
  * \brief Funcao da insercao propriamente dita (insercao no arquivo) 
  */
-void Insere_base(FILE *arq_base, char * str_final,  ap_tipo_registro_pk vetor, int n_registros){
+void Insere_base(FILE *arq_base, char * str_final){
   
   /* Chamadas das funcoes de organizacao do vetor a ser inserido */
-  Insere_titulo(str_final, vetor, n_registros);
+  Insere_titulo(str_final);
   Insere_tipo(str_final);
   Insere_autor(str_final);
   Insere_ano(str_final);
@@ -44,6 +44,9 @@ int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cab
     /* Insercao no fim do arquivo */
     fseek(arq_base,0,SEEK_END);
     fprintf(arq_base,"%s",str_final);
+
+    fseek(arq_base,0,SEEK_END);
+    nrr = ftell(arq_base)/TAM_REGISTRO;
   }   
   /* Possibilidade 2 */
   else{
@@ -63,10 +66,8 @@ int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cab
     /* Insercao no lugar do registro apontado pela cabeca da avail */
     fseek(arq_base,(nrr-1)*TAM_REGISTRO,SEEK_SET);
     fprintf(arq_base,"%s",str_final);
-
-    *NRR_cabeca = NRR_nova_cabeca;
   }
-  
+  *NRR_cabeca = NRR_nova_cabeca;  
   printf("Obra adicionada com sucesso.\n\n\n");
   return nrr;
 }
@@ -75,7 +76,7 @@ int escreve_base(FILE * arq_base, FILE* arq_avail, char *str_final, int *NRR_cab
 /*!
  * \brief Funcao que le da entrada padrao (teclado) e verifica coerencia do titulo da obra.
  */
-void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) {
+void Insere_titulo(char *str_final) {
   int i,resposta;
   char c;
   
@@ -130,7 +131,7 @@ void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros) 
       }
     }
 
-    resposta = checa_redundancia_tit(str_final, vetor, n_registros);
+ /*    resposta = checa_redundancia_tit(str_final, vetor, n_registros); */
 
   } while(resposta==ERRO);
   
@@ -592,7 +593,7 @@ void remove_registro (int n_registros, ap_tipo_registro_pk vetor_registros, FILE
 
   printf("ATENCAO! Remocao de obra do catalogo\n\n");
   /* titulo_a_remover eh lido pela mesma funcao de insercao de registro */
-  Insere_titulo(titulo_a_remover, vetor_registros, 0);
+  Insere_titulo(titulo_a_remover);
 
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado = bsearch(titulo_a_remover, vetor_registros, n_registros, sizeof(tipo_registro_pk), compara_bsearch);

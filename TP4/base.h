@@ -2,7 +2,7 @@
    (baseXX.dat) e funcoes auxiliares */
 
 /* Funcao de insercao na base */
-void Insere_base(FILE *arq_base, char * str_final, ap_tipo_registro_pk vetor, int n_registros);
+void Insere_base(FILE *arq_base, char * str_final);
 
 /* Funcao de busca de registro na base a partir do NRR */
 void busca_registro(int NRR, FILE *arq_base, FILE *arq_html);
@@ -11,7 +11,7 @@ void busca_registro(int NRR, FILE *arq_base, FILE *arq_html);
 /* Funcoes de tratamento de entradas */
 /* ********************************* */
 /* Funcao que le da entrada padrao (teclado) e verifica coerencia do titulo da obra */
-void Insere_titulo(char *str_final, ap_tipo_registro_pk vetor, int n_registros);
+void Insere_titulo(char *str_final);
 /* Funcao que le da entrada padrao (teclado) e verifica coerencia do tipo da obra */
 void Insere_tipo(char *str_final);
 /* Funcao que le da entrada padrao (teclado) e verifica coerencia do autor da obra */
