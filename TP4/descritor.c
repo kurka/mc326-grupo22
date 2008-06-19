@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "defines.h"
-#include "pk.h"
+#include "sk.h"
 #include "descritor.h"
 #include "libimg.h"
 
@@ -15,7 +15,7 @@ int main(){
   printf("Testando criacao dos descritores...\n\n");
 
   printf("verificaDescritores: %d\n\n", verificaDescritores());
-  printf("Chamando funcao criaDescritores para a base toda...\n\n");
+  printf("Chamando funcao criaDescritores para a base toda... (carrega PKs apenas em DSC0!\n\n");
   criaDescritores();
 
   return(0);
@@ -85,6 +85,10 @@ void criaDescritores(){
     for( ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j]=fgetc(base);
 
+    printf("nome_arq_img[0]: %c",nome_arq_img[0]);
+    FILE *arq_teste=fopen("teste.dat","a");
+    fputc(nome_arq_img[0],arq_teste);
+
     /* Identificador de obra apagada: '*' no PRIMEIRO CAMPO da imagem */
     if(nome_arq_img[0]!='*'){
       
@@ -118,22 +122,24 @@ void criaDescritores(){
 /* Funcao chamada pelo main para pesquisa por similaridade */
 void listaObrasSimilares(){
 
-  estrutura_pk_imagem entrada;
+  printf("chamada funcao listaObrasSimilares\n\n");
+
+  /*estrutura_pk_imagem entrada;
   int n_obras_a_listar, *descritor_entrada, n_obras_similares;
 
-  printf("Pesquisa por similaridade de obras:\n");
+  printf("Pesquisa por similaridade de obras:\n");*/
 
   /* Le o nome da obra e grava em entrada.titulo[] */
-  leTitulo(entrada.titulo);
+  /*leTitulo(entrada.titulo);*/
 
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
-  if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
+  /*if(verificaPKDescritores(entrada, descritor_entrada)==ERRO){
     printf("A chave procurada nao consta nos registros.\n\n");
     return;
-  }
+    }*/
 
   /* Conta quantas obras similares existem para d-1, d e d+1 */
-  n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
+  /*n_obras_similares=contaObrasSimilares(*descritor_entrada - 1) + contaObrasSimilares(*descritor_entrada) + contaObrasSimilares(*descritor_entrada + 1);
 
   printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
   scanf("%d",&n_obras_a_listar);
@@ -141,8 +147,8 @@ void listaObrasSimilares(){
   if((n_obras_a_listar > n_obras_similares) || (n_obras_a_listar < MIN_OBRAS)){
     printf("Entrada invalida.\n\n");
     return;
-  }
-
+    }*/
+  
 
   return;
 }
@@ -196,7 +202,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
-      if(strcmpinsensitive(PK_lida , entrada.titulo)==0){
+      if(1/*strcmpinsensitive(PK_lida , entrada.titulo)==0*/){
 	*descritor_entrada=i;
 	
 	/* Le o nome do arquivo da imagem */
@@ -220,7 +226,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
 
 
 /* Retorna o numero de obras no arquivo de descritores */
-int ContaObrasSimilares(int descritor){
+int contaObrasSimilares(int descritor){
 
   FILE *arq_descritor;
 
@@ -289,7 +295,7 @@ void leTitulo(char *titulo) {
     c=getchar();
     
     /* Eliminacao de espacos antes dos caracteres */
-    c = come_espaco(c);
+    /*c = come_espaco(c);*/
     
     /* Caso o primeiro caractere seja um 'Enter' */
     if(c=='\n') resposta=ERRO;
@@ -301,13 +307,13 @@ void leTitulo(char *titulo) {
       titulo[i]=c;
       i++;
       /* Remove os espacos entre palavras */
-      if(c==' ') c=come_espaco(c);
+      if(c==' ') /*c=come_espaco(c);*/ i=i;
       else c=getchar();
 
       /* CASO DE ERRO */
       /* Caso a entrada seja maior que o tamanho limite */
       if((i>=TAM_TIT) && (c!='\n')) {
-	resposta = come_excesso(c);
+	/*resposta = come_excesso(c);*/
 	
 	if(resposta==ERRO) printf("ERRO: Tamanho de titulo excedido!\n");
 	break;	
