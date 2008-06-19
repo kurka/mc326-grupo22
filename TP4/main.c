@@ -139,11 +139,11 @@ int main() {
       espera();
       break;
 
-/*       /\* Procurar por registros via chave secundaria *\/ */
-/*     case CONSULTA_SK_TIT: */
-/*       consulta_sk_tit(vetores_sk->titulo, vetor_registros, limite[0], arqs_li->arq_tit_li, arq_base); */
-/*       espera(); */
-/*       break; */
+      /* Procurar por registros via chave secundaria */
+    case CONSULTA_SK_TIT:
+      consulta_sk_tit(limite,arq_base);
+      espera();
+      break;
 /*     case CONSULTA_SK_TIP: */
 /*       consulta_sk_tip(vetores_sk->tipo, vetor_registros, limite[0], arqs_li->arq_tip_li, arq_base); */
 /*       espera(); */
