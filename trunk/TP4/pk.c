@@ -1,6 +1,7 @@
 
 
 
+
 /* Esta biblioteca realiza manipulações no arquivo de chaves primarias da
    base de dados, permitindo consultas, listagem e exibicao (em pagina HTML)
    dos registros contidos no banco de dados. */
@@ -179,10 +180,7 @@ void insere_pk_arquivo(tipo_registro_pk novo){
   if(!arq_teste){
     arq_teste = fopen("teste.txt", "w+");
 
-    fseek(arq_teste,0,SEEK_SET);
-    fprintf(arq_teste, "%08d", 1);
-
-    fseek(arq_teste, 8, SEEK_SET);
+    fseek(arq_teste, 0, SEEK_SET);
 
     for(i=0; i<TAM_TIT; i++)
       fprintf(arq_teste, "%c", novo.titulo[i]);
@@ -192,12 +190,10 @@ void insere_pk_arquivo(tipo_registro_pk novo){
   /*se o arquivo existe*/  
   else
     if(arq_teste){
-      fseek(arq_teste,0,SEEK_SET);
-      fscanf(arq_teste, "%8d", &n_pk);
+      fseek(arq_teste, 0, SEEK_END);
+      n_pk = ftell(arq_teste)/TAM_PK;
       
-      fseek(arq_teste,0,SEEK_SET);
-      fprintf(arq_teste, "%08d", n_pk+1);
-      
+            
       fseek(arq_teste, TAM_PK*n_pk, SEEK_SET);
       for(i=0; i<TAM_TIT; i++)
 	fprintf(arq_teste, "%c", novo.titulo[i]);
@@ -271,10 +267,12 @@ void lista_registros(int limite_reg, tipo_registro_pk *vetor_de_registros) {
 /*!
  * \brief Funcao para leitura de chave primaria a ser procurada na base
  */
-void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *arq_base) {
+void consulta_pk(int limite_reg, FILE *arq_base) {
 
   char titulo_procurado[MAX_TIT];
-  FILE *arq_html;
+  FILE *arq_html, *arq_pk;
+  int tam;
+  tipo_registro_pk * pks;
 
 
 
@@ -287,10 +285,24 @@ void consulta_pk(int limite_reg, ap_tipo_registro_pk vetor_de_registros, FILE *a
   /* titulo_procurado eh lido pela mesma funcao de insercao de registro */
   Insere_titulo(titulo_procurado);
 
+  /*
+  //calcula hash
+  */
+  arq_pk = fopen("teste.txt", "a+");
+  fseek(arq_pk, 0, SEEK_END);
+  tam = ftell(arq_pk)/TAM_PK;
+
+  pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam);
+  pks = lerArquivoPK(arq_pk, pks, tam);
+
+
+  
+
+
   /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
   arq_html=fopen(ARQHTML,"w");
 
-  if(acha_pk(vetor_de_registros, titulo_procurado, limite_reg, arq_base, arq_html)){
+  if(acha_pk(pks, titulo_procurado, limite_reg, arq_base, arq_html)){
     printf("Obra encontrada. Para visualizar suas informações consulte\n");
     printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
   }
@@ -324,6 +336,49 @@ int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TI
   return 1;
 }
 
+
+/*!
+ * \brief Le todos os dados do arquivo PK.dat e os adiciona em um vetor
+ */
+ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int n_registros){
+
+  int i, j;
+  tipo_registro_pk novo;
+  fseek(arqPK,0,SEEK_SET);
+  
+  for(i=0;i<n_registros;i++){
+    for(j=0; j<TAM_TIT; j++){
+      fscanf(arqPK, "%c", &(novo.titulo[j]));
+    }
+       
+    fscanf(arqPK, "%d", &(novo.nrr));
+   
+    
+    /* Insere cada elemento lido no arquivo pk.dat */
+    vetor = insere_pk(vetor, novo, i); 
+  }
+
+  return vetor;
+}
+
+
+/*! 
+ * \brief Insere um novo registro no vetor dinamico de PKs, essa insercao eh 
+ * ordenada e mantem a ordem alfabetica do vetor 
+ */
+ap_tipo_registro_pk insere_pk(ap_tipo_registro_pk vetor_pk,tipo_registro_pk novo, int limite){
+ 
+  /* Verifica se ainda cabem dados no vetor (limite[0] contem 
+     o numero de chaves primarias, e limite[1] o tamanho do vetor) */
+  
+  vetor_pk[limite-1] = novo;  
+  
+  /* Ordena o vetor em ordem alfabetica */
+  qsort(vetor_pk, limite, sizeof(tipo_registro_pk), compara_qsort); 
+
+  return vetor_pk;
+  
+}
 
 /**************************************/
 /*         Funcoes Auxiliares         */
