@@ -125,7 +125,7 @@ void listaObrasSimilares(){
   printf("chamada funcao listaObrasSimilares\n\n");
 
   /*estrutura_pk_imagem entrada;
-  int n_obras_a_listar, *descritor_entrada, n_obras_similares;
+  int n_obras_a_listar, *descritor_entrada, n_obras_similares, *n;
   estrutura_pk_imagem_similaridade *obras_similares;
   
   printf("Pesquisa por similaridade de obras:\n");*/
@@ -153,14 +153,19 @@ void listaObrasSimilares(){
 
   /* Carrega TODAS as obras similares para o vetor obras_similares (vetor ordenado por similaridade) */
   obras_similares=(estrutura_pk_imagem_similaridade *)malloc(n_obras_similares*(sizeof(estrutura_pk_imagem_similaridade)));
-  carregaObrasSimilares(*descritor_entrada, obras_similares);
-  /* !!! Implementar: !!! */void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obras_similares);
 
-  /*  */
+  *n=0; /*contador das obras inseridas no vetor*/
+  carregaObrasSimilares(*descritor_entrada -1 , obras_similares, entrada.path, n);
+  carregaObrasSimilares(*descritor_entrada , obras_similares, entrada.path, n);
+  carregaObrasSimilares(*descritor_entrada +1 , obras_similares, entrada.path, n);
+  if(DEBUG) printf("Chamando o qsort para ordenar o vetor...\n");
+  qsort(obras_similares , n_obras_similares , sizeof(estrutura_pk_imagem_similaridade) , comparaQsortSimilaridade);
+  
   geraHtmlSimilares(obras_similares, n_obras_a_listar);
-  /* !!! Implementar: !!! */void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_obras_a_listar);
 
-  printf("Consulta realizada com sucesso!\n Verifique o arquivo ./tp4.html para visualizar o resultado da pesquisa.\n\n");
+  printf("Consulta realizada com sucesso!\n Verifique o arquivo %s para visualizar o resultado da pesquisa.\n\n",ARQHTML);
+
+  free(obras_similares);
   
   return;
 }
@@ -348,17 +353,73 @@ void leTitulo(char *titulo) {
 }
 
 
-/* Funcao que verifica se a entrada eh um inteiro */
-int leInt(){
+/* Funcao que, a partir de um descritor, carrega todas as chaves dos arquivos d-1, d e d+1 em um vetor
+   obras_similares[]{ titulo; path; similaridade }. O vetor eh ordenado em funcao da similaridade. */
+void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obras_similares, char *path_obra_procurada, int *n){
 
-  int i, resposta;
-  char c, str[N_MAX_REG];
-  
-  for(i=0 ; i<N_MAX_REG ; i++){
-    
-    
+  estrutura_pk_imagem_similaridade obra_lida;
+  char nome_arq_img[TAM_IMG+1];
+  FILE *arq_descritor;
+  int i, j, n_pks_dsc;
+
+  if(descritor<DSC0)
+    return;
+
+  arq_descritor = abreArquivoDescritor(descritor , MODOR);
+  fseek(arq_descritor , 0 , SEEK_END);
+  n_pks_dsc=ftell(arq_descritor)/(TAM_TIT+TAM_IMG+1);
+
+  /* Para cada PK dentro do arquivo pks_dscX.dat */
+  for(i=0 ; i<n_pks_dsc ; i++){
+
+    /* Le PK e nome do arquivo e preenche a estrutura com PK, nome do arquivo e similaridade */
+    fseek(arq_descritor , i*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
+    for(j=0 ; j<TAM_TIT ; j++)
+      obra_lida.titulo[j] = fgetc(arq_descritor);
+    for(j=0 ; j<(TAM_IMG-TAM_FORM) ; j++)
+      nome_arq_img[j] = fgetc(arq_descritor);
+    nome_arq_img[j]='.'; j++;
+    for( ; j<(TAM_IMG+1) ; j++)
+      nome_arq_img[j] = fgetc(arq_descritor);
+    sprintf(obra_lida.path,"%s%s",DIRIMG,nome_arq_img);
+    obra_lida.similaridade=ComputaSimilaridade(obra_lida.path , path_obra_procurada);
+
+    /* Insere a estrutura obra_lida no vetor de estruturas obras_similares[] */
+    obras_similares[*n]=obra_lida;
+    *n++;
 
   }/*fim do for*/
 
+  fclose(arq_descritor);
 
+  return;
+}
+
+/* Funcao auxiliar para a ordenacao usando o qsort */
+int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
+  return((int)((estrutura_pk_imagem_similaridade *)obra1->similaridade - (estrutura_pk_imagem_similaridade *)obra2->similaridade));
+}
+
+
+/* Funcao que gera o arquivo html a partir das obras similares */
+void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_obras_a_listar){
+
+  FILE *arq_html=fopen(ARQHTML,MODOA);
+  int i;
+  
+  fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
+  fprintf(arq_html,"<br><b>Lista das %d obras similares</b><br><br>", n_obras_a_listar);
+
+  for(i=0 ; i<n_obras_a_listar ; i++){
+
+    fprintf(arq_html, "<b>Obra:</b> %s<br>", obras_similares[i].titulo);
+    fprintf(arq_html, "<b>Similaridade:</b> %f<br><br>", obras_similares[i].similaridade);
+    fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\"%s\"</p><br><hr><br><br>", obras_similares[i].path);
+    
+  }/*fim do for*/
+
+  fprintf(arq_html,"<br></div></body></html>");
+
+  fclose(arq_html);
+  return;
 }
