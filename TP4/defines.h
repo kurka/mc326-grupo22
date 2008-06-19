@@ -47,10 +47,11 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define TAM_BIN 8
 #define TAM_DIR 6
 #define N_MAX_REG 5
-
 #define NUM_HASH 1
-/*nomes dos arquivos criados pelo programa*/
 #define TAM_NOME_ARQ 200
+
+
+/*nomes dos arquivos criados pelo programa*/
 #define ARQBASE "files/base22.dat"
 #define ARQPK "files/pk"
 #define ARQAVAIL "files/avail_head.dat"
@@ -137,21 +138,6 @@ typedef struct
   FILE * arq_aut_li;
   FILE * arq_ano_li;
 }tipo_arqs_li;
-
-
-/* estrutura de armazenamento das Pks de cada um
-   dos descritores*/
-typedef struct {
-  ap_tipo_registro_pk vetor_pks_dsc0;
-  ap_tipo_registro_pk vetor_pks_dsc1;
-  ap_tipo_registro_pk vetor_pks_dsc2;
-  ap_tipo_registro_pk vetor_pks_dsc3;
-  ap_tipo_registro_pk vetor_pks_dsc4;
-  ap_tipo_registro_pk vetor_pks_dsc5;
-  ap_tipo_registro_pk vetor_pks_dsc6;
-  ap_tipo_registro_pk vetor_pks_dsc7;
-  ap_tipo_registro_pk vetor_pks_dsc8;
-} estrutura_descritores_pks;
 
 
 typedef struct {
