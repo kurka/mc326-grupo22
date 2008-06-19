@@ -12,8 +12,13 @@ FILE * abre_avail(FILE *arq_cabeca_avail_base, int *cabeca_avail_base);
 /* Abre ou cria arquivos de chaves secundarias*/
 void abre_sk(tipo_arqs_sk *arq_sk, tipo_arqs_li *arqs_li, int *sk);
 
+
+/*! 
+ * \brief Funcao responsavel por calcular o hash de uma chave e retornar o 
+    arquivo em que ela deve ser inserida
+*/
+char *calculaHash(char *chave, char *prefixo);
+
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera();
 
-/* Desaloca memoria alocada nas estruturas durante a execucao */
-void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk);

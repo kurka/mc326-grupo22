@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<malloc.h>
+#include<string.h>
 #include "defines.h" 
 #include "fopen.h"
 
@@ -138,6 +139,34 @@ void abre_sk(tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, int *sk){
   *sk = temp;
 }
 
+/*! 
+ * \brief Funcao responsavel por calcular o hash de uma chave e retornar o 
+    arquivo em que ela deve ser inserida
+*/
+char *calculaHash(char *chave, char *prefixo){
+  int i=0;
+  int hash;
+  char arquivo[TAM_NOME_ARQ];
+  char * retorno;
+  
+  while(chave[i]!= '\0'){
+    hash += (int) chave[i];
+    i++;
+  }
+  hash = hash % NUM_HASH;
+
+ 
+  sprintf(arquivo, "%s%d.dat", prefixo, hash);
+
+ 
+
+  retorno = (char *) malloc(sizeof(char)*(strlen(arquivo)+1)); 
+  strcpy(retorno, arquivo);
+  return retorno;
+
+}
+
+
 
 /*! 
  * \brief Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
@@ -148,34 +177,3 @@ void espera(){
 }
 
 
-/*!
- * \brief Desaloca memoria alocada nas estruturas durante a execucao
- */
-void liberamemoria(tipo_registro_pk *vetor_registros, tipo_arqs_sk *arqs_sk, tipo_arqs_li *arqs_li, tipo_vetores_sk *vetores_sk){
-  int i;
-
- 
-  free(vetor_registros);
-  free(arqs_sk);
-  free(arqs_li);
-
-  for(i=0;i<vetores_sk->titulo->n_sk;i++)
-    free(vetores_sk->titulo->vetor_SK[i].chave);
-  for(i=0;i<vetores_sk->tipo->n_sk;i++)
-    free(vetores_sk->tipo->vetor_SK[i].chave);
-  for(i=0;i<vetores_sk->autor->n_sk;i++)
-    free(vetores_sk->autor->vetor_SK[i].chave);
-  for(i=0;i<vetores_sk->ano->n_sk;i++)
-    free(vetores_sk->ano->vetor_SK[i].chave);
-  
-  free(vetores_sk->titulo->vetor_SK);
-  free(vetores_sk->tipo->vetor_SK);
-  free(vetores_sk->autor->vetor_SK);
-  free(vetores_sk->ano->vetor_SK);
-  free(vetores_sk->titulo);
-  free(vetores_sk->tipo);
-  free(vetores_sk->autor);
-  free(vetores_sk->ano);
-  free(vetores_sk);
-  
-}
