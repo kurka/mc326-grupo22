@@ -8,6 +8,7 @@
 #include "sk.h"
 #include "fopen.h"
 #include "libimg.h"
+#include "descritor.h"
 
 /*!
  * \brief Programa de criação e manipulação de um banco de dados 
