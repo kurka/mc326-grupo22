@@ -55,34 +55,32 @@ void criaRegistrosSK(int n_registros, FILE *arqBase){
   
 }
 
-/* /\*!  */
+/* /\*! */
 /*  * \brief Cria vetores de SKs, a partir de um arquivo ja existente com as chaves criadas */
 /*  *\/ */
-/* tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk){  */
+/* tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk * arqs_sk, int tam){ */
   
-/*   tipo_vetores_sk *vetores_sk; */
+/*   tipo_registro_sk *vetor_sk; */
 
 /*   /\* Inicializa vetores_sk com memoria e valores iniciais*\/ */
 /*   vetores_sk = aloca_memoria_vetor(vetores_sk); */
 
-/*   /\*faz a leitura das chaves de cada arquivo e guarda em seus respectivos campos*\/ */
-/*   vetores_sk->titulo = le_chaves_sk(vetores_sk->titulo, arqs_sk->arq_sk_tit); */
-/*   vetores_sk->tipo = le_chaves_sk(vetores_sk->tipo, arqs_sk->arq_sk_tip); */
-/*   vetores_sk->autor = le_chaves_sk(vetores_sk->autor, arqs_sk->arq_sk_aut); */
-/*   vetores_sk->ano = le_chaves_sk(vetores_sk->ano, arqs_sk->arq_sk_ano); */
+/*   /\*faz a leitura das chaves de cada arquivo e guarda em seus respectivos campo*\/ */
+/*   vetor_sk = le_chaves_sk(vetor_sk, arqs_sk->arq_sk_tit); */
+ 
 
-/*   return vetores_sk; */
-/* }  */
+/*   return vetor; */
+/* } */
 
 
 /*! 
- * \brief Faz a leitura de cada arquivo, copiando as chaves secundarias para um vetor
+ * \brief Faz a leitura de um arquivo de chaves secundarias, copiando as chaves secundarias para um vetor
  */
-tipo_dados_sk *le_chaves_sk(FILE * arq_generico, int *n_sks){
+tipo_registro_sk *le_chaves_sk(FILE *arq_generico, int *n_sks){
 
   int i, n_sk, size;
   char temp[TAM_TIT];
-  tipo_dados_sk *generico;
+  tipo_registro_sk *vetor_sk;
 
   fseek(arq_generico,0,SEEK_END);
   size = ftell(arq_generico);
@@ -93,28 +91,28 @@ tipo_dados_sk *le_chaves_sk(FILE * arq_generico, int *n_sks){
     fscanf(arq_generico, "%8d", &n_sk);
   
   
-    generico = aloca_memoria_vetor(generico, n_sk);
+    vetor_sk = aloca_memoria_vetor(vetor_sk, n_sk);
     
     for(i=0; i<n_sk; i++){
       
       /*le as chaves secundarias e seus apontadores*/
       fscanf(arq_generico, "%s", temp);   
-      generico->vetor_SK[i].chave = (char *)malloc(sizeof(char)*((strlen(temp)+1))); 
-      strcpy(generico->vetor_SK[i].chave, temp);  
-      fscanf(arq_generico, "%8d", &generico->vetor_SK[i].endereco_li);
-      generico->n_sk++;
+      vetor_sk[i].chave = (char *)malloc(sizeof(char)*((strlen(temp)+1))); 
+      strcpy(vetor_sk[i].chave, temp);  
+      fscanf(arq_generico, "%8d", &vetor_sk[i].endereco_li);
+     /*  generico->n_sk++; */
     }
   }
   else
     if(!size){
       n_sk = 0;
-      generico = NULL;
+      vetor_sk = NULL;
     }
 
   
   *n_sks = n_sk;
   
-  return generico;
+  return vetor_sk;
 }
 
 
@@ -164,7 +162,7 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
   int novaSK, endereco_li;
   int n_li, n_sk, pos;
   FILE *arq_sk, *arq_li;
-  tipo_dados_sk *dados_sk;
+  tipo_registro_sk *vetor_sk;
   
   
   /* Rotina que separa uma string composta em substrigs simples, que serão as SKs, e verifica se essa SK 
@@ -196,7 +194,7 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 	  arq_sk = fopen("teste_sk.dat", "w+");
 
 	/*carrega os vetores dinamicamente*/	
-	dados_sk = le_chaves_sk(arq_sk, &n_sk);
+	vetor_sk = le_chaves_sk(arq_sk, &n_sk);
 
 
 	arq_li = fopen("teste_li.dat", "r+");
@@ -205,12 +203,12 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 	
 	/*calcula o numero de chaves no arquivo*/
 	fseek(arq_li,0,SEEK_END);
-	n_li = ftell(arq_li)/(TAM_TIT+8);
+	n_li = ftell(arq_li)/(TAM_LI);
 
 	/* novaSK (1 = true, 0 = false) */
 	novaSK = 1;
 	for(l=0; l<n_sk; l++){
-	  if(strcmpinsensitive(dados_sk->vetor_SK[l].chave, temp_sk) == 0)
+	  if(strcmpinsensitive(vetor_sk[l].chave, temp_sk) == 0)
 	    novaSK = 0;
 	}
 
@@ -241,10 +239,10 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 	else{
 	  for(l=0; l<n_sk; l++){  
 	    
-	    if(strcmpinsensitive(dados_sk->vetor_SK[l].chave, temp_sk) == 0){
+	    if(strcmpinsensitive(vetor_sk[l].chave, temp_sk) == 0){
 	      
 	      /* Encontramos a SK no vetor de SKs */
-	      endereco_li = dados_sk->vetor_SK[l].endereco_li;
+	      endereco_li = vetor_sk[l].endereco_li;
 	      
 	      fseek(arq_li, ((endereco_li)*(TAM_TIT+8))+TAM_TIT, SEEK_SET);
 	      fscanf(arq_li, "%08d", &prox);
@@ -282,11 +280,10 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 
   /*desaloca vetor criado*/
   for(j=0; j<n_sk; j++)
-    free(dados_sk->vetor_SK[j].chave);
+    free(vetor_sk[j].chave);
 
   if(n_sk)
-    free(dados_sk->vetor_SK);
-  free(dados_sk);
+    free(vetor_sk);
 
 }
 
@@ -299,18 +296,12 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2]){
 /*!
  * \brief Aloca memoria inicial das estruturas de chaves secundarias
  */
-tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, int tam){
+tipo_registro_sk *aloca_memoria_vetor(tipo_registro_sk *vetor_sk, int tam){
 
   
-  /*
-  //remover tamanho vetor do struct
-  //remover funcao aloca 
-  //remover limites inf e sup do struct (?)
-  */
-  generico = (tipo_dados_sk *)malloc(sizeof(tipo_dados_sk));
-  generico->vetor_SK = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(tam));
+  vetor_sk = (tipo_registro_sk *) malloc(sizeof(tipo_registro_sk)*(tam));
  
-  return generico;
+  return vetor_sk;
 }
 
 
@@ -340,7 +331,7 @@ tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *l
 /*!
  * \brief Funcao de procura por chave no vetor de chaves secundarias
  */
-void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk){
+void acha_sk(char *palavra_procurada, int n_pk, int n_sk, FILE *arq_base, FILE *arq_gen_li, tipo_registro_sk *vetor_sk, tipo_registro_pk *vetor_pk){
   
   int endereco_li, res;
   char pk[MAX_TIT];
@@ -349,7 +340,7 @@ void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li
 
 
   /* Busca o titulo procurado no vetor de structs. */
-  elto_encontrado=bsearch(palavra_procurada, generico->vetor_SK, generico->n_sk, sizeof(tipo_registro_sk), compara_bsearch2);  
+  elto_encontrado=bsearch(palavra_procurada, vetor_sk, n_sk, sizeof(tipo_registro_sk), compara_bsearch2);  
  
  
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
@@ -443,9 +434,14 @@ int le_sk(char* palavra_procurada, int max){
 /*!
  * \brief Instancia a estrutura do tipo_dados_sk do campo titulo
  */
-void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base) {
+void consulta_sk_tit(int n_pk, FILE *arq_base) {
 
   char titulo_procurado[TAM_TIT+1];
+  int n_sk, tam_pks;
+  FILE *arq_li, *arq_sk, *arq_pk;
+  tipo_registro_pk * pks;
+  tipo_registro_sk * sks;
+
 
   if(n_pk == 0) {
     printf("Nao ha obras registradas no catalogo.\n\n");
@@ -457,87 +453,116 @@ void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk
   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 200 letras)\n\n");
   
   /* Le o tipo a ser buscado */
-  if(le_sk(titulo_procurado, TAM_TIT))
-    /* Procura se existe chave secundaria com o termo requisitado */
-    acha_sk(titulo_procurado, n_pk, arq_base, arq_tit_li, titulo, vetor_pk);
+  if(le_sk(titulo_procurado, TAM_TIT)){
+    
+    /*
+    //calcula hash sk, li, titulo
+    */
+    /*abre arquivo li*/
+    arq_li = fopen("teste_li.dat", "r+");
 
+    /*abre arquivo de sks e carrega suas chaves em vetor dinamico*/
+    arq_sk = fopen("teste_sk.dat", "r+");
+    if(!arq_sk)
+      arq_sk = fopen("teste_sk.dat", "w+");
+
+    sks = le_chaves_sk(arq_sk, &n_sk);
+    /*ordena vetor, para fazer bsearch*/
+    qsort(sks, n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
+
+    /*abre arquivo de pks e carrega as suas chaves primarias*/
+    arq_pk = fopen("teste.txt", "a+");
+ 
+    fseek(arq_pk, 0, SEEK_END);
+    tam_pks = ftell(arq_pk)/TAM_PK;
+    
+    pks = (tipo_registro_pk *) malloc(sizeof(tipo_registro_pk)*tam_pks);
+    pks = lerArquivoPK(arq_pk, pks, tam_pks);
+
+
+    /* Procura se existe chave secundaria com o termo requisitado */
+    acha_sk(titulo_procurado, tam_pks, n_sk, arq_base, arq_li, sks, pks);
+  }
+
+    free(sks);
+    free(pks);
   return;
 }
 
-/*!
- * \brief Instancia a estrutura do tipo_dados_sk do campo tipo
- */
+/* /\*! */
+/*  * \brief Instancia a estrutura do tipo_dados_sk do campo tipo */
+/*  *\/ */
 
-void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) {
+/* void consulta_sk_tip(tipo_dados_sk * tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base) { */
 
-  char tipo_procurado[TAM_TIP+1];
+/*   char tipo_procurado[TAM_TIP+1]; */
 
-  if(n_pk == 0) {
-    printf("Nao ha obras registradas no catalogo.\n\n");
-    return;
-  }
+/*   if(n_pk == 0) { */
+/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
+/*     return; */
+/*   } */
 
-  printf("Consulta de tipo catalogo:\n");
-  /* tipo_procurado eh lido */
-  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n");
+/*   printf("Consulta de tipo catalogo:\n"); */
+/*   /\* tipo_procurado eh lido *\/ */
+/*   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 100 letras)\n\n"); */
 
-  /* Le o tipo a ser buscado */
-  if(le_sk(tipo_procurado, TAM_TIP))
-    /* Procura se existe chave secundaria com o termo requisitado */
-    acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, tipo, vetor_pk);
+/*   /\* Le o tipo a ser buscado *\/ */
+/*   if(le_sk(tipo_procurado, TAM_TIP)) */
+/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
+/*     acha_sk(tipo_procurado, n_pk, arq_base, arq_tip_li, tipo, vetor_pk); */
 
-  return;
-}
+/*   return; */
+/* } */
 
 
-/*!
- * \brief Instancia a estrutura do tipo_dados_sk do campo autor
- */
-void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) {
+/* /\*! */
+/*  * \brief Instancia a estrutura do tipo_dados_sk do campo autor */
+/*  *\/ */
+/* void consulta_sk_aut(tipo_dados_sk * autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base) { */
 
-  char autor_procurado[TAM_AUT+1];
+/*   char autor_procurado[TAM_AUT+1]; */
 
-  if(n_pk == 0) {
-    printf("Nao ha obras registradas no catalogo.\n\n");
-    return;
-  }
+/*   if(n_pk == 0) { */
+/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
+/*     return; */
+/*   } */
 
-  printf("Consulta de autor no catalogo:\n");
-  /* autor_procurado eh lido*/
-  printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n");
+/*   printf("Consulta de autor no catalogo:\n"); */
+/*   /\* autor_procurado eh lido*\/ */
+/*   printf("Digite um termo (apenas uma palavra) a ser pesquisado (max 125 letras)\n\n"); */
   
-  /* Le o autor a ser buscado */
-  if(le_sk(autor_procurado, TAM_AUT))
-    /* Procura se existe chave secundaria com o termo requisitado */
-    acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, autor, vetor_pk);
+/*   /\* Le o autor a ser buscado *\/ */
+/*   if(le_sk(autor_procurado, TAM_AUT)) */
+/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
+/*     acha_sk(autor_procurado, n_pk, arq_base, arq_aut_li, autor, vetor_pk); */
 
-  return;
-}
+/*   return; */
+/* } */
 
 
-/*!
- * \brief Instancia a estrutura do tipo_dados_sk do campo ano
- */
-void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) {
+/* /\*! */
+/*  * \brief Instancia a estrutura do tipo_dados_sk do campo ano */
+/*  *\/ */
+/* void consulta_sk_ano(tipo_dados_sk * ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base) { */
 
-  char ano_procurado[TAM_ANO+1];
+/*   char ano_procurado[TAM_ANO+1]; */
 
-  if(n_pk == 0) {
-    printf("Nao ha obras registradas no catalogo.\n\n");
-    return;
-  }
+/*   if(n_pk == 0) { */
+/*     printf("Nao ha obras registradas no catalogo.\n\n"); */
+/*     return; */
+/*   } */
 
-  printf("Consulta de ano no catalogo:\n");
-  /* ano_procurado eh lido */
-  printf("Digite um ano a ser pesquisado (max 4 letras)\n\n");
+/*   printf("Consulta de ano no catalogo:\n"); */
+/*   /\* ano_procurado eh lido *\/ */
+/*   printf("Digite um ano a ser pesquisado (max 4 letras)\n\n"); */
 
-  /* Le o ano a ser buscado */
-  if(le_sk(ano_procurado, TAM_ANO))
-    /* Procura se existe chave secundaria com o termo requisitado */
-    acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, ano, vetor_pk);
+/*   /\* Le o ano a ser buscado *\/ */
+/*   if(le_sk(ano_procurado, TAM_ANO)) */
+/*     /\* Procura se existe chave secundaria com o termo requisitado *\/ */
+/*     acha_sk(ano_procurado, n_pk, arq_base, arq_ano_li, ano, vetor_pk); */
   
-  return;
-}
+/*   return; */
+/* } */
 
 /*!
  * \brief Instancia a estrutura do tipo_dados_sk do 'campo' descritor

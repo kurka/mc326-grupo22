@@ -236,9 +236,6 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   pks = lerArquivoPK(arq_pk, pks, tam);
 
 
-  
-
-
   /* Como a chave primaria eh unica, arq_html eh criado em modo "w" */
   arq_html=fopen(ARQHTML,"w");
 
@@ -249,6 +246,8 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
   else
     printf("O titulo nao foi encontrado.\n\n");
     
+  free(pks);
+
   fclose(arq_html);
 }
 
@@ -262,7 +261,6 @@ int acha_pk(ap_tipo_registro_pk vetor_de_registros, char titulo_procurado[MAX_TI
   int NRR;
   /* Busca o titulo procurado no vetor de structs. */
   elto_encontrado=bsearch(titulo_procurado, vetor_de_registros, limite_reg, sizeof(tipo_registro_pk), compara_bsearch);
-tet  
   /* Caso o titulo nao esteja registrado, resposta==NULL. Retorna a funcao. */
   if(elto_encontrado==NULL) {
     return 0;

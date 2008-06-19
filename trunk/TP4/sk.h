@@ -8,7 +8,7 @@ void criaRegistrosSK(int n_registros, FILE *arqBase);
 tipo_vetores_sk *ler_arquivo_sk(tipo_arqs_sk *arqs_sk);
   
 /* Faz a leitura de cada arquivo, copiando as chaves secundarias para um vetor*/
-tipo_dados_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
+tipo_registro_sk *le_chaves_sk(FILE *arq_generico, int *n_sks);
 
 /* Insere um novo vetor de SKs, um para cada chave secundaria do novo registro, assim como as suas 
    respectivas listas invertidas*/
@@ -18,19 +18,19 @@ void insereVetorSK(char *registro);
 void cria_vetor_generico(char *registro, char *pk, int limite[2]);
 
 /* Aloca memoria inicial das estruturas de chaves secundarias */
-tipo_dados_sk *aloca_memoria_vetor(tipo_dados_sk *generico, int tam);
+tipo_registro_sk *aloca_memoria_vetor(tipo_registro_sk *vetor_sk, int tam);
 
 /* Funcao de alocacao do vetor (dobravel) de SKs */
 tipo_registro_sk *realoca_memoria_sk(tipo_registro_sk *vetor_SK_generico, int *limite); 
 
 /* Estas funcoes "instanciam" os tipos das chaves secundarias (titulo, tipo, autor ou ano) */
-void consulta_sk_tit(tipo_dados_sk *titulo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tit_li, FILE *arq_base);
+void consulta_sk_tit(int n_pk, FILE *arq_base);
 void consulta_sk_tip(tipo_dados_sk *tipo, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_tip_li, FILE *arq_base);
 void consulta_sk_aut(tipo_dados_sk *autor, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_aut_li, FILE *arq_base);
 void consulta_sk_ano(tipo_dados_sk *ano, tipo_registro_pk *vetor_pk, int n_pk, FILE *arq_ano_li, FILE *arq_base);
 
 /* Procura por uma chave no vetor de chaves secundarias */
-void acha_sk(char *palavra_procurada, int n_pk, FILE *arq_base, FILE *arq_gen_li, tipo_dados_sk * generico, tipo_registro_pk *vetor_pk);
+void acha_sk(char *palavra_procurada, int n_pk, int n_sk, FILE *arq_base, FILE *arq_gen_li, tipo_registro_sk *vetor_sk, tipo_registro_pk *vetor_pk);
 
 /* Funcao que le da entrada padrao e trata excecoes de entrada de busca */
 int le_sk(char* palavra_procurada, int max);
