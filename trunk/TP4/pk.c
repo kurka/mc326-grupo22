@@ -217,6 +217,7 @@ void lista_registros(int limite_reg){
 	    fprintf(arq_html,"%c",pks[i].titulo[j]);
 	  }
 	}
+	free(pks);
       }
     }
     fprintf(arq_html,"<br></div></body></html>");        
@@ -274,9 +275,10 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
       printf("Obra encontrada. Para visualizar suas informações consulte\n");
       printf("sua pasta atual e abra o arquivo %s\n\n", ARQHTML); 
     }
-    else
+    else{
       printf("O titulo nao foi encontrado.\n\n");
-    
+    }
+
     free(pks);
     
     fclose(arq_html);
@@ -319,7 +321,7 @@ ap_tipo_registro_pk lerArquivoPK(FILE *arqPK, ap_tipo_registro_pk vetor, int n_r
   int i, j;
   tipo_registro_pk novo;
 
-  fseek(arqPK,i*TAM_PK,SEEK_SET);
+  fseek(arqPK,0,SEEK_SET);
   for(i=0;i<n_registros;i++){
     for(j=0; j<TAM_TIT; j++){
       fscanf(arqPK, "%c", &(novo.titulo[j]));
