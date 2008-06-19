@@ -19,7 +19,7 @@ int main() {
   char str_final[TAM_REGISTRO+1];
   int n_registros, cabeca_avail, nrr;
   FILE *arq_base, *arq_avail;
-   int limite, limite_descritores[DSC8][2];
+  int limite;
  
 
   /* Atribui o caractere '\0' ao final da string 
