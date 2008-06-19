@@ -152,15 +152,16 @@ int main() {
        espera();
        break; 
 
-/*       /\* Remove um registro do catalogo *\/ */
-/*     case REMOVER: */
-/*       remove_registro(n_registros, vetor_registros, arq_base, arq_avail, &cabeca_avail); */
-/*       vetor_registros = remove_pk(vetor_registros, limite, cabeca_avail); */
-/*       if(DEBUG) */
-/* 	printf(">>>Numero de registros: %d\n\n",limite[0]); */
- 
-/*       espera(); */
-/*       break; */
+       /* Remove um registro do catalogo */
+    case REMOVER:
+      printf("infelizmente essa funcao nao esta implementada nessa versao do programa!\n Desculpe-nos pelo transtorno");
+      /*remove_registro(n_registros, vetor_registros, arq_base, arq_avail, &cabeca_avail); */
+      /*vetor_registros = remove_pk(vetor_registros, limite, cabeca_avail); */
+      /*if(DEBUG) */
+      /*printf(">>>Numero de registros: %d\n\n",limite[0]); */
+      
+       espera(); 
+       break; 
     } 
     
   } while(opcao!=SAIR);
