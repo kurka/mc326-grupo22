@@ -60,6 +60,12 @@ Segue as mesmas especificações do último trabalho prático, mas com as chaves
 A pesquisa por chave secundaria é feita individualmente para cada campo do registro (titulo, tipo, autor e ano) e tem o funcionamento análogo aos trabalhos anteriores, utilizando agora a mesma estrutura de arquivos da pesquisa por chave primária.
 
 
+\textbf{8) Procurar por obras similares (descritores):}
+
+Novidade nesse projeto, cada imagem ganha um descritor associado, que são separados em arquivos distintos, dependendo do numero de ``1''s de sua representação binária (o descritor é um char de 8 bits).
+Desse modo, imagens com descritores próximos possuem similaridades. O programa é capaz de identificar N imagens mais similares, deixando o usuário escolher a quantidade de imagens que deseja visualizar.
+
+
 \section{função de hash}\
 
 Algo que merece destaque nesse trabalho, apesar de não ser visível para o usuário final, é o uso de uma função de hash para espalhamento dos arquivos que armazenam chaves primárias e chaves secundárias (arquivos de titulos, tipos, autores e anos).
@@ -123,6 +129,6 @@ A diferença entre o tamanho maior arquivo (li_titulos1.dat) e o menor (li_titul
 
 \section{Problemas}\
 
-Neste trabalho não foram implementadas funções de remoção de registros. Desse modo, a opção de remover registros foi removida do projeto, não constando essa opção ao usuário.
-
+*Neste trabalho não foram implementadas funções de remoção de registros. Desse modo, a opção de remover registros foi removida do projeto, não constando essa opção ao usuário.
+*Possivel vazamento de memória: rodando o valgrind ele acusa alguns erros, mas o número de mallocs e frees sao iguais. Não consegui retirar esses avisos.
 \end{document}
