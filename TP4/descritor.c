@@ -135,7 +135,7 @@ void listaObrasSimilares(){
   /* Conta quantas obras similares existem para d-1, d e d+1 */
   n_obras_similares=contaObrasSimilares(descritor_entrada - 1) + contaObrasSimilares(descritor_entrada) + contaObrasSimilares(descritor_entrada + 1);
   
-  printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares);
+  printf("Digite quantas dentre as %d obras similares voce deseja visualizar:\n",n_obras_similares-1);
   scanf("%d",&n_obras_a_listar);
   
   if((n_obras_a_listar > n_obras_similares) || (n_obras_a_listar < MIN_OBRAS)){
