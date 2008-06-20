@@ -85,12 +85,12 @@ tipo_registro_sk *le_chaves_sk(FILE *arq_generico, int *n_sks){
      /*  generico->n_sk++; */
     }
   }
-  else
+  else{
     if(!size){
       n_sk = 0;
       vetor_sk = NULL;
     }
-
+  }
   
   *n_sks = n_sk;
   
@@ -175,7 +175,7 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	    printf(">>>Criando arquivo %s\n", arquivo);
 	  arq_sk = fopen(arquivo, "w+");
 	}
-
+	free(arquivo);
 	/*carrega os vetores dinamicamente*/	
 	vetor_sk = le_chaves_sk(arq_sk, &n_sk);
 
@@ -187,7 +187,7 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	    printf(">>>Criando arquivo %s\n", arquivo);
 	  arq_li = fopen(arquivo, "w+");
 	}
-
+	free(arquivo);
 	/*calcula o numero de chaves no arquivo*/
 	fseek(arq_li,0,SEEK_END);
 	n_li = ftell(arq_li)/(TAM_LI);
@@ -269,7 +269,7 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
   for(j=0; j<n_sk; j++)
     free(vetor_sk[j].chave);
 
-  if(n_sk)
+ /*  if(vetor_sk) */
     free(vetor_sk);
 
 }
@@ -427,7 +427,7 @@ void abre_arqs_busca(char * palavra_procurada, char * pre_li, char * pre_sk, FIL
   /*calcula hash e abre arquivo li*/
   arquivo = calculaHash(palavra_procurada, pre_li);   
   arq_li = fopen(arquivo, "r+");
-  
+  free(arquivo);
   /*abre arquivo de sks e carrega suas chaves em vetor dinamico*/
   arquivo = calculaHash(palavra_procurada, pre_sk);   
   if(DEBUG)
@@ -436,7 +436,8 @@ void abre_arqs_busca(char * palavra_procurada, char * pre_li, char * pre_sk, FIL
   arq_sk = fopen(arquivo, "r+");
   if(!arq_sk)
     arq_sk = fopen(arquivo, "w+");
-  
+  free(arquivo);
+   
   sks = le_chaves_sk(arq_sk, &n_sk);
   /*ordena vetor, para fazer bsearch*/
   qsort(sks, n_sk, sizeof(tipo_registro_sk), compara_qsort2); 
@@ -444,7 +445,7 @@ void abre_arqs_busca(char * palavra_procurada, char * pre_li, char * pre_sk, FIL
   /*abre arquivo de pks e carrega as suas chaves primarias*/
   arquivo = calculaHash(palavra_procurada, ARQPK);   
   arq_pk = fopen(arquivo, "r+");
-  
+  free(arquivo);
   if(arq_pk){
     fseek(arq_pk, 0, SEEK_END);
     tam_pks = ftell(arq_pk)/TAM_PK;

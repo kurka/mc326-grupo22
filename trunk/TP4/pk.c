@@ -150,7 +150,7 @@ void insere_pk_arquivo(tipo_registro_pk novo){
       fprintf(arq_pk, "%08d", novo.nrr);      
       
     }
-  
+  free(arquivo);
   fclose(arq_pk);  
 }
 
