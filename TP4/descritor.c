@@ -396,7 +396,7 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
 
 /* Funcao auxiliar para a ordenacao usando o qsort */
 int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
-  return((int)(1000* (((estrutura_pk_imagem_similaridade *)obra1)->similaridade - ((estrutura_pk_imagem_similaridade *)obra2)->similaridade) ));
+  return((int)(1000* (((estrutura_pk_imagem_similaridade *)obra2)->similaridade - ((estrutura_pk_imagem_similaridade *)obra2)->similaridade) ));
 }
 
 
