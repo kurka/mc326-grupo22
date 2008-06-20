@@ -120,6 +120,7 @@ void listaObrasSimilares(){
   /* Le o nome da obra e grava em entrada.titulo[] */
   leTitulo(entrada.titulo);
 
+  if(DEBUG) printf(">>> PK lida por leTitulo (ja esta errada!): %s\n", entrada.titulo);
   if(DEBUG) printf(">>> Chamando funcao verificaPKDescritores...\n");
   
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
