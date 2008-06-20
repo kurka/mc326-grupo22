@@ -400,21 +400,18 @@ int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
 /* Funcao que gera o arquivo html a partir das obras similares */
 void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_obras_a_listar){
 
-  FILE *arq_html=fopen(ARQHTML,MODOA);
+  FILE *arq_html=fopen(ARQHTML,MODOW);
   int i,j;
   
-  if(DEBUG) printf("As %d primeiras obras do vetor:\n",n_obras_a_listar);
-  for(i=0 ; i<n_obras_a_listar ; i++){
-    if(DEBUG) printf("%s  %f\n",obras_similares[i].titulo, obras_similares[i].similaridade);
-  }
-
   fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
   fprintf(arq_html,"<br><b>Lista das %d obras similares</b><br><br>", n_obras_a_listar);
 
-  for(i=0 ; i<n_obras_a_listar ; i++){
+  for(i=0 ; i<=n_obras_a_listar ; i++){
 
-    fprintf(arq_html, "<b>Obra:</b> %s<br>", obras_similares[i].titulo);
-    fprintf(arq_html, "<b>Similaridade:</b> %f<br><br>", obras_similares[i].similaridade);
+    fprintf(arq_html, "<b>Obra:</b> ");
+    for(j=0 ; j<TAM_TIT ; j++)
+      fprintf(arq_html , "%c", obras_similares[i].titulo[j]);
+    fprintf(arq_html, "<br><b>Similaridade:</b> %f<br><br>", obras_similares[i].similaridade);
     fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\"");
     for(j=0 ; j<(TAM_DIR+TAM_IMG+1) ; j++)
       fprintf(arq_html,"%c",obras_similares[i].path[j]);
