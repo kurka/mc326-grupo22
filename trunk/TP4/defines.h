@@ -142,7 +142,7 @@ typedef struct
 
 
 typedef struct {
-  char titulo[TAM_TIT];
+  char titulo[TAM_TIT+1];
   char path[TAM_DIR+TAM_IMG+1];
 } estrutura_pk_imagem;
 
