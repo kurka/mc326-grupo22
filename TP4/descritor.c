@@ -120,7 +120,7 @@ void listaObrasSimilares(){
   /* Le o nome da obra e grava em entrada.titulo[] */
   leTitulo(entrada.titulo);
   entrada.titulo[TAM_TIT] = '\0';
-  if(DEBUG) printf(">>> PK lida por leTitulo (ja esta errada!): %s\n", entrada.titulo);
+  if(DEBUG) printf(">>> PK lida por leTitulo: %s\n", entrada.titulo);
   if(DEBUG) printf(">>> Chamando funcao verificaPKDescritores...\n");
   
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
@@ -191,7 +191,7 @@ int verificaPKDescritores(estrutura_pk_imagem *entrada, int *descritor_entrada){
 
   int i, j, z, n_pks_descritor;
   FILE *arq_descritor;
-  char PK_lida[TAM_TIT], img_lida[TAM_IMG+1];
+  char PK_lida[TAM_TIT+1], img_lida[TAM_IMG+1];
 
   /* Para cada arquivo de descritores... */
   for(i=DSC0 ; i<=DSC8 ; i++){
@@ -208,7 +208,9 @@ int verificaPKDescritores(estrutura_pk_imagem *entrada, int *descritor_entrada){
       fseek(arq_descritor , j*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
       for(z=0 ; z<TAM_TIT ; z++)
 	PK_lida[z]=fgetc(arq_descritor);
-      
+      PK_lida[TAM_TIT]='\0';
+      if(DEBUG) printf("PK_lida do arquivo descritor: %s\n",PK_lida);
+
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
       if(strncmpinsensitive(PK_lida , entrada->titulo, TAM_TIT)==0){
@@ -353,7 +355,6 @@ void leTitulo(char *titulo) {
    obras_similares[]{ titulo; path; similaridade }. O vetor eh ordenado em funcao da similaridade. */
 void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obras_similares, char *path_obra_procurada, int *n){
 
-  estrutura_pk_imagem_similaridade obra_lida;
   char nome_arq_img[TAM_IMG+1];
   FILE *arq_descritor;
   int i, j, n_pks_dsc;
@@ -372,19 +373,15 @@ void carregaObrasSimilares(int descritor, estrutura_pk_imagem_similaridade *obra
     /* Le PK e nome do arquivo e preenche a estrutura com PK, nome do arquivo e similaridade */
     fseek(arq_descritor , i*(TAM_TIT+TAM_IMG+1) , SEEK_SET);
     for(j=0 ; j<TAM_TIT ; j++)
-      obra_lida.titulo[j] = fgetc(arq_descritor);
-    if(DEBUG) printf(">>>obra_lida.titulo: %s\n",obra_lida.titulo);
+      obras_similares[*n].titulo[j] = fgetc(arq_descritor);
+    obras_similares[*n].titulo[TAM_TIT]='\0';
+    if(DEBUG) printf(">>> Obra lida para o vetor: %s\n",obras_similares[*n].titulo);
     for(j=0 ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j] = fgetc(arq_descritor);
-    if(DEBUG) printf(">>>nome_arq_img: %s\n",nome_arq_img);
-    sprintf(obra_lida.path,"%s%s",DIRIMG,nome_arq_img);
-    if(DEBUG) printf(">>>obra_lida.path: %s\n",obra_lida.path);
-    if(DEBUG) printf(">>>path_obra_lida: %s\n",path_obra_procurada);
+    sprintf(obras_similares[*n].path,"%s%s",DIRIMG,nome_arq_img);
     if(DEBUG) printf(">>> Chamada da ComputaSimilaridade...\n");
-    obra_lida.similaridade=ComputaSimilaridade(obra_lida.path , path_obra_procurada);
+    obras_similares[*n].similaridade=ComputaSimilaridade(obras_similares[*n].path , path_obra_procurada);
 
-    /* Insere a estrutura obra_lida no vetor de estruturas obras_similares[] */
-    obras_similares[(*n)]=obra_lida;
     (*n)++;
 
   }/*fim do for*/
@@ -404,8 +401,13 @@ int comparaQsortSimilaridade(const void *obra1 , const void *obra2){
 void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_obras_a_listar){
 
   FILE *arq_html=fopen(ARQHTML,MODOA);
-  int i;
+  int i,j;
   
+  if(DEBUG) printf("As %d primeiras obras do vetor:\n",n_obras_a_listar);
+  for(i=0 ; i<n_obras_a_listar ; i++){
+    if(DEBUG) printf("%s  %f\n",obras_similares[i].titulo, obras_similares[i].similaridade);
+  }
+
   fprintf(arq_html,"<html><head></head><body>\n<div align=\"center\">\n");
   fprintf(arq_html,"<br><b>Lista das %d obras similares</b><br><br>", n_obras_a_listar);
 
@@ -413,7 +415,10 @@ void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_
 
     fprintf(arq_html, "<b>Obra:</b> %s<br>", obras_similares[i].titulo);
     fprintf(arq_html, "<b>Similaridade:</b> %f<br><br>", obras_similares[i].similaridade);
-    fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\"%s\"</p><br><hr><br><br>", obras_similares[i].path);
+    fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\"");
+    for(j=0 ; j<(TAM_DIR+TAM_IMG+1) ; j++)
+      fprintf(arq_html,"%c",obras_similares[i].path[j]);
+    fprintf(arq_html,"\"</p><br><hr><br><br>");
     
   }/*fim do for*/
 
