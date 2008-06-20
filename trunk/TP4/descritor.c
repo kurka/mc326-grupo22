@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "defines.h"
 #include "base.h"
 #include "pk.h"
@@ -38,7 +39,7 @@ void criaDescritores(){
 
   FILE *arq_descritor, *base;
   int i, j, descritor, n_registros;
-  char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+2], path[TAM_DIR+TAM_IMG+1];
+  char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+2], nome_arq_img2[TAM_IMG+2], path[TAM_DIR+TAM_IMG+1];
 
   if(DEBUG) printf(">>> Criando arquivos pks_dscX.dat a partir da base...\n");
 
@@ -79,25 +80,23 @@ void criaDescritores(){
       nome_arq_img[j]=fgetc(base);
 
     nome_arq_img[TAM_IMG+1] = '\0';
-    
-    /* Identificador de obra apagada: '*' no PRIMEIRO CAMPO da imagem */
+      /* Identificador de obra apagada: '*' no PRIMEIRO CAMPO da imagem */
     if(nome_arq_img[0]!='*'){
-      
-      /* path = diretorio + arquivo */
-      sprintf(path,"%s%s",DIRIMG,nome_arq_img);
-      
+      strcpy(nome_arq_img2, nome_arq_img);
+        /* path = diretorio + arquivo */
+      sprintf(path,"%s%s", DIRIMG, nome_arq_img);
+        
       /* Calcula descritor da obra */
       descritor=ContaUns(CalculaDescritor(path));
-
       /* Abre o arquivo correspondente aquele descritor no modo "a" */
       arq_descritor = (FILE *)abreArquivoDescritor(descritor,MODOA);
-
       /* Escreve PK no arquivo pks_dscX.dat */
       for(j=0 ; j<TAM_TIT ; j++)
 	fputc(PK_lida[j] , arq_descritor);
       /* Escreve o nome do arquivo daquela obra */
-      for(j=0 ; j<(TAM_IMG+1) ; j++)
-	fputc(nome_arq_img[j] , arq_descritor);
+/*       for(j=0 ; j<(TAM_IMG+1) ; j++) */
+/* 	fputc(nome_arq_img[j] , arq_descritor); */
+      fprintf(arq_descritor, "%s", nome_arq_img);
 
       fclose(arq_descritor);
 
