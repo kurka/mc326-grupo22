@@ -19,7 +19,7 @@ int ContaUns(char descritor);
 
 /* Verifica se a PK procurada existe nos registros;
    Se existe, calcula o seu descritor e encontra o nome do seu arquivo.*/
-int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada);
+int verificaPKDescritores(estrutura_pk_imagem *entrada, int *descritor_entrada);
 
 /* Retorna o numero de obras contidas no arquivo daquele descritor */
 int contaObrasSimilares(int descritor);

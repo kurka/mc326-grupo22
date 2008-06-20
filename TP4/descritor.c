@@ -122,7 +122,7 @@ void listaObrasSimilares(){
   if(DEBUG) printf(">>> Chamando funcao verificaPKDescritores...\n");
   
   /* Caso a funcao aux nao encontre a PK, exibe msg de erro e retorna */
-  if(verificaPKDescritores(entrada, &descritor_entrada)==ERRO){
+  if(verificaPKDescritores(&entrada, &descritor_entrada)==ERRO){
     printf("A chave procurada nao consta nos registros.\n\n");
     return;
   }
@@ -185,7 +185,7 @@ int ContaUns(char descritor){
    Alem disso, ela modifica os valores de entrada.path e descritor_entrada, inserindo
    o nome do arquivo da PK procurada e seu descritor.
 */
-int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
+int verificaPKDescritores(estrutura_pk_imagem *entrada, int *descritor_entrada){
 
   int i, j, z, n_pks_descritor;
   FILE *arq_descritor;
@@ -209,7 +209,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
       
       /* Caso a PK lida seja igual a procurada, retorna o valor para o descritor
 	 do registro, retorna o nome do arquivo do registro e a funcao retorna OK*/
-      if(strncmpinsensitive(PK_lida , entrada.titulo, TAM_TIT)==0){
+      if(strncmpinsensitive(PK_lida , entrada->titulo, TAM_TIT)==0){
 	if(DEBUG) printf(">>> Encontrou a PK igual...(entrou no if)\n");
 	(*descritor_entrada)=i;
 	      
@@ -217,7 +217,7 @@ int verificaPKDescritores(estrutura_pk_imagem entrada, int *descritor_entrada){
 	for(z=0 ; z<(TAM_IMG+1) ; z++)
 	  img_lida[z]=fgetc(arq_descritor);
 	/* Passagem por referencia do arquivo... entrada.path = dir + arq */
-	sprintf(entrada.path , "%s%s" , DIRIMG , img_lida);
+	sprintf(entrada->path , "%s%s" , DIRIMG , img_lida);
 
 	return(OK);
       }
