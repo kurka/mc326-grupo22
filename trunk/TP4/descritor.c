@@ -38,7 +38,7 @@ void criaDescritores(){
 
   FILE *arq_descritor, *base;
   int i, j, descritor, n_registros;
-  char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+1], path[TAM_DIR+TAM_IMG+1];
+  char PK_lida[TAM_TIT], nome_arq_img[TAM_IMG+2], path[TAM_DIR+TAM_IMG+1];
 
   if(DEBUG) printf(">>> Criando arquivos pks_dscX.dat a partir da base...\n");
 
@@ -78,6 +78,8 @@ void criaDescritores(){
     for( ; j<(TAM_IMG+1) ; j++)
       nome_arq_img[j]=fgetc(base);
 
+    nome_arq_img[TAM_IMG+1] = '\0';
+    
     /* Identificador de obra apagada: '*' no PRIMEIRO CAMPO da imagem */
     if(nome_arq_img[0]!='*'){
       
