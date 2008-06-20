@@ -412,7 +412,7 @@ void geraHTMLSimilares(estrutura_pk_imagem_similaridade *obras_similares, int n_
     for(j=0 ; j<TAM_TIT ; j++)
       fprintf(arq_html , "%c", obras_similares[i].titulo[j]);
     fprintf(arq_html, "<br><b>Similaridade:</b> %f<br><br>", obras_similares[i].similaridade);
-    fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\"");
+    fprintf(arq_html, "<b>Imagem:</b><br><br><p><img src=\".");
     for(j=0 ; j<(TAM_DIR+TAM_IMG+1) ; j++)
       fprintf(arq_html,"%c",obras_similares[i].path[j]);
     fprintf(arq_html,"\"</p><br><hr><br><br>");
