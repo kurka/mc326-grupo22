@@ -32,7 +32,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define MAX_IMG 450
 #define TAM_FORM 3
 #define MEM_INIT 10
-#define DEBUG 1/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
+#define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 #define TAM_NRR_CHAR 5
 #define DSC0 0
 #define DSC1 1
@@ -77,6 +77,7 @@ que guarda titulo e numero de registro do arquivo de chaves primarias*/
 #define DIRIMG "./img/"
 #define MODOA "a"
 #define MODOR "r"
+#define MODOW "w"
 
 
 typedef struct {
