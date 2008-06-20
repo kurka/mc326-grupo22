@@ -217,6 +217,7 @@ void lista_registros(int limite_reg){
 	    fprintf(arq_html,"%c",pks[i].titulo[j]);
 	  }
 	}
+	free(arquivo);
 	free(pks);
       }
     }
@@ -278,7 +279,7 @@ void consulta_pk(int limite_reg, FILE *arq_base) {
     else{
       printf("O titulo nao foi encontrado.\n\n");
     }
-
+    free(arquivo);
     free(pks);
     
     fclose(arq_html);

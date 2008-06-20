@@ -86,7 +86,6 @@ int abre_pk(){
 	temp = ftell(teste);
       }
     }
-
   return temp;
 }
 
@@ -113,7 +112,6 @@ int abre_sk(){
 	temp = ftell(teste);
       }
   }
-  
   return temp;
 }
 

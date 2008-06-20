@@ -139,7 +139,7 @@ void insereVetorSK(char *registro)
  */	
 void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_sk, char *prefixo_li){
 
-  int j, k, l, prox;   
+  int j, k, l, m, prox;   
   char temp_sk[TAM_TIT];
   char *arquivo;
   int novaSK, endereco_li;
@@ -220,7 +220,14 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	  fseek(arq_li, (n_li)*(TAM_TIT+8),SEEK_SET);	  
 	  fprintf(arq_li, "%s", pk); 
 	  fprintf(arq_li, "%08d", prox);     	  
+	
+/* 	  /\*desaloca vetor criado*\/ */
+/* 	  for(j=0; j<n_sk; j++) */
+/* 	    free(vetor_sk[j].chave); */
 	  
+/* 	  /\*  if(vetor_sk) *\/ */
+/* 	  free(vetor_sk); */
+  
 	}
 	/* Caso a SK já existe, entao adiciona a chave primaria correspondente na lista invertida */
 	else{
@@ -248,13 +255,28 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
 	      fprintf(arq_li, "%s", pk); 
 	      fprintf(arq_li, "%08d", prox);     	  
 	      
+
+/* 	      /\*desaloca vetor criado*\/ */
+/* 	      for(j=0; j<n_sk; j++) */
+/* 		free(vetor_sk[j].chave); */
+	      
+/* 	      /\*  if(vetor_sk) *\/ */
+/* 	      free(vetor_sk); */
+	      
 	      break;
 	      
 	    }
 	  }  
 	}  
 	fclose(arq_sk);
-	fclose(arq_li);	
+	fclose(arq_li);
+	
+	/*desaloca vetor criado*/
+	for(m=0; m<n_sk; m++){
+	  free(vetor_sk[m].chave);
+	}
+	if(n_sk)
+	  free(vetor_sk);
       } 
       k = 0;
       
@@ -263,14 +285,9 @@ void cria_vetor_generico(char *registro, char *pk, int limite[2], char *prefixo_
       temp_sk[k] = registro[j];
       k++;
     }
+    
   }
-
-  /*desaloca vetor criado*/
-  for(j=0; j<n_sk; j++)
-    free(vetor_sk[j].chave);
-
- /*  if(vetor_sk) */
-    free(vetor_sk);
+  
 
 }
 
