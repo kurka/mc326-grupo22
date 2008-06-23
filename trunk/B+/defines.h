@@ -1,5 +1,6 @@
 
 /* Constantes numericas */
+#define CHAVES 4
 #define OK 0
 #define ERRO -1
 #define ERRO2 -2
@@ -16,3 +17,13 @@ typedef struct {
   int a;
   int b;
 } tipoParDeInt;
+
+
+typedef struct{
+  int tipo; /*(1 se for folha, 0 se nao for folha)*/
+  int n_pagina;
+  int chaves[CHAVES]; /*depois isso vai virar um union..*/
+  int apontadores[CHAVES+1];
+  int prox_dir;
+  int prox_esq;
+} tipoNo
