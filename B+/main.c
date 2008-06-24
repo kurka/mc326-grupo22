@@ -50,6 +50,7 @@ insere(tipoNo *arvore){
 /* Interface de utilizacao da arvore B+ */
 int main(){
 
+
   tipoNo *arvore = (tipoNo *) malloc(sizeof(tipoNo)*100);
   char opcao, c;
 
