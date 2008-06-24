@@ -23,6 +23,7 @@ typedef struct {
 } tipoParDeInt;
 
 
+//vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores
 typedef struct{
   int tipo; /*(1 se for folha, 0 se nao for folha)*/
   int n_elementos;
@@ -30,4 +31,4 @@ typedef struct{
   int apontadores[CHAVES+1];
   int prox_dir;
   int prox_esq;
-} tipoNo
+} tipoNo;
