@@ -1,13 +1,25 @@
 #include <stdio.h>
 #include "defines.h"
 
-
-insere(){
-  /*
-  //le a chave a ser inserida
-   */
-
-  fopen(ROOT, "a+");
+insere(tipoNo *arvore){
+  
+  int chave;
+  
+  /*le a chave a ser inserida*/
+  printf("Digite a chave a ser inserida\n");
+  scanf("%d", &chave);
+    
+    
+  /*abre arquivo 0*/
+  for(i=0; i<arvore[0].n_elementos; i++){
+    if(chave < arvore[0].chaves[i] == 0){
+      if(arvore[0].n_elementos < CHAVES)
+	}
+    else
+      chave < arvore[0].chaves[i] == 0
+      procura_folha();
+    }
+  /* fopen(ROOT, "a+");*/
   /*acha chave certa*/
 
 
@@ -32,6 +44,7 @@ insere(){
 
 
 }
+
 
 int insere_folha(){
 
