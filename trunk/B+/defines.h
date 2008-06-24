@@ -19,7 +19,7 @@ typedef struct {
 
 typedef struct{
   int tipo; /*(1 se for folha, 0 se nao for folha)*/
-  int n_pagina;
+  int n_elementos;
   int chaves[CHAVES]; /*depois isso vai virar um union..*/
   int apontadores[CHAVES+1];
   int prox_dir;
