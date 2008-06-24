@@ -8,9 +8,7 @@
 
 
 /* Definicao de strings, nomes de arquivos, etc */
-#define MODOA "a"
-#define MODOR "r"
-#define MODOW "w"
+#define ROOT "0"
 
 /* Definicao de tipos */
 typedef struct {
