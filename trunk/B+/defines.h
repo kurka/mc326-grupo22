@@ -9,6 +9,12 @@
 
 /* Definicao de strings, nomes de arquivos, etc */
 #define ROOT "0"
+#define INSERE '1'
+#define CONSULTA '2'
+#define REMOVE '3'
+#define SAIR '0'
+
+
 
 /* Definicao de tipos */
 typedef struct {
