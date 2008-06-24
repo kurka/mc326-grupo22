@@ -13,7 +13,7 @@
 #define CONSULTA '2'
 #define REMOVE '3'
 #define SAIR '0'
-
+#define TAM_NOME_ARQ 7
 
 
 /* Definicao de tipos */
@@ -23,7 +23,7 @@ typedef struct {
 } tipoParDeInt;
 
 
-//vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores
+/*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
 typedef struct{
   int tipo; /*(1 se for folha, 0 se nao for folha)*/
   int n_elementos;
