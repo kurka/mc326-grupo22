@@ -13,7 +13,7 @@
 #define CONSULTA '2'
 #define REMOVE '3'
 #define SAIR '0'
-#define TAM_NOME_ARQ 7
+#define TAM_NOME_ARQ 9
 
 
 /* Definicao de tipos */
