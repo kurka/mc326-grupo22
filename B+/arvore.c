@@ -1,3 +1,4 @@
+
 #include<stdio.h>
 #include<strings.h>
 #include<malloc.h>
@@ -10,6 +11,7 @@ void abre_raiz();
 tipoNo *abre_folha(int numero);
 void fecha_no(tipoNo *arvore, int numero);
 int acha_folha();
+
 
 /*imprime no arquivo informacoes sobre o no*/
 void fecha_no(tipoNo *arvore, int numero){
@@ -119,25 +121,24 @@ tipoNo *abre_folha(int numero){
 }
 
 
-/* /\*insere retorna 1 se a inserção foi efetuada corretamente, e 0 se não*\/ */
-/* int insere() */
-/* { */
-/*   int chave; */
-/*   FILE *arq; */
-/*   tipoNo *arvore; */
-/*   int i; */
-/*   char nome_arq[TAM_NOME_ARQ]; /\*o 7 deve virar constante depois*\/ */
+/*insere retorna 1 se a inserção foi efetuada corretamente, e 0 se não*/
+ int insere() { 
+   int chave; 
+   FILE *arq; 
+   tipoNo *arvore; 
+   int i; 
+   char nome_arq[TAM_NOME_ARQ]; 
   
   
-/*   /\*le a chave a ser inserida*\/ */
-/*   printf("Digite a chave a ser inserida\n"); */
-/*   scanf("%d", &chave); */
+   /*le a chave a ser inserida*/
+   printf("Digite a chave a ser inserida\n"); 
+   scanf("%d", &chave); 
   
     
 
-/*   //acha a folha */
-/*   acha_folha() */
-
+   //acha a folha 
+   acha_folha();
+ }
 /*   //insere na folha */
 
 
@@ -219,24 +220,25 @@ tipoNo *abre_folha(int numero){
 
 /* } */
 
-/* int acha_folha(int folha){ */
-
-/*   //abre arquivo e le ele; */
-
-/*   if( tipo == 1) */
-/*     return insere_folha(folha); */
-
-/*   else{ */
-/*     //acha proxima folha */
-/*     chave = acha_folha(prox); */
-    
-/*     if(chave != -1) */
-/*       return insere_arvore(chave); */
+int acha_folha(int folha){ 
   
-/*     return -1;   */
-/*   } */
-
-/* } */
+  //abre arquivo e le ele; 
+  
+  if( tipo == 1) 
+    return insere_folha(folha); 
+  
+  else{ 
+    //acha proxima folha 
+    chave = acha_folha(prox); 
+    
+    if(chave != -1) 
+      return insere_arvore(chave); 
+    
+    return -1;   
+  } 
+  
+}
+ 
 
 
 /* int insere_folha(){ */
