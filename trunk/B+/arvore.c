@@ -5,24 +5,24 @@
 #include "defines.h"
 
 
-void montar_nome_arquivo(int n, char *nome_arq);
 int insere();
 void abre_raiz();
 tipoNo *abre_folha(int numero);
-void fecha_no(tipoNo *arvore, int numero);
-int acha_folha();
+void fecha_no(tipoNo *arvore);
+int *acha_folha();
 
 
 /*imprime no arquivo informacoes sobre o no*/
-void fecha_no(tipoNo *arvore, int numero){
+void fecha_no(tipoNo *arvore){
 
   FILE * arq;
   char nome_arq[TAM_NOME_ARQ];
   int i;
   
-  sprintf(nome_arq, "%s%d", DIRETORIO, numero);
+  sprintf(nome_arq, "%s%d", DIRETORIO, arvore->posicao);
 
   /*dados ficam nessa disposicao no arquivo:
+    posicao
     tipo
     n_elementos
     chave0 chave1 chave2 ...
@@ -32,6 +32,7 @@ void fecha_no(tipoNo *arvore, int numero){
 */
   arq = fopen(nome_arq, "w");
   fseek(arq,0,SEEK_SET); 
+  fprintf(arq, "%d\n", arvore->posicao);
   fprintf(arq, "%d\n", arvore->tipo);
   
   fprintf(arq, "%d\n", arvore->n_elementos);
@@ -61,17 +62,18 @@ void abre_raiz(){
   arq = fopen(arquivo, "r");
   
   if(arq == NULL) /* se o nó raíz não existe, ou seja, não existe nem árvore, nem mato, nem nada...*/
-    {             
+    {  
       
       /*Criamos o nó raíz, inserimos o primeiro elemento; A Raíz é uma folha*/
       arvore = (tipoNo *)(malloc(sizeof(tipoNo)));
+      arvore->posicao = 0; /*a raíz é folha;*/
       arvore->tipo = 1; /*a raíz é folha;*/
       arvore->n_elementos = 0;
       arvore->prox_esq = -1;
       arvore->prox_dir = -1; /*-1 significa apontar pra ninguém*/
       arvore->prox_esq = -1;
 
-      fecha_no(arvore, 0);
+      fecha_no(arvore);
     }
   else
     fclose(arq);
@@ -97,6 +99,7 @@ tipoNo *abre_folha(int numero){
       arvore = (tipoNo *)malloc(sizeof(tipoNo));
 
       fseek(arq,0,SEEK_SET);
+      fscanf(arq, "%d", &arvore->posicao);
       fscanf(arq, "%d", &arvore->tipo);
       
       fscanf(arq, "%d", &arvore->n_elementos);
@@ -110,13 +113,23 @@ tipoNo *abre_folha(int numero){
       if(arvore->tipo == 1){
 	fscanf(arq, "%d", &arvore->prox_esq);
 	fscanf(arq, "%d", &arvore->prox_dir);
-
       }
-
+      
     }
   
-  fclose(arq);
+  if(arq == NULL) /* se o noh não existe*/
+    {  
+      /*Criamos o noh, com elementos nulos */
+      arvore = (tipoNo *)(malloc(sizeof(tipoNo)));
+      arvore->tipo = 1; /*a raíz é folha;*/
+      arvore->n_elementos = 0;
+      arvore->prox_esq = -1;
+      arvore->prox_dir = -1; /*-1 significa apontar pra ninguém*/
+      arvore->prox_esq = -1;
+    }
+
   
+  fclose(arq);
   return arvore;
 }
 
@@ -220,54 +233,160 @@ tipoNo *abre_folha(int numero){
 
 /* } */
 
-int acha_folha(int folha){ 
+int *acha_folha(int chave, int *prox_chave){ 
+  
+  tipoNo *no;
+  int retorno[3] = {-1,-1,-1};
   
   //abre arquivo e le ele; 
+  no = abre_folha(chave);
   
-  if( tipo == 1) 
-    return insere_folha(folha); 
+  if( no->tipo == 1) 
+    retorno = insere_folha(no, chave, prox_chave); 
   
   else{ 
     //acha proxima folha 
-    chave = acha_folha(prox); 
-    
-    if(chave != -1) 
-      return insere_arvore(chave); 
-    
-    return -1;   
-  } 
+    retorno = acha_folha(prox); 
   
+    /*em caso de split insere na arvore novos elementos*/  
+    if(retorno[1] != -1) 
+      retorno = insere_arvore(no, retorno, prox_chave); 
+  } 
+  fecha_no(no);
+  return retorno 
 }
  
 
 
-/* int insere_folha(){ */
+int *insere_folha(tipoNo no, int chave, int *prox_chave){
 
-/*   insere na folha */
-/*   if(n < CHAVES) */
-/*     //insercao simples */
-/*     n++; */
+  int i;
+  tipoNo nova;
+  /*vetor que contem a chave a ser inserida no nivel acima.
+    Se os valores forem -1, -1, -1, significa que novas chaves nao precisam ser inseridas*/
+  int retorno[3] = {-1, -1, -1};
+
+  /*  insere na folha*/
+  if(no->n_elementos < CHAVES){
+    /*insercao simples*/
+    for(i=0; i<no->n_elementos; i++){
+      if(chave == no->chaves[i]){
+	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n");
+	return retorno;
+      }
+      
+      if(chave < no->chaves[i])
+	break;
+    }
+
+    
+    for(j=n_elementos;  j>i; j--){
+      no->chaves[j] = no->chaves[j-1];
+    }
+    
+    
+    no->chaves[i] = chave;
+    no->n_elementos++;  
+   
+    return retorno; 
+  }
+
+
+  if(no->n_elementos == CHAVES){
+    /*
+    //futuro: rotacao
+    */
+    
+    /*split:*/
+ 
+    *prox_chave++;
+    nova = abre_folha(*prox_chave);
+    /*copia chaves para nova estrutura*/
+    for(i=CHAVES/2 + CHAVES%2; i<CHAVES i++){
+      insere_folha(nova, no->chaves[i], prox_chave);
+    }
+    
+    nova->n_elementos = CHAVES/2;
+    no->n_elementos = CHAVES/2 + CHAVES%2;
+    nova->prox_dir = *prox_chave;
+    nova->prox_esq = no->posicao;
+    fecha_no(nova);
+    
+    /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
+    retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
+    /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
+    retorno[1] = nova->posicao;
+    retorno[2] = *prox_chave;
+
+    return retorno;
+  }
+
   
-/*   if(n == CHAVES) */
-/*     /\* */
-/*     //futuro: rotacao */
-/*     *\/ */
-/*     /\*  */
-/*     //split */
-/*     *\/ */
+  int *insere_arvore(tipoNo no, int dados[3], int *prox_chave){
+    int i;
+    tipoNo nova;
+    /*vetor que contem a chave a ser inserida no nivel acima.
+      Se os valores forem -1, -1, -1, significa que novas chaves nao precisam ser inseridas*/
+    int resposta[3] = {-1, -1, -1};
 
-/* } */
+  /*  insere na folha*/
+  if(no->n_elementos < CHAVES){
+    /*insercao simples*/
+    for(i=0; i<no->n_elementos; i++){
+      if(chave == no->chaves[i]){
+	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n");
+	return resposta;
+      }
+      
+      if(chave < no->chaves[i])
+	break;
+    }
+
+    
+    for(j=n_elementos;  j>i; j--){
+      no->chaves[j] = no->chaves[j-1];
+      no->apontadores[j+1] = no->apontadores[j]; 
+    }
+    
+    
+    no->chaves[i] = dados[0];
+    no->chaves[i+1] = dados[2];
+    no->n_elementos++;  
+   
+    return resposta; 
+  }
 
 
-/* int insere_arvore(){ */
+  if(no->n_elementos == CHAVES){
+    /*
+    //futuro: rotacao
+    */
+    
+    /*split:*/
+ 
+    *prox_chave++;
+    nova = abre_folha(*prox_chave);
+    /*copia chaves para nova estrutura*/
+    for(i=CHAVES/2 + CHAVES%2; i<CHAVES i++){
+      insere_folha(nova, no->chaves[i], prox_chave);
+    }
+    
+    nova->n_elementos = CHAVES/2;
+    no->n_elementos = CHAVES/2 + CHAVES%2;
+    nova->prox_dir = *prox_chave;
+    nova->prox_esq = no->posicao;
+    fecha_no(nova);
+    
+    /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
+    retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
+    /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
+    retorno[1] = nova->posicao;
+    retorno[2] = *prox_chave;
+
+    return retorno;
+
+  } 
+            
 
 
-/* } */
 
-/* /\**\/ */
-/* void montar_nome_arquivo(int n, char *nome_arq) */
-/* { */
-/*      int i=0; */
-/*      sprintf(nome_arq, "%8d", n); */
-
-/* } */
