@@ -8,19 +8,19 @@
 
 
 /* Definicao de strings, nomes de arquivos, etc */
-#define ROOT "0"
+#define ROOT 0
 #define INSERE '1'
 #define CONSULTA '2'
 #define REMOVE '3'
 #define SAIR '0'
-#define TAM_NOME_ARQ 9
+#define TAM_NOME_ARQ 16
+#define DIRETORIO "files/"
 
-
-/* Definicao de tipos */
-typedef struct {
-  int a;
-  int b;
-} tipoParDeInt;
+/* /\* Definicao de tipos *\/ */
+/* typedef struct { */
+/*   int a; */
+/*   int b; */
+/* } tipoParDeInt; */
 
 
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
