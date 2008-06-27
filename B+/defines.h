@@ -1,4 +1,4 @@
-
+ve
 /* Constantes numericas */
 #define CHAVES 4
 #define OK 0
@@ -25,6 +25,7 @@
 
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
 typedef struct{
+  int posicao;
   int tipo; /*(1 se for folha, 0 se nao for folha)*/
   int n_elementos;
   int chaves[CHAVES]; /*depois isso vai virar um union..*/
