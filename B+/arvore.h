@@ -13,10 +13,10 @@ tipoNo *abre_folha(int numero);
 void insere(int *prox_chave);
 
 /*procura recursivamente pela folha onde se deve inserir a chave. Na volta da recursao, insere nos niveis superiores*/
-int *acha_folha(int chave, int *prox_chave);
+void acha_folha(int chave, int pagina, int retorno[3], int *prox_chave);
 
 /*insre elemento na folha correta*/
-int *insere_folha(tipoNo no, int chave, int *prox_chave);
+void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave);
 
 /*insere elemento em noh da arvore*/  
-int *insere_arvore(tipoNo no, int dados[3], int *prox_chave);
+void insere_arvore(tipoNo *no, int dados[3], int *prox_chave);

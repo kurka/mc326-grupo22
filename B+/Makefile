@@ -1,7 +1,7 @@
-main: main.o 
-	gcc -ggdb -ansi -pedantic -Wall -lefence main.o -o b+
+main: main.o arvore.o
+	gcc -ggdb -ansi -pedantic -Wall -lefence main.o arvore.o -o b+
 
-main.o: main.c arvore.h defines.h
+main.o: main.c defines.h arvore.h
 	gcc -ggdb -ansi -pedantic -Wall -c main.c
 
 arvore.o: arvore.h defines.h arvore.c
