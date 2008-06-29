@@ -1,5 +1,5 @@
 /* Constantes numericas */
-#define CHAVES 4
+#define CHAVES 2
 #define OK 0
 #define ERRO -1
 #define ERRO2 -2
