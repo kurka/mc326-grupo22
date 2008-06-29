@@ -3,8 +3,8 @@
 /*imprime no arquivo informacoes sobre o no*/
 void fecha_no(tipoNo *arvore);
 
-/*abre ou cria arquivo com os registros da raiz da arvore*/
-void abre_raiz();
+/*cria uma nova raiz, no caso da arvore subir de nivel*/
+tipoNo *cria_raiz(int numero);
 
 /*carrega conteudo de uma folha na memoria*/
 tipoNo *abre_folha(int numero);

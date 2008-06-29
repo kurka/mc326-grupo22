@@ -8,6 +8,8 @@
 
 /* Definicao de strings, nomes de arquivos, etc */
 #define ROOT 0
+#define FOLHA 1
+#define NO 0
 #define INSERE '1'
 #define CONSULTA '2'
 #define REMOVE '3'
@@ -25,7 +27,7 @@ typedef struct{
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
 typedef struct{
   int posicao;
-  int tipo; /*(1 se for folha, 0 se nao for folha)*/
+  int tipo; /*(FOLHA se for folha, NO se nao for folha)*/
   int n_elementos;
   int chaves[CHAVES+1];/*armazena um a mais, para split*/
   int apontadores[CHAVES+2];
