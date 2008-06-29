@@ -137,7 +137,7 @@ void insere(int *prox_chave) {
      nova->apontadores[0] = resposta[1];
      nova->apontadores[1] = resposta[2];
      nova->n_elementos++;  
-   
+     fecha_no(nova);
    }
  }
 
@@ -304,7 +304,6 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
       insere_folha(nova, no->chaves[i], retorno, prox_chave);
     }
     
-    nova->n_elementos = CHAVES/2;
     no->n_elementos = CHAVES/2 + CHAVES%2;
     no->prox_dir = *prox_chave;
     nova->prox_esq = no->posicao;
