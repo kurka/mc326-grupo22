@@ -6,8 +6,9 @@ void fecha_no(tipoNo *arvore);
 /*cria uma nova raiz, no caso da arvore subir de nivel*/
 tipoNo *cria_raiz(int numero);
 
-/*carrega conteudo de uma folha na memoria*/
-tipoNo *abre_folha(int numero);
+/*carrega conteudo de um no na memoria*/
+tipoNo *abre_no(int numero, int tipo);
+
 
 /*faz a insercao de chave na arvore*/
 void insere(int *prox_chave);
