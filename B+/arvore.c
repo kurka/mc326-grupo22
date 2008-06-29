@@ -66,9 +66,20 @@ tipoNo *abre_folha(int numero){
 
   arq = fopen(arquivo, "r");
   
-  if(arq != NULL) 
-    {             
+  if(arq == NULL) /* se o noh não existe*/
+    {  
       
+      /*Criamos o noh, com elementos nulos */
+      arvore = (tipoNo *)(malloc(sizeof(tipoNo)));
+      arvore->posicao = numero;
+      arvore->tipo = 1; /*a raíz é folha;*/
+      arvore->n_elementos = 0;
+      arvore->prox_dir = -1; /*-1 significa apontar pra ninguém*/
+      arvore->prox_esq = -1;
+    }
+
+  else if(arq != NULL) 
+    {             
       /*Alocamos o no e registramos seus dados, lendo do arquivo*/
       arvore = (tipoNo *)malloc(sizeof(tipoNo));
 
@@ -79,7 +90,7 @@ tipoNo *abre_folha(int numero){
       fscanf(arq, "%d", &arvore->n_elementos);
       
       for(i=0; i<arvore->n_elementos; i++)
-	fscanf(arq, "%d ", &arvore->apontadores[i]);
+	fscanf(arq, "%d ", &arvore->chaves[i]);
       /*fscanf(arq, "\n");*/
       if(arvore->tipo == 2){
 	for(i=0; i<arvore->n_elementos+1; i++)
@@ -92,21 +103,10 @@ tipoNo *abre_folha(int numero){
       }
       fclose(arq);      
     }
-  
-  if(arq == NULL) /* se o noh não existe*/
-    {  
-
-      /*Criamos o noh, com elementos nulos */
-      arvore = (tipoNo *)(malloc(sizeof(tipoNo)));
-      arvore->posicao = numero;
-      arvore->tipo = 1; /*a raíz é folha;*/
-      arvore->n_elementos = 0;
-      arvore->prox_dir = -1; /*-1 significa apontar pra ninguém*/
-      arvore->prox_esq = -1;
-    }
 
   
-
+  
+  
   return arvore;
 }
 
@@ -273,7 +273,6 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n");
 	return;
       }
-      
       if(chave < no->chaves[i])
 	break;
     }
@@ -281,8 +280,8 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
     
     for(j=no->n_elementos; j>i; j--){
       no->chaves[j] = no->chaves[j-1];
+
     }
-    
     
     no->chaves[i] = chave;
     no->n_elementos++;  
@@ -307,18 +306,17 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
     
     nova->n_elementos = CHAVES/2;
     no->n_elementos = CHAVES/2 + CHAVES%2;
-    nova->prox_dir = *prox_chave;
+    no->prox_dir = *prox_chave;
     nova->prox_esq = no->posicao;
-    fecha_no(nova);
+
     
     /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
     retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
-
     /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
-    retorno[1] = nova->posicao;
+    retorno[1] = no->posicao;
+    retorno[2] = nova->posicao; 
 
-    retorno[2] = *prox_chave;
-
+    fecha_no(nova);
   }
 }
 
@@ -382,8 +380,9 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
       /*resposta[0] possui o delimitador (copia da ultima chave do no da esquerda*/
       dados[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
       /*resposta[1] e [2] possuem os apontadores para as novas folhas*/
-      dados[1] = nova->posicao;
-      dados[2] = *prox_chave;
+      dados[1] = no->posicao;
+      dados[2] = nova->posicao;
+
     } 
 }
   
