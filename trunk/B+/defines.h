@@ -1,4 +1,3 @@
-ve
 /* Constantes numericas */
 #define CHAVES 4
 #define OK 0
@@ -16,11 +15,11 @@ ve
 #define TAM_NOME_ARQ 16
 #define DIRETORIO "files/"
 
-/* /\* Definicao de tipos *\/ */
-/* typedef struct { */
-/*   int a; */
-/*   int b; */
-/* } tipoParDeInt; */
+/* Definicao de tipos */
+typedef struct{
+  int a;
+  int b;
+} tipoParDeInt;
 
 
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
@@ -28,8 +27,8 @@ typedef struct{
   int posicao;
   int tipo; /*(1 se for folha, 0 se nao for folha)*/
   int n_elementos;
-  int chaves[CHAVES]; /*depois isso vai virar um union..*/
-  int apontadores[CHAVES+1];
+  int chaves[CHAVES+1];/*armazena um a mais, para split*/
+  int apontadores[CHAVES+2];
   int prox_dir;
   int prox_esq;
 } tipoNo;
