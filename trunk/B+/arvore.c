@@ -130,7 +130,7 @@ void insere(int *prox_chave) {
 
    if(resposta[2] != -1){
      /*se a funcao retornar algo diferente de -1, significa que a raiz sofreu split*/   
-     
+     *prox_chave = *prox_chave+1;
      nova = abre_folha(*prox_chave);
      /*  insere na folha*/
      nova->chaves[0] = resposta[0];
