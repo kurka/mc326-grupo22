@@ -170,6 +170,8 @@ void insere(int *prox_chave) {
      fecha_no(raiz_velha);
      fecha_no(nova);
    }
+
+   printf("Chave inserida com sucesso!\n\n");
  }
 
 
@@ -271,7 +273,7 @@ void acha_folha(int chave, int pagina, int retorno[3], int *prox_chave){
   else{ 
     /*acha proxima folha*/ 
     for(i=0; i<no->n_elementos; i++){
-      if(chave < no->chaves[i])
+      if(chave <= no->chaves[i])
 	break;
     }
     acha_folha(chave, no->apontadores[i], retorno, prox_chave);
@@ -301,7 +303,7 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
     /*insercao simples*/
     for(i=0; i<no->n_elementos; i++){
       if(chave == no->chaves[i]){
-	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n");
+	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n\n\n");
 	return;
       }
       if(chave < no->chaves[i])
@@ -396,7 +398,7 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
 	insere_arvore(nova, dados, prox_chave);
       }
       
-      no->n_elementos = CHAVES/2 + CHAVES%2;
+      no->n_elementos = (CHAVES/2 + CHAVES%2)-1;
       
       
       /*resposta[0] possui o delimitador (copia da ultima chave do no da esquerda*/
