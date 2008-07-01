@@ -1,15 +1,15 @@
 /* Constantes numericas */
-#define CHAVES 4
-#define OK -1
+#define CHAVES 4 /*numero de chaves por noh*/
+#define OK -1 /* retornos das funcoes de insercao e remocao*/
 #define ERRO -2
 #define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 
 
 /* Definicao de strings, nomes de arquivos, etc */
 #define ROOT 0
-#define FOLHA 1
+#define FOLHA 1 /*tipos de nohs*/
 #define NO 0
-#define INSERE 1
+#define INSERE 1  /*opcoes do menu*/
 #define CONSULTA 2
 #define LISTAR 3
 #define REMOVE 4
