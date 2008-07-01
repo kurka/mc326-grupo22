@@ -24,7 +24,7 @@ void remove(&ultima_chave, &nrr){
 
 /*procura recursivamente pela folha onde se deve remover a chave. 
   Na volta da recursao, se necessario, faz merge dos nos superiores*/
-void acha_folha_ins(int chave, int pagina, int retorno[3], int *prox_chave){ 
+void acha_folha_rem(int chave, int pagina, int retorno[3], int *prox_chave){ 
   
   tipoNo *no;
 
@@ -42,15 +42,17 @@ void acha_folha_ins(int chave, int pagina, int retorno[3], int *prox_chave){
   else{ 
     /*acha proxima folha*/ 
     for(i=0; i<no->n_elementos; i++){
-      if(chave[0] <= no->chaves[i])
+      if(chave <= no->chaves[i])
 	break;
     }
-    acha_folha_ins(chave, no->apontadores[i], retorno, prox_chave);
+    acha_folha_rem(chave, no->apontadores[i], retorno, prox_chave);
     
   
     /*em caso de split insere na arvore novos elementos*/  
     if(retorno[1] != OK) 
-      insere_arvore(no, retorno, prox_chave); 
+      remove_arvore(no, retorno, prox_chave); 
   } 
   fecha_no(no);
 }
+
+
