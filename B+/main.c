@@ -1,7 +1,9 @@
 #include<stdio.h>
 #include<malloc.h>
 #include "defines.h"
-#include "arvore.h"  
+#include "leitura.h"  
+#include "insercao.h"  
+#include "remocao.h"  
 
 
 /* Interface de utilizacao da arvore B+ */
