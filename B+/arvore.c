@@ -335,9 +335,9 @@ void insere_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
     }
     
     no->n_elementos = CHAVES/2 + CHAVES%2;
-    no->prox_dir = *prox_chave;
+    nova->prox_dir = no->prox_dir;
     nova->prox_esq = no->posicao;
-
+    no->prox_dir = *prox_chave;
     
     /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
     retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
