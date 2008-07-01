@@ -47,21 +47,29 @@ int main(){
     case INSERE:
      /*  abre_raiz(); */
       insere(&ultima_chave, &nrr);
+
+      espera();
       continue;
 
     case CONSULTA:
       /* ... */
+
+      espera();
       continue;
 
     case LISTAR:
       lista_elementos();
+
+      espera();
       continue;
 
     case REMOVE:
       /* ... */
+      espera();
       continue;
 
     case SAIR:
+      printf("Fim da execução!\n");
       break;
 
     default:
