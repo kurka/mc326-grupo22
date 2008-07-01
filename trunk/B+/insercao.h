@@ -4,7 +4,7 @@
 void insere(int *prox_chave, int *nrr);
 
 /*procura recursivamente pela folha onde se deve inserir a chave. Na volta da recursao, insere nos niveis superiores*/
-void acha_folha(int chave[2], int pagina, int retorno[3], int *prox_chave);
+void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave);
 
 /*insre elemento na folha correta*/
 void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave);
