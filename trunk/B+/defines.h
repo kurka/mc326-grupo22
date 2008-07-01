@@ -1,8 +1,7 @@
 /* Constantes numericas */
 #define CHAVES 4
-#define OK 0
-#define ERRO -1
-#define ERRO2 -2
+#define OK -1
+#define ERRO -2
 #define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 
 

@@ -26,8 +26,8 @@ void insere(int *prox_chave, int *nrr) {
    /*acha a folha */
    acha_folha(chave, 0, resposta, prox_chave);
 
-   if(resposta[2] != -1){
-     /*se a funcao retornar algo diferente de -1, significa que a raiz sofreu split*/   
+   if(resposta[2] != OK){
+     /*se a funcao retornar algo diferente de OK, significa que a raiz sofreu split*/   
      *prox_chave = *prox_chave+1;
      nova = abre_no(*prox_chave, NO);
      /*  insere na folha*/
@@ -70,9 +70,10 @@ void acha_folha(int chave[2], int pagina, int retorno[3], int *prox_chave){
   /*abre arquivo e le ele*/
   no = abre_no(pagina, FOLHA);
   
-  if(no->tipo == 1){ 
+  if(no->tipo == FOLHA){ 
     insere_folha(no, chave, retorno, prox_chave); 
-    printf("Chave inserida com sucesso!\n\n");  
+    if(retorno[2] != ERRO)
+      printf("Chave inserida com sucesso!\n\n");  
   } 
   else{ 
     /*acha proxima folha*/ 
@@ -84,7 +85,7 @@ void acha_folha(int chave[2], int pagina, int retorno[3], int *prox_chave){
     
   
     /*em caso de split insere na arvore novos elementos*/  
-    if(retorno[1] != -1) 
+    if(retorno[1] != OK) 
       insere_arvore(no, retorno, prox_chave); 
   } 
   fecha_no(no);
@@ -98,15 +99,16 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
   tipoNo *nova;
   /*vetor que contem a chave a ser inserida no nivel acima.
     Se os valores forem -1, -1, -1, significa que novas chaves nao precisam ser inseridas*/
-  retorno[0] = -1;
-  retorno[1] = -1;
-  retorno[2] = -1;
+  retorno[0] = OK;
+  retorno[1] = OK;
+  retorno[2] = OK;
 
   /*  insere na folha*/
   if(no->n_elementos <= CHAVES){
     /*insercao simples*/
     for(i=0; i<no->n_elementos; i++){
       if(chave[0] == no->chaves[i]){
+	retorno[2] = ERRO;
 	printf("Erro! Chave repetida! Por favor, adicione uma nova chave\n\n\n");
 	return;
       }
@@ -185,9 +187,9 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
   }
   if(no->n_elementos <= CHAVES){
     /*muda os valores de dados, para nao inserir mais nenhum elemento*/
-    dados[0] = -1;
-    dados[1] = -1;
-    dados[2] = -1;
+    dados[0] = OK;
+    dados[1] = OK;
+    dados[2] = OK;
   }
   else 
     if(no->n_elementos == CHAVES+1){
