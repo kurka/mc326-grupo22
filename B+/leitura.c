@@ -177,4 +177,5 @@ void lista_elementos(){
 void espera(){
   printf("\nPressione a tecla enter para voltar ao menu...\n");
   getchar();
+  getchar();
 }
