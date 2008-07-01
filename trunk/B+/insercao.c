@@ -24,7 +24,7 @@ void insere(int *prox_chave, int *nrr) {
    chave[1] = *nrr;
       
    /*acha a folha */
-   acha_folha(chave, 0, resposta, prox_chave);
+   acha_folha_ins(chave, 0, resposta, prox_chave);
 
    if(resposta[2] != OK){
      /*se a funcao retornar algo diferente de OK, significa que a raiz sofreu split*/   
@@ -61,7 +61,7 @@ void insere(int *prox_chave, int *nrr) {
 
 
 /*procura recursivamente pela folha onde se deve inserir a chave. Na volta da recursao, insere nos niveis superiores*/
-void acha_folha(int chave[2], int pagina, int retorno[3], int *prox_chave){ 
+void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){ 
   
   tipoNo *no;
 
@@ -81,7 +81,7 @@ void acha_folha(int chave[2], int pagina, int retorno[3], int *prox_chave){
       if(chave[0] <= no->chaves[i])
 	break;
     }
-    acha_folha(chave, no->apontadores[i], retorno, prox_chave);
+    acha_folha_ins(chave, no->apontadores[i], retorno, prox_chave);
     
   
     /*em caso de split insere na arvore novos elementos*/  
