@@ -198,18 +198,18 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
       *prox_chave = *prox_chave + 1;
       nova = abre_no(*prox_chave, NO);
       /*copia chaves para nova estrutura*/
-      for(i=CHAVES/2 + CHAVES%2; i<=CHAVES; i++){
+      for(i=CHAVES/2 + 1; i<=CHAVES; i++){
 	dados[0]=no->chaves[i];
 	dados[1]=no->apontadores[i];
 	dados[2]=no->apontadores[i+1];
 	insere_arvore(nova, dados, prox_chave);
       }
       
-      no->n_elementos = (CHAVES/2 + CHAVES%2)-1;
+      no->n_elementos = CHAVES/2;
       
       
       /*resposta[0] possui o delimitador (copia da ultima chave do no da esquerda*/
-      dados[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
+      dados[0] = no->chaves[CHAVES/2];
       /*resposta[1] e [2] possuem os apontadores para as novas folhas*/
       dados[1] = no->posicao;
       dados[2] = nova->posicao;
