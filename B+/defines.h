@@ -1,5 +1,5 @@
 /* Constantes numericas */
-#define CHAVES 3
+#define CHAVES 4
 #define OK 0
 #define ERRO -1
 #define ERRO2 -2
@@ -10,11 +10,12 @@
 #define ROOT 0
 #define FOLHA 1
 #define NO 0
-#define INSERE '1'
-#define CONSULTA '2'
-#define REMOVE '3'
-#define SAIR '0'
+#define INSERE 1
+#define CONSULTA 2
+#define REMOVE 3
+#define SAIR 0
 #define TAM_NOME_ARQ 16
+#define VETOR 1000
 #define DIRETORIO "files/"
 
 /* Definicao de tipos */
