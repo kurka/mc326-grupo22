@@ -12,18 +12,13 @@
 #define NO 0
 #define INSERE 1
 #define CONSULTA 2
-#define REMOVE 3
+#define LISTAR 3
+#define REMOVE 4
 #define SAIR 0
 #define TAM_NOME_ARQ 16
 #define VETOR 1000
 #define DIRETORIO "files/"
-
-/* Definicao de tipos */
-typedef struct{
-  int a;
-  int b;
-} tipoParDeInt;
-
+#define DADOS "dados.dat"
 
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
 typedef struct{
@@ -31,6 +26,7 @@ typedef struct{
   int tipo; /*(FOLHA se for folha, NO se nao for folha)*/
   int n_elementos;
   int chaves[CHAVES+1];/*armazena um a mais, para split*/
+  int nrr[CHAVES+1];
   int apontadores[CHAVES+2];
   int prox_dir;
   int prox_esq;
