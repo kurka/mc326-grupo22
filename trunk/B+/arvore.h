@@ -24,3 +24,9 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave);
 
 /*lista as chaves e os respectivos nrrs armazenados na arvore*/
 void lista_elementos();
+
+/* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
+void espera(){
+  printf("\nPressione a tecla enter para voltar ao menu...\n");
+  getchar();
+}
