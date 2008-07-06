@@ -124,8 +124,6 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	/*confere se a folha da esquerda pode "emprestar" sua chave*/ 
 	if(nova->n_elementos > CHAVES/2){
 	
-	
-  
 	  /*insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow*/
 	  chave_viz[0] = nova->chaves[nova->n_elementos-1];
 	  chave_viz[1] = nova->nrr[nova->n_elementos-1];
@@ -150,6 +148,8 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	retorno[1] = OK;
 	retorno[2] = OK;
 	fecha_no(nova);
+
+	return;
       }
 
       /*rotacao com a direita*/
@@ -160,11 +160,9 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	/*confere se a folha da direita pode "emprestar" sua chave*/ 
 	if(nova->n_elementos > CHAVES/2){
 	
-	
-  
 	  /*insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow*/
-	  chave_viz[0] = nova->chaves[nova->n_elementos-1];
-	  chave_viz[1] = nova->nrr[nova->n_elementos-1];
+	  chave_viz[0] = nova->chaves[0];
+	  chave_viz[1] = nova->nrr[0];
 
 	  remove_folha(nova, chave_viz[0], retorno, prox_chave); 
 	  insere_folha(no, chave_viz, retorno, prox_chave);
@@ -173,11 +171,11 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	  if(no->posicao != NADA){
 	    pai = abre_no(retorno[2]);
 	    for(i=0; i<pai->n_elementos; i++){
-	      if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
+	      if(pai->chaves[i] > no->chaves[no->n_elementos-1] && pai->chaves[i] < no->chaves[no->n_elementos-2])
 		break;
 	    }
-	    /*o novo delimitador corresponde ao primeiro elemento da arvore */
-	    pai->chaves[i] = no->chaves[0];
+	    /*o novo delimitador corresponde ao primeiro elemento da folha da direita*/
+	    pai->chaves[i] = nova->chaves[0];
 	  
 	    fecha_no(pai);  
 	  }
@@ -186,7 +184,10 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	retorno[1] = OK;
 	retorno[2] = OK;
 	fecha_no(nova);
+
+	return;
       }
+
 
 
 
