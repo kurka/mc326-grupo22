@@ -2,7 +2,7 @@
 #define CHAVES 4 /*numero de chaves por noh*/
 #define OK -1 /* retornos das funcoes de insercao e remocao*/
 #define ERRO -2
-#define NULL -1 /*quando apontador para folha nao existe*/
+#define NADA -1 /*quando apontador para folha nao existe*/
 #define DEBUG 0/*if(DEBUG) imprime etapas e outras infos uteis para o programador ou usuario avancado*/ 
 
 
