@@ -4,12 +4,13 @@
 #include<strings.h>
 #include<malloc.h>
 #include "defines.h"
+#include "remocao.h"
 #include "leitura.h"
 #include "insercao.h"
 
 
-/*rotirna de remocao de no em uma arvore B+*/
-void remove(&ultima_chave, &nrr){
+/*rotina de remocao de no em uma arvore B+*/
+void remover(int *ultima_chave){
 
   int chave, resposta, i, j;
   int parentesco[3] = {NADA, NADA, NADA};
@@ -36,7 +37,7 @@ void remove(&ultima_chave, &nrr){
 	  break;
       }
       
-      for(j=i j<raiz->n_elementos;j++){
+      for(j=i; j<raiz->n_elementos; j++){
 	raiz->chaves[j] = raiz->chaves[j+1];
 	raiz->apontadores[j+1] = raiz->apontadores[j+2];
       }
@@ -132,7 +133,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
   /*remove elemento da folha*/
      
   for(i=0; i<no->n_elementos; i++){
-    if(chave[0] == no->chaves[i]){
+    if(chave == no->chaves[i]){
       break;
     }
   }
@@ -142,7 +143,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     return ERRO;
   }
     
-  for(j=i j<no->n_elementos;j++){
+  for(j=i; j<no->n_elementos; j++){
     no->chaves[j] = no->chaves[j+1];
     no->nrr[j] = no->nrr[j+1];
   }
@@ -287,7 +288,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       return REM_PAI;
     }
   }
- 
+  return ERRO;
 } 
   
   
@@ -348,8 +349,8 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	pai->chaves[i] = nova->chaves[nova->n_elementos-1];
 
 	remove_arvore(nova, nova->n_elementos-1, parentesco, prox_chave); 
-	insere_arvore(no, nova_chave, parentesco, prox_chave);
-	
+	insere_arvore(no, nova_chave, prox_chave);
+
 	fecha_no(pai);  
       }
       fecha_no(nova);
@@ -383,7 +384,7 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	pai->chaves[i] = nova->chaves[0];
 
 	remove_arvore(nova, 0, parentesco, prox_chave); 
-	insere_arvore(no, nova_chave, parentesco, prox_chave);
+	insere_arvore(no, nova_chave, prox_chave);
 	
 	fecha_no(pai);   
       }
@@ -449,5 +450,5 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
       return REM_PAI;
     }
   }
- 
+  return ERRO; 
 } 

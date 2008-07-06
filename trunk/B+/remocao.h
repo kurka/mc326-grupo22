@@ -1,7 +1,7 @@
 /*implementacao de funcoes de remocao em arvore B+*/
 
-/*rotirna de remocao de no em uma arvore B+*/
-void remove(&ultima_chave, &nrr);
+/*rotina de remocao de no em uma arvore B+*/
+void remover(int *ultima_chave);
 
 /*procura recursivamente pela folha onde se deve remover a chave. 
   Na volta da recursao, se necessario, faz merge dos nos superiores*/
