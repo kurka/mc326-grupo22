@@ -11,13 +11,53 @@
 /*rotirna de remocao de no em uma arvore B+*/
 void remove(&ultima_chave, &nrr){
 
-  int chave, parentesco[3] = {NADA, NADA, NADA};
+  int chave, resposta, i, j;
+  int parentesco[3] = {NADA, NADA, NADA};
+  tipoNo *raiz, *nova_raiz;
   /*le chave a ser removida*/
   printf("Digite a chave a ser inserida\n"); 
   scanf("%d", &chave);
 
   /*acha a folha onde acontecera a remocao*/
-  acha_folha_rem(chave, ROOT, parentesco, ultima_chave);
+  resposta = acha_folha_rem(chave, ROOT, parentesco, ultima_chave);
+
+
+
+  if(resposta == REM_PAI){
+    /*se a funcao retornar REM_PAI, significa que deve ser removido elemento da raiz*/   
+
+    raiz = abre_no(0, NO);
+
+    /*remove o delimitador antigo e mantem a raiz*/
+    if(raiz->n_elementos > 1){
+      /*acha a posicao do delimitador*/ 
+      for(i=0; i<raiz->n_elementos; i++){
+	if(chave <= raiz->chaves[i])
+	  break;
+      }
+      
+      for(j=i j<raiz->n_elementos;j++){
+	raiz->chaves[j] = raiz->chaves[j+1];
+	raiz->apontadores[j+1] = raiz->apontadores[j+2];
+      }
+      
+      raiz->n_elementos--; 
+    }
+    
+    /*caso a raiz tenha ficado vazia, desce um nivel a arvore*/
+    if(raiz->n_elementos == 1){
+      nova_raiz = abre_no(raiz->apontadores[0], FOLHA);
+      
+      raiz->posicao = nova_raiz->posicao;
+      nova_raiz->posicao = 0;
+      
+      raiz->n_elementos = 0;
+      
+      fecha_no(nova_raiz);  
+    }
+    fecha_no(raiz);
+    
+  }
 }
 
 
@@ -127,7 +167,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     /*rotacao com a esquerda*/
     /*confere se a folha da esquerda eh "filha" do mesmo pai*/
     if(parentesco[0] != NADA){
-      nova = abre_no(no->prox_esq);
+      nova = abre_no(no->prox_esq, FOLHA);
       
       /*confere se a folha da esquerda pode "emprestar" sua chave*/ 
       if(nova->n_elementos > CHAVES/2){
@@ -139,7 +179,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	remove_folha(nova, chave_viz[0], parentesco, prox_chave); 
 	insere_folha(no, chave_viz, parentesco, prox_chave);
 	
-	pai = abre_no(parentesco[2]);
+	pai = abre_no(parentesco[2], FOLHA);
 	for(i=0; i<pai->n_elementos; i++){
 	  if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
 	    break;
@@ -158,7 +198,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     /*rotacao com a direita*/
     /*confere se a folha da direita eh "filha" do mesmo pai*/
     if(parentesco[1] != NADA){
-      nova = abre_no(no->prox_dir);
+      nova = abre_no(no->prox_dir, FOLHA);
       
       /*confere se a folha da direita pode "emprestar" sua chave*/ 
       if(nova->n_elementos > CHAVES/2){
@@ -170,7 +210,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	remove_folha(nova, chave_viz[0], parentesco, prox_chave); 
 	insere_folha(no, chave_viz, parentesco, prox_chave);
 	
-	pai = abre_no(parentesco[2]);
+	pai = abre_no(parentesco[2], FOLHA);
 	for(i=0; i<pai->n_elementos; i++){
 	  if(pai->chaves[i] < no->chaves[no->n_elementos-1] && pai->chaves[i] > no->chaves[no->n_elementos-2])
 	    break;
@@ -192,7 +232,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     /*merge com a esquerda*/
     /*confere se a folha da esquerda eh "filha" do mesmo pai*/
     if(parentesco[0] != NADA){
-      nova = abre_no(no->prox_esq);
+      nova = abre_no(no->prox_esq, FOLHA);
       
       if(nova->n_elementos <= CHAVES/2){
 	/*copia chaves para folha da direita*/
@@ -224,7 +264,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     /*merge com a direita*/
     /*confere se a folha da direita eh "filha" do mesmo pai*/
     if(parentesco[1] != NADA){
-      nova = abre_no(no->prox_dir);
+      nova = abre_no(no->prox_dir, FOLHA);
       
       if(nova->n_elementos <= CHAVES/2){
 	/*copia chaves para folha da esquerda*/
@@ -285,13 +325,13 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     /*rotacao com a esquerda*/
     /*confere se a folha da esquerda eh "filha" do mesmo pai*/
     if(parentesco[0] != NADA){
-      nova = abre_no(no->prox_esq);
+      nova = abre_no(no->prox_esq, NO);
       
       /*confere se a folha da esquerda pode "emprestar" sua chave*/ 
       if(nova->n_elementos > CHAVES/2){
 	
 	/*insere o delimitador na chave da direita e o ultimo da esquerda vira delimitador*/
-	pai = abre_no(parentesco[2]);
+	pai = abre_no(parentesco[2], NO);
 	
 	for(i=0; i<pai->n_elementos; i++){
 	  if(pai->chaves[i] < no->chaves[0] && pai->chaves[i] > nova->chaves[nova->n_elementos-1])
@@ -320,14 +360,14 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     /*rotacao com a direita*/
     /*confere se a folha da direita eh "filha" do mesmo pai*/
     if(parentesco[1] != NADA){
-      nova = abre_no(no->prox_dir);
+      nova = abre_no(no->prox_dir, NO);
       
       /*confere se a folha da direita pode "emprestar" sua chave*/ 
       if(nova->n_elementos > CHAVES/2){
 
 	
 	/*insere o delimitador na chave da esquerda e o ultimo da direita vira delimitador*/
-	pai = abre_no(parentesco[2]);
+	pai = abre_no(parentesco[2], NO);
 	
 	for(i=0; i<pai->n_elementos; i++){
 	  if(pai->chaves[i] > no->chaves[no->n_elementos-1] && pai->chaves[i] < nova->chaves[0])
@@ -359,7 +399,7 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     /*merge com a esquerda*/
     /*confere se a folha da esquerda eh "filha" do mesmo pai*/
     if(parentesco[0] != NADA){
-      nova = abre_no(no->prox_esq);
+      nova = abre_no(no->prox_esq, NO);
       
       if(nova->n_elementos <= CHAVES/2){
 	/*copia chaves para folha da direita*/
@@ -389,7 +429,7 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     /*merge com a direita*/
     /*confere se a folha da direita eh "filha" do mesmo pai*/
     if(parentesco[1] != NADA){
-      nova = abre_no(no->prox_dir);
+      nova = abre_no(no->prox_dir, NO);
       
       if(nova->n_elementos <= CHAVES/2){
 	/*copia chaves para folha da esquerda*/
