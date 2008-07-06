@@ -37,8 +37,8 @@ void insere(int *prox_chave, int *nrr) {
      nova->n_elementos++;  
 
      /*faz com que arquivo 0 sempre seja o arquivo raiz*/
-     raiz_velha = abre_no(0, FOLHA);
-     nova->posicao = 0;
+     raiz_velha = abre_no(ROOT, FOLHA);
+     nova->posicao = ROOT;
      raiz_velha->posicao = *prox_chave;
      nova->apontadores[0] = *prox_chave;
 

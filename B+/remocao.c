@@ -27,7 +27,7 @@ void remover(int *ultima_chave){
   if(resposta == REM_PAI){
     /*se a funcao retornar REM_PAI, significa que deve ser removido elemento da raiz*/   
 
-    raiz = abre_no(0, NO);
+    raiz = abre_no(ROOT, NO);
 
     /*remove o delimitador antigo e mantem a raiz*/
     if(raiz->n_elementos > 1){
@@ -50,7 +50,7 @@ void remover(int *ultima_chave){
       nova_raiz = abre_no(raiz->apontadores[0], FOLHA);
       
       raiz->posicao = nova_raiz->posicao;
-      nova_raiz->posicao = 0;
+      nova_raiz->posicao = ROOT;
       
       raiz->n_elementos = 0;
       

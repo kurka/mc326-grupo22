@@ -139,7 +139,7 @@ tipoNo *cria_raiz(int numero){
   
 /*lista as chaves e os respectivos nrrs armazenados na arvore*/
 void lista_elementos(){
-  tipoNo *no, *temp;
+  tipoNo *no;
   int prox;
   int i;
   
@@ -147,7 +147,6 @@ void lista_elementos(){
   no = abre_no(ROOT, FOLHA);
   /*procura folha*/
   while(no->tipo != 1){
-    temp = no;
     /*vai para a folha com elementos de menor valor*/
     prox = no->apontadores[0];
     fecha_no(no);
@@ -172,6 +171,55 @@ void lista_elementos(){
   printf("\n\n");
 
 }
+
+/*consulta por uma chave secundaria, a pedido do usuario*/
+void consulta(){
+  tipoNo *no;
+  int busca, prox;
+  int i;
+  
+  printf("Digite a chave que voce deseja buscar\n");
+
+  scanf("%d", &busca);
+
+  /*abre arquivo e le ele*/
+  no = abre_no(ROOT, FOLHA);
+  /*procura folha*/
+  while(no->tipo != 1){
+    /*procura a folha aonde deve estar o elemento*/
+    for(i=0; i<no->n_elementos; i++){
+      if(busca <= no->chaves[i])
+	break;
+    }
+
+    prox = no->apontadores[i];
+    fecha_no(no);
+    no = abre_no(prox, FOLHA);
+  }
+
+  for(i=0; i<no->n_elementos; i++){
+    if(busca == no->chaves[i]){
+      break;
+    }
+  }
+  
+  if(i==no->n_elementos){
+    printf("A chave procurada nao existe na arvore!\n\n\n");
+  }
+
+  else{
+    printf("Chave %d encontrada!\n", no->chaves[i]); 
+    printf("Chave = %d  ", no->chaves[i]); 
+    printf("NRR = %d\n", no->nrr[i]);   
+
+    printf("Para visualizar sua folha, consulte arquivo %d, na pasta files.\n\n\n", no->posicao);
+    
+    fecha_no(no);  
+  }
+  
+}
+
+
 
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera(){
