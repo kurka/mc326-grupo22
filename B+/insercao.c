@@ -98,7 +98,7 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
   int i, j;
   tipoNo *nova;
   /*vetor que contem a chave a ser inserida no nivel acima.
-    Se os valores forem -1, -1, -1, significa que novas chaves nao precisam ser inseridas*/
+    Se os valores forem OK, OK, OK, significa que novas chaves nao precisam ser inseridas*/
   retorno[0] = OK;
   retorno[1] = OK;
   retorno[2] = OK;
