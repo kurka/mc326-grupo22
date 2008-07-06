@@ -13,5 +13,8 @@ tipoNo *abre_no(int numero, int tipo);
 /*lista as chaves e os respectivos nrrs armazenados na arvore*/
 void lista_elementos();
 
+/*consulta por uma chave secundaria, a pedido do usuario*/
+void consulta();
+
 /* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
 void espera();
