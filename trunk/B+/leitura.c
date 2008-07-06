@@ -166,7 +166,7 @@ void lista_elementos(){
     if(prox != NADA)
       no = abre_no(prox, FOLHA);
     else
-      no = NADA;
+      no = NULL;
   }while(no);
   
   printf("\n\n");
