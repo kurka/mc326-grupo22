@@ -148,8 +148,8 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
     nova->prox_esq = no->posicao;
     no->prox_dir = *prox_chave;
     
-    /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
-    retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
+    /*retorno[0] possui o delimitador (copia da primeira chave do no da direita*/
+    retorno[0] = nova->chaves[0];
     /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
     retorno[1] = no->posicao;
     retorno[2] = nova->posicao; 
@@ -210,7 +210,7 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
       no->n_elementos = CHAVES/2;
       
       
-      /*resposta[0] possui o delimitador (copia da ultima chave do no da esquerda*/
+      /*resposta[0] possui o delimitador (elemento do meio dos nos)*/
       dados[0] = no->chaves[CHAVES/2];
       /*resposta[1] e [2] possuem os apontadores para as novas folhas*/
       dados[1] = no->posicao;
