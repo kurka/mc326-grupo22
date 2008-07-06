@@ -66,7 +66,7 @@ int main(){
       continue;
 
     case REMOVE:
-      /* ... */
+      remover(&ultima_chave);
       espera();
       continue;
 
