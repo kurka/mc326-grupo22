@@ -108,115 +108,153 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
     retorno[0] = OK;
     retorno[1] = OK;
     retorno[2] = OK;
+
+    return;
   }
   
   /*verifica se deu underflow*/
-  else 
-    if(no->n_elementos < CHAVES/2){
+  if(no->n_elementos < CHAVES/2){
+    
+    /*ROTACAO*/
+    
+    /*rotacao com a esquerda*/
+    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    if(retorno[0] != NADA){
+      nova = abre_no(no->prox_esq);
       
-      /*rotacao*/
-      
-      /*rotacao com a esquerda*/
-      /*confere se a folha da esquerda eh "filha" do mesmo pai*/
-      if(retorno[0] != NADA){
-	nova = abre_no(no->prox_esq);
+      /*confere se a folha da esquerda pode "emprestar" sua chave*/ 
+      if(nova->n_elementos > CHAVES/2){
 	
-	/*confere se a folha da esquerda pode "emprestar" sua chave*/ 
-	if(nova->n_elementos > CHAVES/2){
+	/*insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow*/
+	chave_viz[0] = nova->chaves[nova->n_elementos-1];
+	chave_viz[1] = nova->nrr[nova->n_elementos-1];
 	
-	  /*insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow*/
-	  chave_viz[0] = nova->chaves[nova->n_elementos-1];
-	  chave_viz[1] = nova->nrr[nova->n_elementos-1];
-
-	  remove_folha(nova, chave_viz[0], retorno, prox_chave); 
-	  insere_folha(no, chave_viz, retorno, prox_chave);
-
-	  /*atualiza delimitador (se a folha nao for a raiz)*/
-	  if(no->posicao != NADA){
-	    pai = abre_no(retorno[2]);
-	    for(i=0; i<pai->n_elementos; i++){
-	      if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
-		break;
-	    }
-	    /*o novo delimitador corresponde ao primeiro elemento da arvore */
-	    pai->chaves[i] = no->chaves[0];
-	  
-	    fecha_no(pai);  
+	remove_folha(nova, chave_viz[0], retorno, prox_chave); 
+	insere_folha(no, chave_viz, retorno, prox_chave);
+	
+	/*atualiza delimitador (se a folha nao for a raiz)*/
+	if(no->posicao != NADA){
+	  pai = abre_no(retorno[2]);
+	  for(i=0; i<pai->n_elementos; i++){
+	    if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
+	      break;
 	  }
-	}
-	retorno[0] = OK;
-	retorno[1] = OK;
-	retorno[2] = OK;
-	fecha_no(nova);
-
-	return;
-      }
-
-      /*rotacao com a direita*/
-      /*confere se a folha da direita eh "filha" do mesmo pai*/
-      if(retorno[1] != NADA){
-	nova = abre_no(no->prox_dir);
-	
-	/*confere se a folha da direita pode "emprestar" sua chave*/ 
-	if(nova->n_elementos > CHAVES/2){
-	
-	  /*insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow*/
-	  chave_viz[0] = nova->chaves[0];
-	  chave_viz[1] = nova->nrr[0];
-
-	  remove_folha(nova, chave_viz[0], retorno, prox_chave); 
-	  insere_folha(no, chave_viz, retorno, prox_chave);
-
-	  /*atualiza delimitador (se a folha nao for a raiz)*/
-	  if(no->posicao != NADA){
-	    pai = abre_no(retorno[2]);
-	    for(i=0; i<pai->n_elementos; i++){
-	      if(pai->chaves[i] > no->chaves[no->n_elementos-1] && pai->chaves[i] < no->chaves[no->n_elementos-2])
-		break;
-	    }
-	    /*o novo delimitador corresponde ao primeiro elemento da folha da direita*/
-	    pai->chaves[i] = nova->chaves[0];
+	  /*o novo delimitador corresponde ao primeiro elemento da arvore */
+	  pai->chaves[i] = no->chaves[0];
 	  
-	    fecha_no(pai);  
-	  }
+	  fecha_no(pai);  
 	}
-	retorno[0] = OK;
-	retorno[1] = OK;
-	retorno[2] = OK;
-	fecha_no(nova);
-
-	return;
       }
-
-
-
-
-	/*split:*/
+      retorno[0] = OK;
+      retorno[1] = OK;
+      retorno[2] = OK;
+      fecha_no(nova);
+      
+      return;
+    }
+    
+    /*rotacao com a direita*/
+    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    if(retorno[1] != NADA){
+      nova = abre_no(no->prox_dir);
+      
+      /*confere se a folha da direita pode "emprestar" sua chave*/ 
+      if(nova->n_elementos > CHAVES/2){
 	
-	*prox_chave = *prox_chave +1;
+	/*insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow*/
+	chave_viz[0] = nova->chaves[0];
+	chave_viz[1] = nova->nrr[0];
 	
-	nova = abre_no(*prox_chave, FOLHA);
-	/*copia chaves para nova estrutura*/
-	for(i=CHAVES/2 + CHAVES%2; i<=CHAVES; i++){
-	  chave[0] = no->chaves[i];
-	  chave[1] = no->nrr[i];
-	  insere_folha(nova, chave, retorno, prox_chave);
+	remove_folha(nova, chave_viz[0], retorno, prox_chave); 
+	insere_folha(no, chave_viz, retorno, prox_chave);
+	
+	/*atualiza delimitador (se a folha nao for a raiz)*/
+	if(no->posicao != NADA){
+	  pai = abre_no(retorno[2]);
+	  for(i=0; i<pai->n_elementos; i++){
+	    if(pai->chaves[i] > no->chaves[no->n_elementos-1] && pai->chaves[i] < no->chaves[no->n_elementos-2])
+	      break;
+	  }
+	  /*o novo delimitador corresponde ao primeiro elemento da folha da direita*/
+	  pai->chaves[i] = nova->chaves[0];
+	  
+	  fecha_no(pai);  
 	}
+      }
+      retorno[0] = OK;
+      retorno[1] = OK;
+      retorno[2] = OK;
+      fecha_no(nova);
       
-      no->n_elementos = CHAVES/2 + CHAVES%2;
-      nova->prox_dir = no->prox_dir;
-      nova->prox_esq = no->posicao;
-      no->prox_dir = *prox_chave;
+      return;
+    }
+    
+    
+    /*MERGE*/
+    
+    /*merge com a esquerda*/
+    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    if(retorno[0] != NADA){
+      nova = abre_no(no->prox_esq);
       
-      /*retorno[0] possui o delimitador (copia da ultima chave do no da esquerda*/
-      retorno[0] = no->chaves[(CHAVES/2 + CHAVES%2)-1];
-      /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
-      retorno[1] = no->posicao;
-      retorno[2] = nova->posicao; 
+      if(nova->n_elementos <= CHAVES/2){
+	/*copia chaves para folha da direita*/
+	for(i=0; i<nova->n_elementos; i++){
+	  chave_viz[0] = nova->chaves[i];
+	  chave_viz[1] = nova->nrr[i];
+	  insere_folha(no, chave_viz, retorno, prox_chave);
+	}
+      }
+      
+      no->prox_esq = nova->prox_esq;
+      
+      /*"apaga" folha*/
+      nova->n_elementos = 0;
+      nova->prox_esq = NADA;
+      nova->prox_dir = NADA;
+      
+      
+      /*retorno possui informacao para remover o delimitador da folha em que foi removida pai*/
+      retorno[0] = REM_PAI;
+      retorno[1] = REM_PAI;
+      retorno[2] = REM_PAI;
       
       fecha_no(nova);
+      return;
     }
-}
-
-
-
+    
+    /*merge com a direita*/
+    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    if(retorno[1] != NADA){
+      nova = abre_no(no->prox_dir);
+      
+      if(nova->n_elementos <= CHAVES/2){
+	/*copia chaves para folha da esquerda*/
+	for(i=0; i<nova->n_elementos; i++){
+	  chave_viz[0] = nova->chaves[i];
+	  chave_viz[1] = nova->nrr[i];
+	  insere_folha(no, chave_viz, retorno, prox_chave);
+	}
+      }
+      
+      no->prox_dir = nova->prox_dir;
+      
+      /*"apaga" folha*/
+      nova->n_elementos = 0;
+      nova->prox_esq = NADA;
+      nova->prox_dir = NADA;
+      
+      
+      /*retorno possui informacao para remover o delimitador da folha em que foi removida pai*/
+      retorno[0] = REM_PAI;
+      retorno[1] = REM_PAI;
+      retorno[2] = REM_PAI;
+      
+      fecha_no(nova);
+      return;
+    }
+  }
+ 
+} 
+  
+  
