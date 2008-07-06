@@ -84,11 +84,11 @@ tipoNo *abre_no(int numero, int tipo){
       arvore->n_elementos = 0;
 
       if(tipo == FOLHA){
-	arvore->prox_dir = -1; /*-1 significa apontar pra ninguém*/
-	arvore->prox_esq = -1;
+	arvore->prox_dir = NADA; /*NADA significa apontar pra ninguém*/
+	arvore->prox_esq = NADA;
       }
     }
-
+  
   else if(arq != NULL) 
     {             
       /*Alocamos o no e registramos seus dados, lendo do arquivo*/
@@ -163,7 +163,7 @@ void lista_elementos(){
     printf("\n");
     prox = no->prox_dir;
     fecha_no(no);  
-    if(prox != -1)
+    if(prox != NADA)
       no = abre_no(prox, FOLHA);
     else
       no = NULL;
