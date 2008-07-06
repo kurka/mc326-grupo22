@@ -124,7 +124,7 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	/*confere se a folha da esquerda pode "emprestar" sua chave*/ 
 	if(nova->n_elementos > CHAVES/2){
 	
-	  /*atualiza */
+	
   
 	  /*insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow*/
 	  chave_viz[0] = nova->chaves[nova->n_elementos-1];
@@ -133,15 +133,62 @@ void remove_folha(tipoNo *no, int chave, int retorno[3], int *prox_chave){
 	  remove_folha(nova, chave_viz[0], retorno, prox_chave); 
 	  insere_folha(no, chave_viz, retorno, prox_chave);
 
-	  /*atualiza delimitador*/
-	  pai = abre_no(retorno[0]);
-	  for(i=0; i<pai->n_elementos; i++)
-	    if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
+	  /*atualiza delimitador (se a folha nao for a raiz)*/
+	  if(no->posicao != NADA){
+	    pai = abre_no(retorno[2]);
+	    for(i=0; i<pai->n_elementos; i++){
+	      if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
+		break;
+	    }
+	    /*o novo delimitador corresponde ao primeiro elemento da arvore */
+	    pai->chaves[i] = no->chaves[0];
 	  
-
+	    fecha_no(pai);  
+	  }
 	}
+	retorno[0] = OK;
+	retorno[1] = OK;
+	retorno[2] = OK;
 	fecha_no(nova);
       }
+
+      /*rotacao com a direita*/
+      /*confere se a folha da direita eh "filha" do mesmo pai*/
+      if(retorno[1] != NADA){
+	nova = abre_no(no->prox_dir);
+	
+	/*confere se a folha da direita pode "emprestar" sua chave*/ 
+	if(nova->n_elementos > CHAVES/2){
+	
+	
+  
+	  /*insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow*/
+	  chave_viz[0] = nova->chaves[nova->n_elementos-1];
+	  chave_viz[1] = nova->nrr[nova->n_elementos-1];
+
+	  remove_folha(nova, chave_viz[0], retorno, prox_chave); 
+	  insere_folha(no, chave_viz, retorno, prox_chave);
+
+	  /*atualiza delimitador (se a folha nao for a raiz)*/
+	  if(no->posicao != NADA){
+	    pai = abre_no(retorno[2]);
+	    for(i=0; i<pai->n_elementos; i++){
+	      if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
+		break;
+	    }
+	    /*o novo delimitador corresponde ao primeiro elemento da arvore */
+	    pai->chaves[i] = no->chaves[0];
+	  
+	    fecha_no(pai);  
+	  }
+	}
+	retorno[0] = OK;
+	retorno[1] = OK;
+	retorno[2] = OK;
+	fecha_no(nova);
+      }
+
+
 
 	/*split:*/
 	
