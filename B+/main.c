@@ -20,7 +20,7 @@ int main(){
   if(! info){
     /*se eh a primeira execucao do programa, comeca a arvore do 0*/
     ultima_chave = 0;
-    nrr = 1;
+    nrr = 0;
   }
   if(info){
     fseek(info, 0, SEEK_SET);
