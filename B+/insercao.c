@@ -1,4 +1,4 @@
-/*implementacao de funcoes de insercao em arvore B+*/
+/* Implementacao de funcoes de insercao em arvore B+ */
 
 #include<stdio.h>
 #include<strings.h>
@@ -8,7 +8,9 @@
 #include "insercao.h"
 
 
-/*faz a insercao de chave na arvore*/
+/*!
+ * \brief Faz a insercao de chave na arvore 
+ */
 void insere(int *prox_chave, int *nrr) { 
   int chave[2]; 
 
@@ -16,27 +18,27 @@ void insere(int *prox_chave, int *nrr) {
   int resposta[3];
    
    
-   /*le a chave a ser inserida*/
+   /* Le a chave a ser inserida */
    printf("Digite a chave a ser inserida\n"); 
    scanf("%d", &chave[0]);
-   /*guarda o nrr da chave*/
+   /* Guarda o nrr da chave */
    *nrr = *nrr + 1;
    chave[1] = *nrr;
       
-   /*acha a folha */
+   /* Acha a folha */
    acha_folha_ins(chave, 0, resposta, prox_chave);
 
    if(resposta[2] != OK){
-     /*se a funcao retornar algo diferente de OK, significa que a raiz sofreu split*/   
+     /* Se a funcao retornar algo diferente de OK, significa que a raiz sofreu split */   
      *prox_chave = *prox_chave+1;
      nova = abre_no(*prox_chave, NO);
-     /*  insere na folha*/
+     /* Insere na folha */
      nova->chaves[0] = resposta[0];
      nova->apontadores[0] = resposta[1];
      nova->apontadores[1] = resposta[2];
      nova->n_elementos++;  
 
-     /*faz com que arquivo 0 sempre seja o arquivo raiz*/
+     /* Faz com que arquivo 0 sempre seja o arquivo raiz */
      raiz_velha = abre_no(ROOT, FOLHA);
      nova->posicao = ROOT;
      raiz_velha->posicao = *prox_chave;
@@ -49,7 +51,7 @@ void insere(int *prox_chave, int *nrr) {
      }
 
 
-     /*salva os arquivos*/
+     /* Salva os arquivos */
      fecha_no(raiz_velha);
      fecha_no(nova);
    }
@@ -60,14 +62,16 @@ void insere(int *prox_chave, int *nrr) {
  
 
 
-/*procura recursivamente pela folha onde se deve inserir a chave. Na volta da recursao, insere nos niveis superiores*/
+/*!
+ * \brief procura recursivamente pela folha onde se deve inserir a chave. Na volta da recursao, insere nos niveis superiores
+ */
 void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){ 
   
   tipoNo *no;
 
   int i;
   
-  /*abre arquivo e le ele*/
+  /* Abre arquivo e o le */
   no = abre_no(pagina, FOLHA);
   
   if(no->tipo == FOLHA){ 
@@ -76,7 +80,7 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
       printf("Chave inserida com sucesso!\n\n");  
   } 
   else{ 
-    /*acha proxima folha*/ 
+    /* Acha proxima folha */ 
     for(i=0; i<no->n_elementos; i++){
       if(chave[0] <= no->chaves[i])
 	break;
@@ -84,7 +88,7 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
     acha_folha_ins(chave, no->apontadores[i], retorno, prox_chave);
     
   
-    /*em caso de split insere na arvore novos elementos*/  
+    /* Em caso de split insere na arvore novos elementos */  
     if(retorno[1] != OK) 
       insere_arvore(no, retorno, prox_chave); 
   } 
@@ -92,20 +96,22 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
 }
  
 
-/*insre elemento na folha correta*/
+/*!
+ * \brief Insre elemento na folha correta
+ */
 void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
 
   int i, j;
   tipoNo *nova;
-  /*vetor que contem a chave a ser inserida no nivel acima.
-    Se os valores forem OK, OK, OK, significa que novas chaves nao precisam ser inseridas*/
+  /* Vetor que contem a chave a ser inserida no nivel acima.
+     Se os valores forem OK, OK, OK, significa que novas chaves nao precisam ser inseridas */
   retorno[0] = OK;
   retorno[1] = OK;
   retorno[2] = OK;
 
-  /*  insere na folha*/
+  /* Insere na folha */
   if(no->n_elementos <= CHAVES){
-    /*insercao simples*/
+    /* Insercao simples */
     for(i=0; i<no->n_elementos; i++){
       if(chave[0] == no->chaves[i]){
 	retorno[2] = ERRO;
@@ -128,7 +134,7 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
    
    }
 
-  /*verifica se deu overflow*/
+  /* Verifica se deu overflow */
   if(no->n_elementos == CHAVES+1){
       
     /*split:*/
@@ -136,7 +142,7 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
     *prox_chave = *prox_chave +1;
 
     nova = abre_no(*prox_chave, FOLHA);
-    /*copia chaves para nova estrutura*/
+    /* Copia chaves para nova estrutura */
     for(i=CHAVES/2 + CHAVES%2; i<=CHAVES; i++){
       chave[0] = no->chaves[i];
       chave[1] = no->nrr[i];
@@ -148,9 +154,9 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
     nova->prox_esq = no->posicao;
     no->prox_dir = *prox_chave;
     
-    /*retorno[0] possui o delimitador (copia da primeira chave do no da direita*/
+    /* retorno[0] possui o delimitador (copia da primeira chave do no da direita */
     retorno[0] = nova->chaves[0];
-    /*retorno[1] e [2] possuem os apontadores para as novas folhas*/
+    /* retorno[1] e [2] possuem os apontadores para as novas folhas */
     retorno[1] = no->posicao;
     retorno[2] = nova->posicao; 
 
@@ -159,14 +165,16 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
 }
 
 
-/*insere elemento em noh da arvore*/  
+/*!
+ * \brief Insere elemento em noh da arvore 
+ */  
 void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
   int i, j;
   tipoNo *nova;
   
-  /*  insere na folha*/
+  /* Insere na folha */
   if(no->n_elementos <= CHAVES){
-    /*insercao simples*/
+    /* Insercao simples */
     for(i=0; i<no->n_elementos; i++){
       if(dados[0] < no->chaves[i])
 	break;
@@ -186,7 +194,7 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
 
   }
   if(no->n_elementos <= CHAVES){
-    /*muda os valores de dados, para nao inserir mais nenhum elemento*/
+    /* Muda os valores de dados, para nao inserir mais nenhum elemento */
     dados[0] = OK;
     dados[1] = OK;
     dados[2] = OK;
@@ -199,7 +207,7 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
       
       *prox_chave = *prox_chave + 1;
       nova = abre_no(*prox_chave, NO);
-      /*copia chaves para nova estrutura*/
+      /* Copia chaves para nova estrutura */
       for(i=CHAVES/2 + 1; i<=CHAVES; i++){
 	dados[0]=no->chaves[i];
 	dados[1]=no->apontadores[i];
@@ -210,9 +218,9 @@ void insere_arvore(tipoNo *no, int dados[3], int *prox_chave){
       no->n_elementos = CHAVES/2;
       
       
-      /*resposta[0] possui o delimitador (elemento do meio dos nos)*/
+      /* resposta[0] possui o delimitador (elemento do meio dos nos) */
       dados[0] = no->chaves[CHAVES/2];
-      /*resposta[1] e [2] possuem os apontadores para as novas folhas*/
+      /* resposta[1] e [2] possuem os apontadores para as novas folhas */
       dados[1] = no->posicao;
       dados[2] = nova->posicao;
 

@@ -9,7 +9,9 @@
 
 
 
-/*imprime no arquivo informacoes sobre o no*/
+/*!
+ * \brief Imprime no arquivo informacoes sobre o no
+ */
 void fecha_no(tipoNo *arvore){
 
   FILE * arq;
@@ -18,16 +20,16 @@ void fecha_no(tipoNo *arvore){
   
   sprintf(nome_arq, "%s%d", DIRETORIO, arvore->posicao);
 
-  /*dados ficam nessa disposicao no arquivo:
-    posicao
-    tipo
-    n_elementos
-    chave0 chave1 chave2 ...
-    nrr0   nrr1   nrr2   ... (se for folha)
-    apontador0 apontador1 apontador2 apontador3 ...(se for no)
-    prox_esq (se for folha)
-    prox_dir (se for folha)
-*/
+  /* Dados ficam nessa disposicao no arquivo:
+     posicao
+     tipo
+     n_elementos
+     chave0 chave1 chave2 ...
+     nrr0   nrr1   nrr2   ... (se for folha)
+     apontador0 apontador1 apontador2 apontador3 ...(se for no)
+     prox_esq (se for folha)
+     prox_dir (se for folha)
+  */
   arq = fopen(nome_arq, "w");
   fseek(arq,0,SEEK_SET); 
   fprintf(arq, "%d\n", arvore->posicao);
@@ -62,14 +64,16 @@ void fecha_no(tipoNo *arvore){
 }
 
 
-/*carrega conteudo de uma folha na memoria*/
+/*!
+ * \brief Carrega conteudo de uma folha na memoria 
+ */
 tipoNo *abre_no(int numero, int tipo){
   tipoNo *arvore;
   FILE *arq;
   char arquivo[TAM_NOME_ARQ];
   int i;
 
-  /*abre ou inicializa arquivo*/
+  /* Abre ou inicializa arquivo */
   sprintf(arquivo, "%s%d", DIRETORIO, numero);
 
   arq = fopen(arquivo, "r");
@@ -84,14 +88,14 @@ tipoNo *abre_no(int numero, int tipo){
       arvore->n_elementos = 0;
 
       if(tipo == FOLHA){
-	arvore->prox_dir = NADA; /*NADA significa apontar pra ninguém*/
+	arvore->prox_dir = NADA; /*NADA significa apontar pra ninguem*/
 	arvore->prox_esq = NADA;
       }
     }
   
   else if(arq != NULL) 
     {             
-      /*Alocamos o no e registramos seus dados, lendo do arquivo*/
+      /* Alocamos o no e registramos seus dados, lendo do arquivo */
       arvore = (tipoNo *)malloc(sizeof(tipoNo));
 
       fseek(arq,0,SEEK_SET);
@@ -121,33 +125,37 @@ tipoNo *abre_no(int numero, int tipo){
   return arvore;
 }
 
-/*cria uma nova raiz, no caso da arvore subir de nivel*/
+/*!
+ * \brief Cria uma nova raiz, no caso da arvore subir de nivel
+ */
 tipoNo *cria_raiz(int numero){
   tipoNo *arvore;
 
 
   
-  /*Criamos o noh, com elementos nulos */
+  /* Criamos o noh, com elementos nulos */
   arvore = (tipoNo *)(malloc(sizeof(tipoNo)));
   arvore->posicao = numero;
-  arvore->tipo = NO; /*a raíz nao eh folha;*/
+  arvore->tipo = NO; /*a raiz nao eh folha;*/
   arvore->n_elementos = 0;
   
   return arvore;
 }
 
   
-/*lista as chaves e os respectivos nrrs armazenados na arvore*/
+/*!
+ * \brief Lista as chaves e os respectivos nrrs armazenados na arvore
+ */
 void lista_elementos(){
   tipoNo *no;
   int prox;
   int i;
   
-  /*abre arquivo e le ele*/
+  /* Abre arquivo e le ele */
   no = abre_no(ROOT, FOLHA);
-  /*procura folha*/
+  /* Procura folha */
   while(no->tipo != 1){
-    /*vai para a folha com elementos de menor valor*/
+    /* Vai para a folha com elementos de menor valor */
     prox = no->apontadores[0];
     fecha_no(no);
     no = abre_no(prox, FOLHA);
@@ -172,7 +180,9 @@ void lista_elementos(){
 
 }
 
-/*consulta por uma chave secundaria, a pedido do usuario*/
+/*!
+ * \brief Consulta por uma chave secundaria, a pedido do usuario
+ */
 void consulta(){
   tipoNo *no;
   int busca, prox;
@@ -182,11 +192,11 @@ void consulta(){
 
   scanf("%d", &busca);
 
-  /*abre arquivo e le ele*/
+  /* Abre arquivo e o le */
   no = abre_no(ROOT, FOLHA);
-  /*procura folha*/
+  /* Procura folha */
   while(no->tipo != 1){
-    /*procura a folha aonde deve estar o elemento*/
+    /* Procura a folha onde deve estar o elemento */
     for(i=0; i<no->n_elementos; i++){
       if(busca <= no->chaves[i])
 	break;
@@ -221,7 +231,9 @@ void consulta(){
 
 
 
-/* Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir */
+/*! 
+ *\brief  Para nao voltar abruptamente para o menu, pede para o usuario digitar algo para prosseguir 
+ */
 void espera(){
   printf("\nPressione a tecla enter para voltar ao menu...\n");
   getchar();
