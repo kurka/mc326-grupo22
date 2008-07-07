@@ -156,7 +156,11 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
   /*remocao simples*/ 
   if(no->n_elementos >= CHAVES/2 || no->posicao == 0){
     
-    /*remocao ocorreu com sucesso e nada deve ser feito*/
+ 
+    if(DEBUG)
+      printf(">>>Remocao simples, na folha %d. N_elementos = %d\n\n", no->posicao, no->n_elementos);
+    
+   /*remocao ocorreu com sucesso e nada deve ser feito*/
     return OK;
   }
   
@@ -189,6 +193,9 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	pai->chaves[i] = no->chaves[0];
 	
 	fecha_no(pai);  
+
+	if(DEBUG)
+	  printf(">>>Rotacao com a esquerda, da folha %d com a folha %d. N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
       }
       
       fecha_no(nova);
@@ -220,6 +227,9 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	pai->chaves[i] = nova->chaves[0];
 	
 	fecha_no(pai);  
+
+	if(DEBUG)
+	  printf(">>>Rotacao com a esquerda, da folha %d com a folha %d. N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
       }
 
       fecha_no(nova);
@@ -256,7 +266,8 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       nova->prox_esq = NADA;
       nova->prox_dir = NADA;
       
-      
+      if(DEBUG)
+	printf(">>>Merge com a esquerda, da folha %d com a folha %d (que foi apagada). N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
       fecha_no(nova);
       /*o delimitador do pai deve ser removido*/
       return REM_PAI;
@@ -285,6 +296,9 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       
       fecha_no(nova);
       /*o delimitador do pai deve ser removido*/
+
+      if(DEBUG)
+	printf(">>>Merge com a direita, da folha %d com a folha %d (que foi apagada). N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
       return REM_PAI;
     }
   }
