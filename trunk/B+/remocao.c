@@ -16,7 +16,7 @@ void remover(int *ultima_chave){
   int parentesco[3] = {NADA, NADA, NADA};
   tipoNo *raiz, *nova_raiz;
   /*le chave a ser removida*/
-  printf("Digite a chave a ser inserida\n"); 
+  printf("Digite a chave a ser removida\n"); 
   scanf("%d", &chave);
 
   /*acha a folha onde acontecera a remocao*/
