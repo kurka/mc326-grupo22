@@ -47,14 +47,13 @@ int main(){
     switch(opcao){
 
     case INSERE:
-     /*  abre_raiz(); */
       insere(&ultima_chave, &nrr);
 
       espera();
       continue;
 
     case CONSULTA:
-      /* ... */
+      consulta();
 
       espera();
       continue;
