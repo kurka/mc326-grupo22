@@ -6,7 +6,9 @@
 #include "remocao.h"  
 
 
-/* Interface de utilizacao da arvore B+ */
+/*! 
+ * \brief Interface de utilizacao da arvore B+ 
+ */
 int main(){
 
  /*  char opcao[VETOR], c; */

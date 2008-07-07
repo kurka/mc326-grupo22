@@ -1,4 +1,4 @@
-/*implementacao de funcoes de remocao em arvore B+*/
+/* Implementacao de funcoes de remocao em arvore B+ */
 
 #include<stdio.h>
 #include<strings.h>
@@ -9,29 +9,31 @@
 #include "insercao.h"
 
 
-/*rotina de remocao de no em uma arvore B+*/
+/*!
+ * \brief Rotina de remocao de no em uma arvore B+
+ */
 void remover(int *ultima_chave){
 
   int chave, resposta, i, j;
   int parentesco[3] = {NADA, NADA, NADA};
   tipoNo *raiz, *nova_raiz;
-  /*le chave a ser removida*/
+  /* Le chave a ser removida */
   printf("Digite a chave a ser removida\n"); 
   scanf("%d", &chave);
 
-  /*acha a folha onde acontecera a remocao*/
+  /* Acha a folha onde acontecera a remocao */
   resposta = acha_folha_rem(chave, ROOT, parentesco, ultima_chave);
 
 
 
   if(resposta == REM_PAI){
-    /*se a funcao retornar REM_PAI, significa que deve ser removido elemento da raiz*/   
+    /* Se a funcao retornar REM_PAI, significa que deve ser removido elemento da raiz */   
 
     raiz = abre_no(ROOT, NO);
 
-    /*remove o delimitador antigo e mantem a raiz*/
+    /* Remove o delimitador antigo e mantem a raiz */
     if(raiz->n_elementos > 1){
-      /*acha a posicao do delimitador*/ 
+      /* Acha a posicao do delimitador */ 
       for(i=0; i<raiz->n_elementos; i++){
 	if(chave <= raiz->chaves[i])
 	  break;
@@ -45,7 +47,7 @@ void remover(int *ultima_chave){
       raiz->n_elementos--; 
     }
     
-    /*caso a raiz tenha ficado vazia, desce um nivel a arvore*/
+    /* Caso a raiz tenha ficado vazia, desce um nivel a arvore */
     if(raiz->n_elementos == 1){
       nova_raiz = abre_no(raiz->apontadores[0], FOLHA);
       
@@ -62,42 +64,44 @@ void remover(int *ultima_chave){
 }
 
 
-/*procura recursivamente pela folha onde se deve remover a chave. 
-  Na volta da recursao, se necessario, faz merge dos nos superiores*/
+/*!
+ * \brief Procura recursivamente pela folha onde se deve remover a chave.
+ * Na volta da recursao, se necessario, faz merge dos nos superiores
+ */
 int acha_folha_rem(int chave, int pagina, int parentesco[3], int *prox_chave){ 
   
   tipoNo *no;
 
   int i, retorno, pos_chave;
   
-  /*abre arquivo e le ele*/
+  /* Abre arquivo e o le */
   no = abre_no(pagina, FOLHA);
   
-  /*se eh uma folha, remove a chave desejada*/
+  /* Se eh uma folha, remove a chave desejada */
   if(no->tipo == FOLHA){ 
     retorno = remove_folha(no, chave, parentesco, prox_chave); 
     if(retorno != ERRO)
       printf("Chave removida com sucesso!\n\n");  
   } 
   else{ 
-    /*acha proxima folha*/ 
+    /* Acha proxima folha */ 
     for(i=0; i<no->n_elementos; i++){
       if(chave <= no->chaves[i])
 	break;
     }
 
-    /*parentesco[0] e [1] possuem o endereco dos irmaos da esquerda e da direita da folha em que a chave sera removida*/
-    /*parentesco[2] possui o endereco do pai dos irmaos*/
+    /* parentesco[0] e [1] possuem o endereco dos irmaos da esquerda e da direita da folha em que a chave sera removida */
+    /* parentesco[2] possui o endereco do pai dos irmaos */
     
     parentesco[2] = no->posicao;
 
-    /*se a folha corresponde ao primeiro apontador do noh, ela nao tem irmao a esquerda.*/
+    /* Se a folha corresponde ao primeiro apontador do noh, ela nao tem irmao a esquerda */
     if(i==0)
     parentesco[0] = NADA; 
     else
       parentesco[0] = no->apontadores[i-1];
    
-    /*se a folha corresponde ao ultimo apontador do noh, ela nao tem irmao a direita*/
+    /* Se a folha corresponde ao ultimo apontador do noh, ela nao tem irmao a direita */
     if(i == CHAVES-1)
       parentesco[1] = NADA;
     else
@@ -107,9 +111,9 @@ int acha_folha_rem(int chave, int pagina, int parentesco[3], int *prox_chave){
     retorno = acha_folha_rem(chave, no->apontadores[i], parentesco, prox_chave);
     
 
-    /*em caso de merge remove na arvore delimitador antigo*/  
+    /* Em caso de merge remove na arvore delimitador antigo */  
     if(retorno == REM_PAI){ 
-      /*pos_folha guarda a posicao da chave (delimitador) a ser removida*/
+      /* pos_folha guarda a posicao da chave (delimitador) a ser removida */
       if(i<no->n_elementos)
 	pos_chave = i-1;
       else
@@ -124,13 +128,15 @@ int acha_folha_rem(int chave, int pagina, int parentesco[3], int *prox_chave){
 }
 
 
-/*remove elemento na folha da arvore*/
+/*!
+ * \brief Remove elemento na folha da arvore
+ */
 int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 
   int i, j, temp, chave_viz[2];
   tipoNo *nova, *pai;
 
-  /*remove elemento da folha*/
+  /* Remove elemento da folha */
      
   for(i=0; i<no->n_elementos; i++){
     if(chave == no->chaves[i]){
@@ -153,31 +159,31 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     
 
 
-  /*remocao simples*/ 
+  /* Remocao simples */ 
   if(no->n_elementos >= CHAVES/2 || no->posicao == 0){
     
  
     if(DEBUG)
       printf(">>>Remocao simples, na folha %d. N_elementos = %d\n\n", no->posicao, no->n_elementos);
     
-   /*remocao ocorreu com sucesso e nada deve ser feito*/
+   /* Remocao ocorreu com sucesso e nada deve ser feito */
     return OK;
   }
   
-  /*verifica se deu underflow*/
+  /* Verifica se deu underflow */
   if(no->n_elementos < CHAVES/2){
     
     /*ROTACAO*/
     
-    /*rotacao com a esquerda*/
-    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    /* Rotacao com a esquerda */
+    /* Confere se a folha da esquerda eh "filha" do mesmo pai */
     if(parentesco[0] != NADA){
       nova = abre_no(no->prox_esq, FOLHA);
       
-      /*confere se a folha da esquerda pode "emprestar" sua chave*/ 
+      /* Confere se a folha da esquerda pode "emprestar" sua chave */ 
       if(nova->n_elementos > CHAVES/2){
 	
-	/*insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow*/
+	/* Insere a ultima chave da esquerda como primeiro elemento do no atual, evitando underflow */
 	chave_viz[0] = nova->chaves[nova->n_elementos-1];
 	chave_viz[1] = nova->nrr[nova->n_elementos-1];
 	
@@ -189,7 +195,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	  if(pai->chaves[i] > no->chaves[0] && pai->chaves[i] < no->chaves[1])
 	    break;
 	}
-	/*o novo delimitador corresponde ao primeiro elemento da arvore */
+	/* O novo delimitador corresponde ao primeiro elemento da arvore */
 	pai->chaves[i] = no->chaves[0];
 	
 	fecha_no(pai);  
@@ -203,15 +209,15 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       return OK;
     }
     
-    /*rotacao com a direita*/
-    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    /* Rotacao com a direita */
+    /* Confere se a folha da direita eh "filha" do mesmo pai */
     if(parentesco[1] != NADA){
       nova = abre_no(no->prox_dir, FOLHA);
       
-      /*confere se a folha da direita pode "emprestar" sua chave*/ 
+      /* Confere se a folha da direita pode "emprestar" sua chave */ 
       if(nova->n_elementos > CHAVES/2){
 	
-	/*insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow*/
+	/* Insere a primeira chave da direita como ultimo elemento do no atual, evitando underflow */
 	chave_viz[0] = nova->chaves[0];
 	chave_viz[1] = nova->nrr[0];
 	
@@ -223,7 +229,7 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
 	  if(pai->chaves[i] < no->chaves[no->n_elementos-1] && pai->chaves[i] > no->chaves[no->n_elementos-2])
 	    break;
 	}
-	/*o novo delimitador corresponde ao primeiro elemento da folha da direita*/
+	/* O novo delimitador corresponde ao primeiro elemento da folha da direita */
 	pai->chaves[i] = nova->chaves[0];
 	
 	fecha_no(pai);  
@@ -238,15 +244,15 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
     }
     
     
-    /*MERGE*/
+    /* MERGE */
     
-    /*merge com a esquerda*/
-    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    /* Merge com a esquerda */
+    /* Confere se a folha da esquerda eh "filha" do mesmo pai */
     if(parentesco[0] != NADA){
       nova = abre_no(no->prox_esq, FOLHA);
       
       if(nova->n_elementos <= CHAVES/2){
-	/*copia chaves para folha da direita*/
+	/* Copia chaves para folha da direita */
 	for(i=0; i<nova->n_elementos; i++){
 	  chave_viz[0] = nova->chaves[i];
 	  chave_viz[1] = nova->nrr[i];
@@ -256,12 +262,12 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       
       no->prox_esq = nova->prox_esq;
       
-      /*troca posicao dos arquivos, pra apontador da esquerda sempre conter o no*/
+      /* Troca posicao dos arquivos, pra apontador da esquerda sempre conter o no */
       temp = nova->posicao;
       nova->posicao = no->posicao;
       no->posicao = temp;
       
-      /*"apaga" folha*/
+      /* "Apaga" folha */
       nova->n_elementos = 0;
       nova->prox_esq = NADA;
       nova->prox_dir = NADA;
@@ -269,17 +275,17 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       if(DEBUG)
 	printf(">>>Merge com a esquerda, da folha %d com a folha %d (que foi apagada). N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
       fecha_no(nova);
-      /*o delimitador do pai deve ser removido*/
+      /* O delimitador do pai deve ser removido */
       return REM_PAI;
     }
     
-    /*merge com a direita*/
-    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    /* Merge com a direita */
+    /* Confere se a folha da direita eh "filha" do mesmo pai */
     if(parentesco[1] != NADA){
       nova = abre_no(no->prox_dir, FOLHA);
       
       if(nova->n_elementos <= CHAVES/2){
-	/*copia chaves para folha da esquerda*/
+	/* Copia chaves para folha da esquerda */
 	for(i=0; i<nova->n_elementos; i++){
 	  chave_viz[0] = nova->chaves[i];
 	  chave_viz[1] = nova->nrr[i];
@@ -289,13 +295,13 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
       
       no->prox_dir = nova->prox_dir;
       
-      /*"apaga" folha*/
+      /* "Apaga" folha */
       nova->n_elementos = 0;
       nova->prox_esq = NADA;
       nova->prox_dir = NADA;
       
       fecha_no(nova);
-      /*o delimitador do pai deve ser removido*/
+      /* O delimitador do pai deve ser removido */
 
       if(DEBUG)
 	printf(">>>Merge com a direita, da folha %d com a folha %d (que foi apagada). N_elementos = %d\n\n", no->posicao, nova->posicao, no->n_elementos);
@@ -307,13 +313,15 @@ int remove_folha(tipoNo *no, int chave, int parentesco[3], int *prox_chave){
   
   
 
-/*remove elemento em no da arvore*/
+/*!
+ * \brief Remove elemento em no da arvore
+ */
 int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave){
 
   int i, temp, nova_chave[3];
   tipoNo *nova, *pai;
 
-  /*remove elemento da folha*/
+  /* Remove elemento da folha */
      
   for(i=pos_chave; i<no->n_elementos; i++){
     no->chaves[i] = no->chaves[i+1];
@@ -325,27 +333,27 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     
 
 
-  /*remocao simples*/ 
+  /* Remocao simples */ 
   if(no->n_elementos >= CHAVES/2 || no->posicao == 0){
     
-    /*remocao ocorreu com sucesso e nada deve ser feito*/
+    /* Remocao ocorreu com sucesso e nada deve ser feito */
     return OK;
   }
   
-  /*verifica se deu underflow*/
+  /* Verifica se deu underflow */
   if(no->n_elementos < CHAVES/2){
     
-    /*ROTACAO*/
+    /* ROTACAO */
     
-    /*rotacao com a esquerda*/
-    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    /* Rotacao com a esquerda */
+    /* Confere se a folha da esquerda eh "filha" do mesmo pai */
     if(parentesco[0] != NADA){
       nova = abre_no(no->prox_esq, NO);
       
-      /*confere se a folha da esquerda pode "emprestar" sua chave*/ 
+      /* Confere se a folha da esquerda pode "emprestar" sua chave */ 
       if(nova->n_elementos > CHAVES/2){
 	
-	/*insere o delimitador na chave da direita e o ultimo da esquerda vira delimitador*/
+	/* Insere o delimitador na chave da direita e o ultimo da esquerda vira delimitador */
 	pai = abre_no(parentesco[2], NO);
 	
 	for(i=0; i<pai->n_elementos; i++){
@@ -354,12 +362,12 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	}
 
 
-	/*nova_chave possui a chave do antigo delimitador com novos apontadores*/
+	/* nova_chave possui a chave do antigo delimitador com novos apontadores */
 	nova_chave[0] = pai->chaves[i];
 	nova_chave[1] = nova->apontadores[nova->n_elementos];
 	nova_chave[2] = no->apontadores[0];
 
-	/*o novo delimitador corresponde ao ultimo elemento do no da esquerda */
+	/* O novo delimitador corresponde ao ultimo elemento do no da esquerda */
 	pai->chaves[i] = nova->chaves[nova->n_elementos-1];
 
 	remove_arvore(nova, nova->n_elementos-1, parentesco, prox_chave); 
@@ -372,16 +380,16 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
       return OK;
     }
     
-    /*rotacao com a direita*/
-    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    /* Rotacao com a direita */
+    /* Confere se a folha da direita eh "filha" do mesmo pai */
     if(parentesco[1] != NADA){
       nova = abre_no(no->prox_dir, NO);
       
-      /*confere se a folha da direita pode "emprestar" sua chave*/ 
+      /* Confere se a folha da direita pode "emprestar" sua chave */ 
       if(nova->n_elementos > CHAVES/2){
 
 	
-	/*insere o delimitador na chave da esquerda e o ultimo da direita vira delimitador*/
+	/* Insere o delimitador na chave da esquerda e o ultimo da direita vira delimitador */
 	pai = abre_no(parentesco[2], NO);
 	
 	for(i=0; i<pai->n_elementos; i++){
@@ -389,12 +397,12 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	    break;
 	}
 
-	/*nova_chave possui a chave do antigo delimitador com novos apontadores*/
+	/* nova_chave possui a chave do antigo delimitador com novos apontadores */
 	nova_chave[0] = pai->chaves[i];
 	nova_chave[1] = nova->apontadores[0];
 	nova_chave[2] = no->apontadores[no->n_elementos];
 
-	/*o novo delimitador corresponde ao primeiro elemento do no da direita */
+	/* O novo delimitador corresponde ao primeiro elemento do no da direita */
 	pai->chaves[i] = nova->chaves[0];
 
 	remove_arvore(nova, 0, parentesco, prox_chave); 
@@ -409,15 +417,15 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
     }
     
     
-    /*MERGE*/
+    /* MERGE */
     
-    /*merge com a esquerda*/
-    /*confere se a folha da esquerda eh "filha" do mesmo pai*/
+    /* Merge com a esquerda */
+    /* Confere se a folha da esquerda eh "filha" do mesmo pai */
     if(parentesco[0] != NADA){
       nova = abre_no(no->prox_esq, NO);
       
       if(nova->n_elementos <= CHAVES/2){
-	/*copia chaves para folha da direita*/
+	/* Copia chaves para folha da direita */
 	for(i=0; i<nova->n_elementos; i++){
 	  nova_chave[0] = nova->chaves[i];
 	  nova_chave[1] = nova->apontadores[i];
@@ -426,28 +434,28 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	}
       }
       
-      /*faz com que folha da esquerda seja a valida*/
+      /* Faz com que folha da esquerda seja a valida */
       temp = no->posicao;
       no->posicao = nova->posicao;
       nova->posicao = temp;
       
-      /*"apaga" folha*/
+      /* "Apaga" folha */
       nova->n_elementos = 0;
    
             
       fecha_no(nova);
       
-      /*o delimitador do pai deve ser removido*/
+      /* O delimitador do pai deve ser removido */
       return REM_PAI;
     }
     
-    /*merge com a direita*/
-    /*confere se a folha da direita eh "filha" do mesmo pai*/
+    /* Merge com a direita */
+    /* Confere se a folha da direita eh "filha" do mesmo pai */
     if(parentesco[1] != NADA){
       nova = abre_no(no->prox_dir, NO);
       
       if(nova->n_elementos <= CHAVES/2){
-	/*copia chaves para folha da esquerda*/
+	/* Copia chaves para folha da esquerda */
 	for(i=0; i<nova->n_elementos; i++){
 	  nova_chave[0] = nova->chaves[i];
 	  nova_chave[1] = nova->apontadores[i];
@@ -456,11 +464,11 @@ int remove_arvore(tipoNo *no, int pos_chave, int parentesco[3], int *prox_chave)
 	}
       }
       
-      /*"apaga" folha*/
+      /* "Apaga" folha */
       nova->n_elementos = 0;
       
       fecha_no(nova);
-      /*o delimitador do pai deve ser removido*/
+      /* O delimitador do pai deve ser removido */
       return REM_PAI;
     }
   }
