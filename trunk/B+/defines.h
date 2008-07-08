@@ -11,15 +11,18 @@
 #define ROOT 0
 #define FOLHA 1 /*tipos de nohs*/
 #define NO 0
+#define REMOVER 2
 #define INSERE 1  /*opcoes do menu*/
 #define CONSULTA 2
 #define LISTAR 3
 #define REMOVE 4
 #define SAIR 0
 #define TAM_NOME_ARQ 16
+#define TAM_LINHA_COM 16
 #define VETOR 1000
 #define DIRETORIO "files/"
-#define DADOS "dados.dat"
+#define DADOS "files/dados.dat"
+#define RM "rm "
 
 /*vamos definir que ir a esquerda de um elemento de um nó implica valores menores ou iguais a ele, e a direita maiores*/
 typedef struct{
