@@ -89,7 +89,8 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
     
   
     /* Em caso de split insere na arvore novos elementos */  
-    if(retorno[1] != OK) 
+    if(retorno[1] != OK && retorno[2]  != ERRO) 
+
       insere_arvore(no, retorno, prox_chave); 
   } 
   fecha_no(no);
