@@ -195,10 +195,10 @@ void consulta(){
   /* Abre arquivo e o le */
   no = abre_no(ROOT, FOLHA);
   /* Procura folha */
-  while(no->tipo != 1){
+  while(no->tipo != FOLHA){
     /* Procura a folha onde deve estar o elemento */
     for(i=0; i<no->n_elementos; i++){
-      if(busca <= no->chaves[i])
+      if(busca < no->chaves[i])
 	break;
     }
 
@@ -224,9 +224,9 @@ void consulta(){
 
     printf("Para visualizar sua folha, consulte arquivo %d, na pasta files.\n\n\n", no->posicao);
     
-    fecha_no(no);  
+
   }
-  
+  fecha_no(no);    
 }
 
 

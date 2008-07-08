@@ -53,7 +53,7 @@ int acha_folha_rem(int chave, int pagina, int parentesco[3], int *prox_chave){
   else{ 
     /* Acha proxima folha */ 
     for(i=0; i<no->n_elementos; i++){
-      if(chave <= no->chaves[i])
+      if(chave < no->chaves[i])
 	break;
     }
 
