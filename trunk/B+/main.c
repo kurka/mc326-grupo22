@@ -89,7 +89,7 @@ int main(){
   fseek(info, 0, SEEK_SET);
   fprintf(info, "%d ", ultima_chave);
   fprintf(info, "%d", nrr);
-  
+  fclose(info);
   
   return(0);
 }

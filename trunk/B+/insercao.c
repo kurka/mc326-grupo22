@@ -82,7 +82,7 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
   else{ 
     /* Acha proxima folha */ 
     for(i=0; i<no->n_elementos; i++){
-      if(chave[0] <= no->chaves[i])
+      if(chave[0] < no->chaves[i])
 	break;
     }
     acha_folha_ins(chave, no->apontadores[i], retorno, prox_chave);
@@ -137,7 +137,7 @@ void insere_folha(tipoNo *no, int chave[2], int retorno[3], int *prox_chave){
   /* Verifica se deu overflow */
   if(no->n_elementos == CHAVES+1){
       
-    /*split:*/
+   /*split:*/
 
     *prox_chave = *prox_chave +1;
 
