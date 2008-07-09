@@ -21,14 +21,17 @@ void insere(int *prox_chave, int *nrr) {
    /* Le a chave a ser inserida */
    printf("Digite a chave a ser inserida\n"); 
    scanf("%d", &chave[0]);
+   
    /* Guarda o nrr da chave */
-   *nrr = *nrr + 1;
-   chave[1] = *nrr;
+    chave[1] = *nrr;
       
    /* Acha a folha */
    acha_folha_ins(chave, 0, resposta, prox_chave);
 
-   if(resposta[2] != OK){
+   if(resposta[2] != ERRO)
+     *nrr = *nrr + 1;
+
+   if(resposta[2] != OK  && resposta[2]  != ERRO){
      /* Se a funcao retornar algo diferente de OK, significa que a raiz sofreu split */   
      *prox_chave = *prox_chave+1;
      nova = abre_no(*prox_chave, NO);
@@ -89,7 +92,7 @@ void acha_folha_ins(int chave[2], int pagina, int retorno[3], int *prox_chave){
     
   
     /* Em caso de split insere na arvore novos elementos */  
-    if(retorno[1] != OK && retorno[2]  != ERRO) 
+    if(retorno[2] != OK && retorno[2] != ERRO) 
 
       insere_arvore(no, retorno, prox_chave); 
   } 

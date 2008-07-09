@@ -36,8 +36,9 @@ void fecha_no(tipoNo *arvore){
   fprintf(arq, "%d\n", arvore->tipo);
   
   fprintf(arq, "%d\n", arvore->n_elementos);
-  for(i=0; i<arvore->n_elementos; i++)
+  for(i=0; i<arvore->n_elementos; i++){
     fprintf(arq, "%d ", arvore->chaves[i]);
+  }
   fprintf(arq, "\n");
 
   if(arvore->tipo == FOLHA){
